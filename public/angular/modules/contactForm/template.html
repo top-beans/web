@@ -1,0 +1,37 @@
+<h3>Get in Touch</h3>
+<form class="rd-mailform form-modern offset-top-30">
+    <div class="range">
+        <div class="cell-sm-12">
+            <div class="form-group">
+                <input type="text" placeholder="Fullname" class="form-control" 
+                       ng-model="$ctrl.form.name">
+            </div>
+        </div>
+        <div class="cell-xs-6 offset-top-22">
+            <div class="form-group">
+                <input type="email" placeholder="Email" class="form-control"
+                       ng-model="$ctrl.form.email">
+            </div>
+        </div>
+        <div class="cell-xs-6 offset-top-22">
+            <div class="form-group">
+                <input type="text" placeholder="Contact Number" class="form-control"
+                       ng-model="$ctrl.form.number">
+            </div>
+        </div>
+        <div class="cell-xs-12 offset-top-22">
+            <div class="form-group">
+                <div class="textarea-lined-wrap">
+                    <textarea placeholder="Your Enquiry" class="form-control"
+                              ng-model="$ctrl.form.description"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="cell-xs-8 offset-top-30 offset-xs-top-30 offset-sm-top-50">
+            <button type="submit" class="btn btn-primary btn-block" ng-click="$ctrl.save();">Send</button>
+        </div>
+        <div class="cell-xs-4 offset-top-22 offset-xs-top-30 offset-sm-top-50">
+            <button type="reset" class="btn btn-silver-outline btn-block">Reset</button>
+        </div>
+    </div>
+</form>

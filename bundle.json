@@ -1,0 +1,36 @@
+{
+    "customjs": {
+        "src": [
+            "public/corejs/**/*.js",
+            "public/vendor/moment/min/moment.min.js",
+            "public/vendor/moment-timezone/builds/moment-timezone-with-data.min.js",                
+            "public/vendor/angular/angular.min.js",
+            "public/vendor/angular-md5/angular-md5.min.js",
+            "public/vendor/angular-moment/angular-moment.min.js",
+            "public/vendor/angular-resource/angular-resource.min.js",
+            "public/vendor/angular-bootstrap/ui-bootstrap-tpls.min.js",
+            "public/vendor/lodash/dist/lodash.min.js",
+            "public/vendor/toastr/toastr.min.js",
+            "public/vendor/ladda/dist/ladda.min.js",
+            "public/vendor/ladda/dist/spin.min.js",
+            "public/js/**/*.js",
+            "public/angular/utils/**/*.js",
+            "public/angular/models/**/*.js",
+            "public/angular/modals/**/*.ctrl.js",
+            "public/angular/modules/**/*module.js",
+            "public/angular/modules/**/*service.js",
+            "public/angular/modules/**/*component.js",
+            "public/angular/modules/**/*config.js"
+        ],
+        "dest": "public/dist/topbeans.js"
+    }, 
+    "customcss": {
+        "src": [
+            "public/corecss/**/*.css",
+            "public/css/**/*.css",
+            "public/vendor/toastr/toastr.min.css",
+            "public/vendor/ladda/dist/ladda-themeless.min.css"
+        ],
+        "dest": "public/dist/topbeans.css"
+    }
+}

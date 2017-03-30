@@ -1,0 +1,29 @@
+{
+    "name": "TopBeabs",
+    "description": "TopBeans",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "TopBeans",
+        "Coffee Beans"
+    ],
+    "homepage": "https://topbeans.co.uk/",
+    "require": {
+        "php": ">=5.5",
+        "zendframework/zendframework": "~2.5",
+        "doctrine/doctrine-orm-module": "0.*",
+        "symfony/serializer": "2.5.*@dev",
+        "symfony/http-foundation": "2.5.*@dev",
+        "phpoffice/phpexcel": "1.8.0",
+        "tecnickcom/tcpdf": "6.2.12",
+        "zendframework/zendservice-recaptcha": "~2.0",
+        "jms/serializer": "~0.16"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "bower install"
+        ],
+        "post-update-cmd": [
+            "bower install"
+        ]
+    }
+}

@@ -1,0 +1,46 @@
+<section class="section-15 section-sm-top-15 section-sm-bottom-100">
+    <div class="shell">
+        <div class="row">
+            <div class="col-md-12">
+                <h5>Admin Users</h5>
+                
+
+                <table class="table table-condensed table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="col-md-5">Username</th>
+                            <th class="col-md-5">Last Login</th>
+                            <th class="col-md-1 text-center">Active</th>
+                            <th class="col-md-1 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-if="(!$ctrl.loading && $ctrl.users.length === 0)">
+                        <tr>
+                            <td colspan="4"><em>No Users</em></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr ng-repeat="user in $ctrl.users">
+                            <td>{{user.username}}</td>
+                            <td>{{user.lastlogin | amDateFormat: 'DD MMM YYYY  HH:mma'}}</td>
+                            <td class="text-center"><span class="glyphicon" ng-class="{'glyphicon-ok': (user.tries === 0), 'glyphicon-remove': (user.tries !== 0) }"></span></td>
+                            <td class="text-center">
+                                <span class="glyphicon glyphicon-pencil pointer-cursor"
+                                      ng-click="$ctrl.addOrEditUser(user)">
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>                
+                
+            </div>
+            <div class="col-md-12">
+                <div class="text-right section-top-15">
+                    <button type="button" class="btn btn-xs btn-primary" ng-click="$ctrl.addOrEditUser(null)">
+                        <span class="glyphicon glyphicon-plus"></span> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

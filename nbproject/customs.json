@@ -1,0 +1,11 @@
+{
+    "elements": {
+        "client": {
+            "attributes": {
+                "client": {},
+                "callback": {}
+            }
+        }
+    },
+    "attributes": {}
+}

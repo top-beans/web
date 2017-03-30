@@ -1,0 +1,30 @@
+<section style="background-image: url(/images/bg-login.jpg)" class="page-content">
+    <div class="shell">
+        <div class="range range-sm-center" style="padding: 40px 0 40px 0;">
+            <div class="cell-sm-7 cell-md-5 cell-lg-4">
+                <div class="block-shadow text-center">
+                    <div class="block-inner">
+                        <p class="h7">Login to your account</p>
+                    </div>
+                    <form class="rd-mailform form-modern form-darker offset-top-22">
+                        <div class="block-inner">
+                            <div class="form-group">
+                                <input id="login-form-login" type="text" name="login" data-constraints="@@Required" class="form-control" 
+                                       placeholder="Username"
+                                       ng-model="$ctrl.credentials.username">
+                            </div>
+                            <div class="form-group offset-top-22">
+                                <input id="login-form-password" type="password" name="pass" data-constraints="@@Required" class="form-control" 
+                                       placeholder="Password"
+                                       ng-model="$ctrl.credentials.password">
+                            </div>
+                        </div>
+                        <div class="offset-top-30 offset-sm-top-40">
+                            <button type="submit" class="btn btn-primary btn-block" ng-click="$ctrl.login()">Sign in</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

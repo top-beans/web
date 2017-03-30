@@ -1,0 +1,4 @@
+<?=count($this->posts);?>
+<?php if ($this->posts != null && count($this->posts) > 0): foreach($this->posts as $post): ?>
+    <?php echo $post->getContent(); ?>
+<?php endforeach; endif; ?>

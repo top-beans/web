@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" class="wide wow-animation" ng-app="topbeans">
+    <head>
+        <?php echo $this->headTitle('Top Beans: Green Coffee Merchants')->setSeparator(' - ')->setAutoEscape(false) ?>
+        <meta name="format-detection" content="telephone=no">
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta charset="utf-8">
+
+        <meta name="description" content="Top Beans: Looking for the Top Kenyan Coffee beans? Contact us at www.topbeans.co.uk">
+        <meta name="keywords" content="Top Beans, Coffee, Beans, Kenya, AA, AB, PB, E, Top, Beans, Top Beans">
+
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Top Beans: Green Coffee Merchants">
+        <meta property="og:url" content="http://www.topbeans.co.uk">
+
+
+        <?php
+        echo $this->headLink(['rel' => 'icon', 'href' => '/images/favicon.png', 'type' => 'image/x-icon'])
+                ->appendStylesheet('//fonts.googleapis.com/css?family=Montserrat:400,700%7CLato:300,300italic,400,400italic,700,900%7CPlayfair+Display:700italic,900')
+        ;
+        ?>
+
+        <!--[if lt IE 10]>
+            <div style="background: #212121; padding: 10px 0; box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3); clear: both; text-align:center; position: relative; z-index:1;">
+                <a href="http://windows.microsoft.com/en-US/internet-explorer/">
+                    <img src="/images/ie8-panel/warning_bar_0000_us.jpg" border="0" height="42" width="820" 
+                         alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today.">
+                </a>
+            </div>
+            <script src="/vendor/html5shiv/dist/html5shiv.min.js"></script>
+            <script src="/vendor/respond/dest/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body style="">
+        <div class="page">
+            <div class="page-loader page-loader-variant-1">
+                <div><a href="/" class="brand brand-md"><img src="/images/logos/bw/full_icons/Icon_192.png" alt="logo"/></a>
+                    <div class="page-loader-body">
+                        <div id="spinningSquaresG">
+                            <div id="spinningSquaresG_1" class="spinningSquaresG"></div>
+                            <div id="spinningSquaresG_2" class="spinningSquaresG"></div>
+                            <div id="spinningSquaresG_3" class="spinningSquaresG"></div>
+                            <div id="spinningSquaresG_4" class="spinningSquaresG"></div>
+                            <div id="spinningSquaresG_5" class="spinningSquaresG"></div>
+                            <div id="spinningSquaresG_6" class="spinningSquaresG"></div>
+                            <div id="spinningSquaresG_7" class="spinningSquaresG"></div>
+                            <div id="spinningSquaresG_8" class="spinningSquaresG"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <header class="page-head">
+                <div class="rd-navbar-wrap">
+                    <nav data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" data-lg-device-layout="rd-navbar-static" data-stick-up-clone="false" data-md-stick-up-offset="53px" data-lg-stick-up-offset="53px"
+                         data-md-stick-up="true" data-lg-stick-up="true" class="rd-navbar rd-navbar-corporate-dark">
+                        <div class="rd-navbar-inner">
+                            <div class="rd-navbar-aside">
+                                <div data-custom-toggle=".rd-navbar-aside" data-custom-toggle-disable-on-blur="true" class="rd-navbar-aside-toggle">
+                                    <span></span>
+                                </div>
+                                <div class="rd-navbar-aside-content context-dark">
+                                    <ul class="rd-navbar-aside-group list-units">
+                                        <li>
+                                            <div class="unit unit-horizontal unit-spacing-xs">
+                                                <div class="unit-left">
+                                                    <span class="icon icon-xxs icon-primary fa-envelope-o"></span>
+                                                </div>
+                                                <div class="unit-body">
+                                                    <a href="mailto:<?=$this->email_address?>" class="link-white-v2"><?=$this->email_address?></a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="unit unit-horizontal unit-spacing-xs">
+                                                <div class="unit-left">
+                                                    <span class="icon icon-xxs icon-primary material-icons-phone icon-shift-2"></span>
+                                                </div>
+                                                <div class="unit-body">
+                                                    <a href="callto:<?=$this->phone_number?>" class="link-white-v2"><?=$this->phone_number?></a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="rd-navbar-aside-group">
+                                        <ul class="list-inline list-inline-reset">
+                                            <li>
+                                                <a href="<?=$this->facebook_url?>" class="icon icon-round icon-gray-dark-filled icon-xxs-smallest fa fa-facebook"></a>
+                                            </li>
+                                            <li>
+                                                <a href="<?=$this->twitter_url?>" class="icon icon-round icon-gray-dark-filled icon-xxs-smallest fa fa-twitter"></a>
+                                            </li>
+                                            <li>
+                                                <a href="<?=$this->instagram_url?>" class="icon icon-round icon-gray-dark-filled icon-xxs-smallest fa fa-instagram"></a>
+                                            </li>
+                                            <li>
+                                                <a href="<?=$this->youtube_url?>" class="icon icon-round icon-gray-dark-filled icon-xxs-smallest fa fa-youtube"></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="rd-navbar-group rd-navbar-search-wrap">
+                                <div class="rd-navbar-panel">
+                                    <button data-custom-toggle=".rd-navbar-nav-wrap" data-custom-toggle-disable-on-blur="true" class="rd-navbar-toggle">
+                                        <span></span>
+                                    </button>
+                                    <!--a href="/" class="rd-navbar-brand brand">
+                                        <img src="/images/logos/bwlogo-black.png" alt="logo">
+                                    </a-->
+                                </div>
+                                <div class="rd-navbar-nav-wrap">
+                                    <div class="rd-navbar-nav-inner">
+                                        
+                                        <?=$this->navigation('Navigation')->menu()->setPartial(['partials/menu', 'default'])->render() ?>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </header>
+
+            <?php echo $this->content; ?>
+
+            <section class="section-40 section-sm-top-75 section-sm-bottom-60 bg-cod-gray">
+                <div class="shell text-center text-sm-left">
+                    <div class="range range-sm-middle range-md-center range-lg-left">
+                        <div class="cell-md-11 cell-lg-3"><a href="/" class="brand"><img src="/images/logos/bw/full_icons/Icon_192.png" alt="logo"/></a></div>
+                        <div class="cell-sm-7 cell-md-6 cell-lg-5 offset-top-30 offset-lg-top-0">
+                            <div class="wrap-justify">
+                                <address class="contact-info text-left">
+                                    <div class="unit unit-horizontal unit-spacing-xs unit-middle unit-align-center unit-sm-left">
+                                        <div class="unit-body"><span class="link-white-03 reveal-inline text-light">Top Beans Ltd<br>UK Company No: SC520820</span></div>
+                                    </div>
+                                </address>
+                                <address class="contact-info text-left">
+                                    <div class="unit unit-horizontal unit-spacing-xs unit-middle unit-align-center unit-sm-left">
+                                        <div class="unit-left"><span class="icon icon-md-custom icon-gunsmoke material-icons-phone"></span></div>
+                                        <div class="unit-body">
+                                            <div class="link-wrap"><a href="callto:<?=$this->phone_number?>" class="link-white-03 text-light"><?=$this->phone_number?></a></div>
+                                            <div class="link-wrap"><a href="mailto:<?=$this->email_address?>" class="link-white-03 text-light"><?=$this->email_address?></a></div>
+                                        </div>
+                                    </div>
+                                </address>
+                            </div>
+                        </div>
+                        <div class="cell-sm-5 cell-lg-4 offset-top-30 offset-lg-top-0 text-md-center">
+                            <ul class="list-inline list-inline-xs">
+                                <li><a href="<?=$this->facebook_url?>" class="icon icon-sm-custom link-tundora-inverse fa-facebook"></a></li>
+                                <li><a href="<?=$this->twitter_url?>" class="icon icon-sm-custom link-tundora-inverse fa-twitter"></a></li>
+                                <li><a href="<?=$this->instagram_url?>" class="icon icon-sm-custom link-tundora-inverse fa-instagram"></a></li>
+                                <li><a href="<?=$this->youtube_url?>" class="icon icon-sm-custom link-tundora-inverse fa-youtube"></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="page-foot page-foot-default section-35 bg-gray-base">
+                <div class="shell">
+                    <div class="range text-center">
+                        <div class="cell-xs-12">
+                            <p class="rights small">
+                                <span>Top Beans Ltd</span>
+                                <span>&nbsp;&#169;&nbsp;</span>
+                                <span id="copyright-year"></span>
+                                <span>All Rights Reserved</span>
+                                <br class="veil-sm">
+                                <a href="/Index/terms" class="link-primary-inverse">Terms of Use</a>
+                                <span>and</span>
+                                <a href="/Index/privacy" class="link-primary-inverse">Privacy Policy</a>
+                                <!-- {%FOOTER_LINK}-->
+                            </p>
+                        </div>
+                        <div class="cell-xs-12">
+                            <p class="rights small">
+                                <a target="_blank" href="/wordpress/wp-login.php" class="link-primary-inverse">Word Press</a>
+                                <span>|</span>
+                                <a href="/Admin/index" class="link-primary-inverse">Admin</a>
+                                <!-- {%FOOTER_LINK}-->
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+        <div id="form-output-global" class="snackbars"></div>
+        <div tabindex="-1" role="dialog" aria-hidden="true" class="pswp">
+            <div class="pswp__bg"></div>
+            <div class="pswp__scroll-wrap">
+                <div class="pswp__container">
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                </div>
+                <div class="pswp__ui pswp__ui--hidden">
+                    <div class="pswp__top-bar">
+                        <div class="pswp__counter"></div>
+                        <button title="Close (Esc)" class="pswp__button pswp__button--close"></button>
+                        <button title="Share" class="pswp__button pswp__button--share"></button>
+                        <button title="Toggle fullscreen" class="pswp__button pswp__button--fs"></button>
+                        <button title="Zoom in/out" class="pswp__button pswp__button--zoom"></button>
+                        <div class="pswp__preloader">
+                            <div class="pswp__preloader__icn">
+                                <div class="pswp__preloader__cut">
+                                    <div class="pswp__preloader__donut"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                        <div class="pswp__share-tooltip"></div>
+                    </div>
+                    <button title="Previous (arrow left)" class="pswp__button pswp__button--arrow--left"></button>
+                    <button title="Next (arrow right)" class="pswp__button pswp__button--arrow--right"></button>
+                    <div class="pswp__caption">
+                        <div class="pswp__caption__cent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <?php echo $this->headScript(); ?>
+        
+        <?php echo $this->partial("layout/messages", array('succ' => $this->succ, 'err' => $this->err, 'info' => $this->info, 'warning' => $this->warning)); ?>
+        
+        <?php if ($this->analytics): ?>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+          ga('create', '<?=$this->analytics?>', 'auto');
+          ga('send', 'pageview');
+        </script>                
+        <?php endif;?>
+        
+    </body>
+</html>

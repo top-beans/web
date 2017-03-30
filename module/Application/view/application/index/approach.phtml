@@ -1,0 +1,92 @@
+<section style="background-image: url(/images/home-slider-1-slide-2.jpg);" class="section-30 section-sm-40 section-md-66 section-lg-bottom-90 bg-gray-dark page-title-wrap">
+  <div class="shell">
+    <div class="page-title">
+      <h2>What we do</h2>
+    </div>
+  </div>
+</section>
+
+
+<section class="section-66 section-sm-90 section-lg-bottom-120">
+  <div class="shell">
+    <h3><?=$whatWeDo->getTitle()?></h3>
+    <div class="range range-lg-justify offset-top-30" style="font-size: 16px;">
+      <div class="cell-sm-6 cell-lg-5 text-secondary">
+        <div class="inset-sm-right-15 inset-lg-right-0">
+            <?=$whatWeDo->getContent()?>
+        </div>
+      </div>
+      <div class="cell-sm-6 offset-top-40 offset-sm-top-0">
+        <div class="shift-sm-top-1">
+          <ul class="list-progress">
+            <li>
+              <p class="animated fadeIn">Supply Green Kenya Coffee</p>
+              <div data-value="95" data-stroke="4" data-easing="linear" data-counter="true" data-duration="1000" data-trail="100" class="progress-bar-js progress-bar-horizontal progress-bar-red-orange-1"></div>
+            </li>
+            <li>
+              <p class="animated fadeIn">Strive for Customer Satisfaction</p>
+              <div data-value="98" data-stroke="4" data-easing="linear" data-counter="true" data-duration="1000" data-trail="100" class="progress-bar-js progress-bar-horizontal progress-bar-gorse"></div>
+            </li>
+            <li>
+              <p class="animated fadeIn">Maintain Provenance &amp; Ethical Farming</p>
+              <div data-value="95" data-stroke="4" data-easing="linear" data-counter="true" data-duration="1000" data-trail="100" class="progress-bar-js progress-bar-horizontal progress-bar-dodger-blue"></div>
+            </li>
+            <li>
+              <p class="animated fadeIn">Live for the Coffee Hunt</p>
+              <div data-value="100" data-stroke="4" data-easing="linear" data-counter="true" data-duration="1000" data-trail="100" class="progress-bar-js progress-bar-horizontal progress-bar-primary"></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section data-on="false" data-md-on="true" style="background-image: url(/images/parallax-1.jpg);" class="rd-parallax bg-gray-base bg-image">
+    <div data-speed="0.33" data-type="media" data-url="/images/parallax-1.jpg" class="rd-parallax-layer"></div>
+    <div data-speed="0" data-type="html" class="rd-parallax-layer">
+        <div class="section-50 section-sm-75 section-lg-top-100 section-lg-bottom-120">
+            <div class="shell">
+                <div class="range range-sm-center">
+                    <div class="cell-sm-11 cell-md-10 cell-lg-9 text-center">
+                        <h3><?=$aboutKenyanCoffee->getTitle()?></h3>
+                    </div>
+                </div>
+                <div class="range">
+                    <div class="cell-sm-12 cell-md-12 cell-lg-12">
+                        <?=$aboutKenyanCoffee->getContent()?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="section-different-grades-n-sizes" class="section-66 section-sm-90 section-lg-bottom-120 text-secondary">
+    <div class="section-50 section-sm-75 section-lg-top-0 section-lg-bottom-120">
+        <div class="shell">
+            <div class="range range-sm-center">
+                <div class="cell-sm-11 cell-md-10 cell-lg-9 text-center">
+                    <h3><?=$this->gradesOfCoffee->getName()?></h3>
+                    <p>
+                        <?=$this->gradesOfCoffee->getDescription()?>
+                    </p>
+                </div>
+            </div>
+            <div class="range">
+                <?php if ($this->gradesOfCoffeePosts != null && count($this->gradesOfCoffeePosts) > 0): foreach ($this->gradesOfCoffeePosts as $post): ?>
+                    <div class="cell-sm-6 cell-md-4 offset-top-50 offset-sm-top-45">
+                        <article class="icon-box-vertical">
+                            <h5 class="icon-box-header" style="border-bottom: 1px solid #aaa;"><?=$post->getTitle()?></h5>
+                            <?=$post->getContent()?>
+                        </article>
+                    </div>
+                <?php endforeach;endif; ?>
+            </div>
+            <div class="range offset-top-30 offset-sm-top-45">
+                <div class="cell-xs-12 text-center"><a href="/Index/buyorsample" class="btn btn-xl btn-primary">buy or sample</a></div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,123 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 25-Feb-2017, 11:35:01
+    Author     : rahman
+*/
+
+.pointer-cursor {
+    cursor: pointer;
+}
+
+#section-different-grades img {
+    display:none;
+}
+
+#section-different-grades-n-sizes img {
+    max-width:50%;
+}
+
+.plain-row {
+    text-align:left;
+    float:left; 
+    width:100%;
+}
+
+.list-row {
+    text-align:left;
+    float:left; 
+    border-bottom: 1px solid #999; 
+    border-left: 1px solid #999; 
+    border-right: 1px solid #999;
+    width:100%;
+    color: #000;
+}
+
+.odd-row { background: #eee; }
+.inactive { background: lightpink; }
+.header-row { background: #ccc; border-top:1px solid #999; color: #000; font-weight: bold;}
+
+.col1 { width:8.3%; }
+.col2 { width:16.6%; }
+.col3 { width:25%; }
+.col4 { width:33.3%; }
+.col5 { width:41.6%; }
+.col6 { width:50%; }
+.col7 { width:58.3%; }
+.col8 { width:66.6%; }
+.col9 { width:75%; }
+.col10 { width:83.3%; }
+.col11 { width:91.6%; }
+.col12 { width:100%; }
+
+.col1,.col2,.col3,.col4,.col5,.col6,.col7,.col8,.col9,.col10,.col11,.col12 { 
+    float:left;
+}
+
+.plain-row > div.col1,
+.plain-row > div.col2,
+.plain-row > div.col3,
+.plain-row > div.col4,
+.plain-row > div.col5,
+.plain-row > div.col6,
+.plain-row > div.col7,
+.plain-row > div.col8,
+.plain-row > div.col9,
+.plain-row > div.col10,
+.plain-row > div.col11,
+.plain-row > div.col12 {
+    padding: 1px 1px 1px 1px;
+}
+
+.list-row > div.col1,
+.list-row > div.col2,
+.list-row > div.col3,
+.list-row > div.col4,
+.list-row > div.col5,
+.list-row > div.col6,
+.list-row > div.col7,
+.list-row > div.col8,
+.list-row > div.col9,
+.list-row > div.col10,
+.list-row > div.col11,
+.list-row > div.col12 {
+    padding: 3px 5px 3px 5px;
+}
+
+.lg-col-pad > .list-row > div.col1,
+.lg-col-pad > .list-row > div.col2,
+.lg-col-pad > .list-row > div.col3,
+.lg-col-pad > .list-row > div.col4,
+.lg-col-pad > .list-row > div.col5,
+.lg-col-pad > .list-row > div.col6,
+.lg-col-pad > .list-row > div.col7,
+.lg-col-pad > .list-row > div.col8,
+.lg-col-pad > .list-row > div.col9,
+.lg-col-pad > .list-row > div.col10,
+.lg-col-pad > .list-row > div.col11,
+.lg-col-pad > .list-row > div.col12,
+.lg-col-pad > .plain-row > div.col1,
+.lg-col-pad > .plain-row > div.col2,
+.lg-col-pad > .plain-row > div.col3,
+.lg-col-pad > .plain-row > div.col4,
+.lg-col-pad > .plain-row > div.col5,
+.lg-col-pad > .plain-row > div.col6,
+.lg-col-pad > .plain-row > div.col7,
+.lg-col-pad > .plain-row > div.col8,
+.lg-col-pad > .plain-row > div.col9,
+.lg-col-pad > .plain-row > div.col10,
+.lg-col-pad > .plain-row > div.col11,
+.lg-col-pad > .plain-row > div.col12 {
+    padding: 5px;
+}
+
+.border-aaa-top {
+    border-top: 1px solid #aaa;
+}
+
+.pointer-cursor {
+    cursor: pointer;
+}

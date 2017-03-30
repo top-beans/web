@@ -1,0 +1,47 @@
+<section style="background-image: url(/images/bg-image-4.jpg)" class="section-30 section-sm-40 section-md-66 section-lg-bottom-90 bg-gray-dark page-title-wrap">
+    <div class="shell">
+        <div class="page-title">
+            <h2>Contact us</h2>
+        </div>
+    </div>
+</section>
+<section class="section-60 section-sm-top-90 section-sm-bottom-100">
+    <div class="shell">
+        <div class="range range-md-justify">
+            <div class="cell-md-5 cell-lg-4">
+                <div class="inset-md-right-15 inset-lg-right-0">
+                    <div class="range">
+                        <div class="cell-sm-10 cell-md-12">
+                            <h3>How to find us</h3>
+                            <p class="offset-sm-top-40 text-secondary">If you have any questions, just fill in the contact form, and we will answer you shortly.</p>
+                        </div>
+                        <div class="cell-sm-6 cell-md-12 offset-top-30 offset-sm-top-45">
+                            <h5>Contacts</h5>
+                            <address class="contact-info">
+                                <dl class="list-terms-inline">
+                                    <dt>Telephone</dt>
+                                    <dd>
+                                        <a href="callto:<?=$this->phoneNumber->getContent()?>" class="link-secondary"><?=$this->phoneNumber->getContent()?></a>
+                                    </dd>
+                                </dl>
+                                <dl class="list-terms-inline">
+                                    <dt>E-mail</dt>
+                                    <dd>
+                                        <a href="mailto:<?=$this->emailAddress->getContent()?>" class="link-primary"><?=$this->emailAddress->getContent()?></a>
+                                    </dd>
+                                </dl>
+                            </address>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell-md-7 cell-lg-6 offset-top-50 offset-md-top-0">
+                <contact-form></contact-form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<?php if ($this->ourTeam != null): ?>
+    <?php echo $this->ourTeam->getContent(); ?>
+<?php endif; ?>
