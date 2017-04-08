@@ -34,7 +34,7 @@ namespace Application\Controller {
                 $username = trim(strtolower($data->getUsername()));
                 $password = $data->getPassword();
                 $user     = $this->usersRepository->find($username);
-                ;
+                
                 if ($user == null) {
                     throw new \Exception("Invalid credentials");
                 }

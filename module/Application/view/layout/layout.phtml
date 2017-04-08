@@ -102,20 +102,21 @@
                                 </div>
                             </div>
                             <div class="rd-navbar-group rd-navbar-search-wrap">
-                                <div class="rd-navbar-panel">
-                                    <button data-custom-toggle=".rd-navbar-nav-wrap" data-custom-toggle-disable-on-blur="true" class="rd-navbar-toggle">
-                                        <span></span>
-                                    </button>
-                                    <!--a href="/" class="rd-navbar-brand brand">
-                                        <img src="/images/logos/bwlogo-black.png" alt="logo">
-                                    </a-->
-                                </div>
                                 <div class="rd-navbar-nav-wrap">
                                     <div class="rd-navbar-nav-inner">
                                         
                                         <?=$this->navigation('Navigation')->menu()->setPartial(['partials/menu', 'default'])->render() ?>
                                         
                                     </div>
+                                </div>
+                                <div class="rd-navbar-panel">
+                                    <button data-custom-toggle=".rd-navbar-nav-wrap" data-custom-toggle-disable-on-blur="true" class="rd-navbar-toggle">
+                                        <span></span>
+                                    </button>
+                                    <a href="#" class="rd-navbar-brand brand">
+                                        <i class="fa fa-shopping-cart fa-2x cart-icon"></i>
+                                        <span class="cart-badge">2</span>
+                                    </a>
                                 </div>
                             </div>
                         </div>
