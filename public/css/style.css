@@ -123,7 +123,7 @@ and open the template in the editor.
 }
 
 i.cart-icon {
-    color: firebrick;
+    color: darkslategray;
 }
 
 .cart-badge {
@@ -134,10 +134,10 @@ i.cart-icon {
     height: 22px;
     position: relative;
     top: -6px;
-    right: 4px;
+    right: 6px;
     display: inline-block;
     box-shadow: 0 0 9px 0 #000000;
-    background: rgba(125, 255, 125, 0.81);
+    background: rgba(125, 255, 125, 0.7);
     font-weight: 900;
     border-radius: 50%;
     text-align: center;
