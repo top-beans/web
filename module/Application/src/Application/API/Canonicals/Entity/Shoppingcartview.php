@@ -18,8 +18,6 @@ class Shoppingcartview
      * @var integer
      *
      * @ORM\Column(name="shoppingCartKey", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $shoppingcartkey;
 
