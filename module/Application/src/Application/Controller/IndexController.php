@@ -74,30 +74,6 @@ namespace Application\Controller {
             ];
         }
         
-        public function wpAction() {
-            
-            $catSlug    = $this->p1;
-            $subCatSlug = $this->p2;
-            $subCats    = $this->wpRepo->fetchChildCategories($catSlug);
-
-            if ($subCatSlug == null && $subCats != null) {
-                $subCatSlug = $subCats[0]->getSlug();
-
-                $nodeId = "$subCatSlug.$catSlug.$this->controller.$this->action";
-                $navNode = $this->navService->findOneById($nodeId);
-
-                if ($navNode != null) {
-                    $navNode->setActive(true);
-                }
-            }
-            
-            return [
-                'cat'       => $this->wpRepo->fetchCategoryBySlug($catSlug),
-                'subCat'    => $this->wpRepo->fetchCategoryBySlug($subCatSlug),
-                'posts'     => $this->wpRepo->fetchCategoryPostsBySlug($subCatSlug == null ? $catSlug : $subCatSlug), 
-            ];
-        }
-        
         public function previewAction() {
             $this->navService->findOneById(Navigation::Preview)->setVisible(true);
             $theLoop = $this->wpRepo->fetchTheLoop($this->getRequest()->getQuery()->toString());

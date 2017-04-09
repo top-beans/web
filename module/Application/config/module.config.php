@@ -78,7 +78,7 @@ namespace Application {
                 'Zend\Log\LoggerAbstractServiceFactory',
             ],
             'factories' => [
-                'Navigation'        => 'Application\API\Repositories\Factories\WordPressNavigationFactory',
+                'Navigation'        => 'Zend\Navigation\Service\DefaultNavigationFactory',
                 'WordPrRepo'        => 'Application\API\Repositories\Factories\WordPressRepositoryFactory',
                 'EMailSvc'          => 'Application\API\Repositories\Factories\EMailServiceFactory',
                 'UsersRepo'         => 'Application\API\Repositories\Factories\UsersRepositoryFactory',
@@ -124,14 +124,6 @@ namespace Application {
         ],
 
         'ENV' => (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : (getenv('REDIRECT_APPLICATION_ENV') ? getenv('REDIRECT_APPLICATION_ENV') : 'development')),
-
-        'wordpress_root_node' => [
-            'route'         => 'web', 
-            'controller'    => 'Index', 
-            'action'        => 'wp', 
-            'rootslug'      => CategorySlugs::Root, 
-            'requireslogin' => false
-        ], 
 
         'navigation' => [
             'default' => [
