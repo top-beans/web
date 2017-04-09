@@ -11,7 +11,7 @@ use JMS\Serializer\Annotation\Type;
  * @ORM\Table(name="Coffees")
  * @ORM\Entity
  */
-class Coffees
+class Coffee
 {
     /**
      * @Type("integer")

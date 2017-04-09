@@ -43,6 +43,14 @@ class Shoppingcart
      * @Type("integer")
      * @var integer
      *
+     * @ORM\Column(name="quantity", type="integer", nullable=true)
+     */
+    private $quantity;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
      * @ORM\Column(name="coffeeKey", type="integer", nullable=false)
      */
     private $requesttypekey;
@@ -58,12 +66,14 @@ class Shoppingcart
     function getShoppingcartkey() { return $this->shoppingcartkey; }
     function getCookiekey() { return $this->cookiekey; }
     function getCoffeekey() { return $this->coffeekey; }
+    function getQuantity() { return $this->quantity; }
     function getRequesttypekey() { return $this->requesttypekey; }
     function getCreateddate() { return $this->createddate; }
 
     function setShoppingcartkey($val) { $this->shoppingcartkey = $val; } 
     function setCookiekey($val) { $this->cookiekey = $val; } 
     function setCoffeekey($val) { $this->coffeekey = $val; } 
+    function setQuantity($val) { $this->quantity = $val; } 
     function setRequesttypekey($val) { $this->requesttypekey = $val; } 
     function setCreateddate($val) { $this->createddate = $val; } 
 }
