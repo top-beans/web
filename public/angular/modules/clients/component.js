@@ -32,11 +32,11 @@ angular.module('clients')
         };
         
         self.exportAllClients = function() {
-            location.href = "/api/ClientsApi/exportallclientstoexcel";
+            location.href = "/api/ClientsApi/exportalltoexcel";
         };
         
         self.exportSearchClients = function() {
-            location.href = "/excelexport/ClientsApi/exportsearchclientstoexcel/" + $.param(self.searchParams);
+            location.href = "/excelexport/ClientsApi/exporttoexcel/" + $.param(self.searchParams);
         };
         
         $scope.$watchGroup([

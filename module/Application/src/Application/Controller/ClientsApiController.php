@@ -39,7 +39,7 @@ namespace Application\Controller {
             }
         }
         
-        public function exportallclientstoexcelAction() {
+        public function exportalltoexcelAction() {
             try {
                 if (!$this->authService->hasIdentity()) {
                     throw new \Exception("Unauthorized Access");
@@ -56,7 +56,7 @@ namespace Application\Controller {
             }
         }
         
-        public function exportsearchclientstoexcelAction () {
+        public function exporttoexcelAction () {
             try {
                 if (!$this->authService->hasIdentity()) {
                     throw new \Exception("Unauthorized Access");

@@ -2,41 +2,43 @@
     <div class="shell">
         <div class="row">
             <div id="scrollPanel" class="col-md-12 form-modern text-secondary">
-                <h2>Clients</h2>
+                <h5>Clients</h5>
 
-                <div class="range">
-                    <div class="cell-sm-2">
+                <div class="row">
+                    <div class="col-sm-2">
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="Code Search"
                                    ng-model-options="{ debounce: 500 }"
                                    ng-model="$ctrl.searchParams.criteria[1].clientcode">
                         </div>
                     </div>
-                    <div class="cell-sm-4">
+                    <div class="col-sm-4">
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="Name, Address, or Postcode Search"
                                    ng-model-options="{ debounce: 500 }"
                                    ng-model="$ctrl.searchParams.criteria[0].searchtext">
                         </div>
                     </div>
-                    <div class="cell-sm-4">
-                        <div class="form-group">
-                            <button class="btn btn-success" ng-click="$ctrl.addClient()">
-                                <span class="glyphicon glyphicon-plus"></span> Add
+                    <div class="col-sm-4">
+                        <div class="pull-left">
+                            <button class="btn btn-sm btn-primary" ng-click="$ctrl.addClient()">
+                                <span class="fa fa-plus"></span> Add
                             </button>
-
-                            <button class="btn btn-primary" ng-click="$ctrl.exportSearchClients()">
+                        </div>
+                        <div class="pull-left">
+                            &nbsp;
+                            <button class="btn btn-sm btn-primary" ng-click="$ctrl.exportSearchClients()">
                                 <span class="fa fa-download"></span> Export
                             </button>
                         </div>
                     </div>
-                    <div class="cell-sm-4">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label><input type="checkbox"
                                           ng-model-options="{ debounce: 1000 }"
                                           ng-model="$ctrl.searchParams.criteria[2].approvedforbusiness"> Approved Only</label>
-                        </div>
                     </div>
+                </div>
                 </div>
                 
                 <div class="list-row header-row">
@@ -54,7 +56,7 @@
                 <div ng-if="(!$ctrl.clients.length && $ctrl.searchParams.notFetching)">
                     <div class="list-row">
                         <div class="col12">
-                            <em>No Results</em>
+                            <i>No Results</i>
                         </div>
                     </div>
                 </div>

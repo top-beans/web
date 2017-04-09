@@ -4,7 +4,7 @@ namespace Application\API\Repositories\Interfaces {
     
     use Application\API\Canonicals\Entity\Shoppingcart;
     
-    interface IShoppingCartRepository {
+    interface ICartRepository {
         public function getAllByCookie($cookieKey);
         public function getTotalByCookie($cookieKey);
         
