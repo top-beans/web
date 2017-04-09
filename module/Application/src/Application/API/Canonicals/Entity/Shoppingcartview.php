@@ -18,6 +18,8 @@ class Shoppingcartview
      * @var integer
      *
      * @ORM\Column(name="shoppingCartKey", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $shoppingcartkey;
 
@@ -49,7 +51,7 @@ class Shoppingcartview
      * @Type("integer")
      * @var integer
      *
-     * @ORM\Column(name="coffeeKey", type="integer", nullable=false)
+     * @ORM\Column(name="requestTypeKey", type="integer", nullable=false)
      */
     private $requesttypekey;
 

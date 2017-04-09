@@ -7,6 +7,7 @@ namespace Application\API\Repositories\Implementations {
         Doctrine\ORM\Mapping\ClassMetadata,
         Application\API\Repositories\Interfaces\ICartRepository,
         Application\API\Repositories\Base\IRepository,
+        Application\API\Repositories\Base\Repository,
         Application\API\Canonicals\Entity\Shoppingcart,
         Application\API\Canonicals\Entity\Shoppingcartview;
 
@@ -41,8 +42,8 @@ namespace Application\API\Repositories\Implementations {
             $this->cartRepo->add($cart);
         }
 
-        public function deleteFromCart($cartKey, $coffeeKey) {
-            $items = $this->cartRepo->findBy(['shoppingcartkey' => $cartKey, 'coffeekey' => $coffeeKey]);
+        public function deleteFromCart($cookiekey, $coffeeKey) {
+            $items = $this->cartRepo->findBy(['cookiekey' => $cookiekey, 'coffeekey' => $coffeeKey]);
             
             if ($items == null || count($items) == 0) {
                 return;
@@ -51,11 +52,11 @@ namespace Application\API\Repositories\Implementations {
             }
         }
 
-        public function getAllByCookie($cookieKey) {
+        public function getCart($cookieKey) {
             return $this->cartViewRepo->findBy(['cookiekey' => $cookieKey]);
         }
 
-        public function getTotalByCookie($cookieKey) {
+        public function getCartSize($cookieKey) {
             return $this->cartViewRepo->count(['cookiekey' => $cookieKey]);
         }
 

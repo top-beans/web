@@ -51,7 +51,7 @@ class Shoppingcart
      * @Type("integer")
      * @var integer
      *
-     * @ORM\Column(name="coffeeKey", type="integer", nullable=false)
+     * @ORM\Column(name="requestTypeKey", type="integer", nullable=false)
      */
     private $requesttypekey;
 

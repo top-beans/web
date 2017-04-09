@@ -9,6 +9,8 @@
             "public/vendor/angular-moment/angular-moment.min.js",
             "public/vendor/angular-resource/angular-resource.min.js",
             "public/vendor/angular-bootstrap/ui-bootstrap-tpls.min.js",
+            "public/vendor/angular.uuid2/dist/angular-uuid2.min.js",
+            "public/vendor/angular-cookies/angular-cookies.min.js",
             "public/vendor/lodash/dist/lodash.min.js",
             "public/vendor/toastr/toastr.min.js",
             "public/vendor/ladda/dist/ladda.min.js",

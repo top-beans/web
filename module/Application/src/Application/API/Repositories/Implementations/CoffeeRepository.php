@@ -9,6 +9,7 @@ namespace Application\API\Repositories\Implementations {
         Application\API\Repositories\Interfaces\ICoffeeRepository,
         Application\API\Canonicals\Entity\Coffee,
         Application\API\Repositories\Base\IRepository,
+        Application\API\Repositories\Base\Repository,
         Application\API\Canonicals\Dto\CoffeeSearch;
 
     class CoffeeRepository implements ICoffeeRepository {
