@@ -1,0 +1,70 @@
+<?php
+
+namespace Application\API\Canonicals\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\AccessType;
+use JMS\Serializer\Annotation\Type;
+
+/**
+ * @AccessType("public_method")
+ * @ORM\Table(name="ShoppingCart")
+ * @ORM\Entity
+ */
+class Shoppingcart
+{
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="shoppingCartKey", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $shoppingcartkey;
+
+    /**
+     * @Type("string")
+     * @var string
+     *
+     * @ORM\Column(name="cookieKey", type="string", length=45, nullable=false)
+     */
+    private $cookiekey;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="coffeeKey", type="integer", nullable=false)
+     */
+    private $coffeekey;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="coffeeKey", type="integer", nullable=false)
+     */
+    private $requesttypekey;
+
+    /**
+     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="createdDate", type="datetime", nullable=false)
+     */
+    private $createddate;
+
+    function getShoppingcartkey() { return $this->shoppingcartkey; }
+    function getCookiekey() { return $this->cookiekey; }
+    function getCoffeekey() { return $this->coffeekey; }
+    function getRequesttypekey() { return $this->requesttypekey; }
+    function getCreateddate() { return $this->createddate; }
+
+    function setShoppingcartkey($val) { $this->shoppingcartkey = $val; } 
+    function setCookiekey($val) { $this->cookiekey = $val; } 
+    function setCoffeekey($val) { $this->coffeekey = $val; } 
+    function setRequesttypekey($val) { $this->requesttypekey = $val; } 
+    function setCreateddate($val) { $this->createddate = $val; } 
+}
+
