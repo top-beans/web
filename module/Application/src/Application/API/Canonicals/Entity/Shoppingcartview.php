@@ -59,6 +59,14 @@ class Shoppingcartview
      * @Type("DateTime<'Y-m-d\TH:i:sO'>")
      * @var \DateTime
      *
+     * @ORM\Column(name="updatedDate", type="datetime", nullable=false)
+     */
+    private $updateddate;
+
+    /**
+     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
+     * @var \DateTime
+     *
      * @ORM\Column(name="createdDate", type="datetime", nullable=false)
      */
     private $createddate;
@@ -228,6 +236,7 @@ class Shoppingcartview
     function getCoffeekey() { return $this->coffeekey; }
     function getQuantity() { return $this->quantity; }
     function getRequesttypekey() { return $this->requesttypekey; }
+    function getUpdateddate() { return $this->updateddate; }
     function getCreateddate() { return $this->createddate; }
     function getRequesttype() { return $this->requesttype; }
     function getPackaging() { return $this->packaging; }
@@ -255,6 +264,7 @@ class Shoppingcartview
     function setCoffeekey($val) { $this->coffeekey = $val; } 
     function setQuantity($val) { $this->quantity = $val; } 
     function setRequesttypekey($val) { $this->requesttypekey = $val; } 
+    function setUpdateddate($val) { $this->updateddate = $val; } 
     function setCreateddate($val) { $this->createddate = $val; } 
     function setRequesttype($val) { $this->requesttype = $val; } 
     function setPackaging($val) { $this->packaging = $val; } 

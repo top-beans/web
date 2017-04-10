@@ -41,6 +41,23 @@ namespace Application\Controller {
                 $cart->setCreateddate(new \DateTime());
                 $this->cartRepo->addToCart($cart);
                 
+                $response = ResponseUtils::createWriteResponse($cart);
+                return $this->jsonResponse($response);
+                
+            } catch (\Exception $ex) {
+                $response = ResponseUtils::createExceptionResponse($ex);
+                return $this->jsonResponse($response);
+            }
+        }
+        
+        public function updateAction() {
+            try {
+                $jsonData = $this->getRequest()->getContent();
+                $cart = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Entity\Shoppingcart", "json");
+                
+                $cart->setUpdateddate(new \DateTime());
+                $this->cartRepo->updateCart($cart);
+                
                 $response = ResponseUtils::createResponse();
                 return $this->jsonResponse($response);
                 
