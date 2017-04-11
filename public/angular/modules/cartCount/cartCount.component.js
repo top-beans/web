@@ -3,7 +3,7 @@
 angular.module('cartCount')
 
 .component('cartCount', {
-    templateUrl: '/angular/modules/cartCount/template.html',
+    templateUrl: '/angular/modules/cartCount/cartCount.template.html',
     controller: ['mycookie', 'cart', function (mycookie, cart) {
         var self = this;
         self.cartSize = 0;

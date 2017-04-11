@@ -163,9 +163,9 @@ class Shoppingcartview
      * @Type("string")
      * @var string
      *
-     * @ORM\Column(name="description", type="text", length=65535, nullable=false)
+     * @ORM\Column(name="producerStory", type="text", length=65535, nullable=false)
      */
-    private $description;
+    private $producerstory;
 
     /**
      * @Type("string")
@@ -249,7 +249,7 @@ class Shoppingcartview
     function getCurrency() { return $this->currency; }
     function getPrice() { return $this->price; }
     function getName() { return $this->name; }
-    function getDescription() { return $this->description; }
+    function getProducerstory() { return $this->producerstory; }
     function getProcessingmethod() { return $this->processingmethod; }
     function getCountry() { return $this->country; }
     function getRegion() { return $this->region; }
@@ -277,7 +277,7 @@ class Shoppingcartview
     function setCurrency($val) { $this->currency = $val; } 
     function setPrice($val) { $this->price = $val; } 
     function setName($val) { $this->name = $val; } 
-    function setDescription($val) { $this->description = $val; } 
+    function setProducerstory($val) { $this->producerstory = $val; } 
     function setProcessingmethod($val) { $this->processingmethod = $val; } 
     function setCountry($val) { $this->country = $val; } 
     function setRegion($val) { $this->region = $val; } 

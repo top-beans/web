@@ -72,8 +72,8 @@ class Coffee
     private $cropyear;
 
     /**
-     * @Type("decimal")
-     * @var decimal
+     * @Type("string")
+     * @var string
      *
      * @ORM\Column(name="cuppingScore", type="decimal", precision=10, scale=2, nullable=false)
      */
@@ -102,14 +102,6 @@ class Coffee
      * @ORM\Column(name="name", type="string", length=45, nullable=false)
      */
     private $name;
-
-    /**
-     * @Type("string")
-     * @var string
-     *
-     * @ORM\Column(name="description", type="text", length=65535, nullable=false)
-     */
-    private $description;
 
     /**
      * @Type("string")
@@ -147,6 +139,14 @@ class Coffee
      * @Type("string")
      * @var string
      *
+     * @ORM\Column(name="producerStory", type="text", length=65535, nullable=false)
+     */
+    private $producerstory;
+
+    /**
+     * @Type("string")
+     * @var string
+     *
      * @ORM\Column(name="priceBaseUnit", type="string", length=45, nullable=true)
      */
     private $pricebaseunit;
@@ -175,6 +175,7 @@ class Coffee
      */
     private $active;
 
+    function getCoffeekey() { return $this->coffeekey; }
     function getPackaging() { return $this->packaging; }
     function getAvailability() { return $this->availability; }
     function getWarehouse() { return $this->warehouse; }
@@ -185,16 +186,17 @@ class Coffee
     function getCurrency() { return $this->currency; }
     function getPrice() { return $this->price; }
     function getName() { return $this->name; }
-    function getDescription() { return $this->description; }
     function getProcessingmethod() { return $this->processingmethod; }
     function getCountry() { return $this->country; }
     function getRegion() { return $this->region; }
     function getProducer() { return $this->producer; }
+    function getProducerstory() { return $this->producerstory; }
     function getPricebaseunit() { return $this->pricebaseunit; }
     function getSensorialdescriptors() { return $this->sensorialdescriptors; }
     function getCultivars() { return $this->cultivars; }
     function getActive() { return $this->active; }
 
+    function setCoffeekey($val) { $this->coffeekey = $val; } 
     function setPackaging($val) { $this->packaging = $val; } 
     function setAvailability($val) { $this->availability = $val; } 
     function setWarehouse($val) { $this->warehouse = $val; } 
@@ -205,11 +207,11 @@ class Coffee
     function setCurrency($val) { $this->currency = $val; } 
     function setPrice($val) { $this->price = $val; } 
     function setName($val) { $this->name = $val; } 
-    function setDescription($val) { $this->description = $val; } 
     function setProcessingmethod($val) { $this->processingmethod = $val; } 
     function setCountry($val) { $this->country = $val; } 
     function setRegion($val) { $this->region = $val; } 
     function setProducer($val) { $this->producer = $val; } 
+    function setProducerstory($val) { $this->producerstory = $val; } 
     function setPricebaseunit($val) { $this->pricebaseunit = $val; } 
     function setSensorialdescriptors($val) { $this->sensorialdescriptors = $val; } 
     function setCultivars($val) { $this->cultivars = $val; } 

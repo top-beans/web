@@ -3,7 +3,7 @@
 angular.module('enquiries')
 
 .component('enquiries', {
-    templateUrl: '/angular/modules/enquiries/template.html',
+    templateUrl: '/angular/modules/enquiries/enquiries.template.html',
     controller: ['$http', 'moment', function ($http, moment) {
         var self = this;
 

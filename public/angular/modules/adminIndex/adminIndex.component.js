@@ -3,7 +3,7 @@
 angular.module('adminIndex').
 
 component('adminIndex', {
-    templateUrl: '/angular/modules/adminIndex/template.html',
+    templateUrl: '/angular/modules/adminIndex/adminIndex.template.html',
     controller: ['$http', 'md5', function ($http, md5) {
         var self = this;
 

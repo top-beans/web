@@ -3,7 +3,7 @@
 angular.module('client')
 
 .component('client', {
-    templateUrl: '/angular/modules/client/template.html',
+    templateUrl: '/angular/modules/client/client.template.html',
     bindings: { 
         client: '<',
         callback: '&'

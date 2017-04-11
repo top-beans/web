@@ -3,7 +3,7 @@
 angular.module('contactForm').
 
 component('contactForm', {
-    templateUrl: '/angular/modules/contactForm/template.html',
+    templateUrl: '/angular/modules/contactForm/contactForm.template.html',
     controller: ['$http', function ($http) {
         var self = this;
 

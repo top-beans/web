@@ -3,7 +3,7 @@
 angular.module('adminUsers')
 
 .component('adminUsers', {
-    templateUrl: '/angular/modules/adminUsers/template.html',
+    templateUrl: '/angular/modules/adminUsers/adminUsers.template.html',
     controller: ['$http', '$uibModal', 'moment', function ($http, $uibModal, moment) {
         var self = this;
 

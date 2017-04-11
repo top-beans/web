@@ -30,30 +30,23 @@
                                             <li ng-repeat="n in $ctrl.borderStars(coffee)">
                                                 <span class="icon icon-xxs material-icons-star_border"></span>
                                             </li>
-                                        </ul><span class="text-light">{{coffee.cuppingScore}} Cupping Score</span>
+                                        </ul><span class="text-light">{{coffee.cuppingscore}} Cupping Score</span>
                                     </div>
                                     <div class="product-description">
-                                        <p>
-                                            <strong>Producer:</strong> {{coffee.producer}}<br/>
-                                            <strong>Crop Year:</strong> {{coffee.cropYear}}<br/>
-                                            <strong>Processing:</strong> {{coffee.processingMethod}}<br/>
-                                            <!--strong>Availability:</strong> {{coffee.availability}}<br/-->
-                                            <strong>Packaging: </strong> {{coffee.packaging}}<br/>
-                                            <strong>Varieties:</strong> {{$ctrl.join(coffee.varieties, ', ')}}<br/>
-                                            <strong>Sensorial Descriptions:</strong> {{$ctrl.join(coffee.sensorialDescriptors, ', ')}}
-                                        </p>
+                                        <h6>{{coffee.producer}}</h6>
+                                        <p>{{coffee.producerstory}}</p>
                                     </div><a ng-href="{{coffee.url}}" class="btn btn-silver-outline product-details">Buy or Sample</a>
                                 </div>
                                 <div class="product-aside">
                                     <div class="product-aside-top">
                                         <p class="pricing-object pricing-object-xl price-current">
-                                            <span class="small small-middle">{{$ctrl.currencyPart(coffee.price)}}</span><span class="price">{{$ctrl.integerPart(coffee.price)}}</span><span class="small small-bottom">.{{$ctrl.fractionalPart(coffee.price)}}/{{coffee.priceBaseUnit}}</span>
+                                            <span class="small small-middle">{{coffee.currency}}</span><span class="price">{{coffee.price.substring(0, coffee.price.indexOf('.'))}}</span><span class="small small-bottom">{{coffee.price.substring(coffee.price.indexOf('.'))}}/{{coffee.pricebaseunit}}</span>
                                         </p>
                                     </div>
                                     <div class="product-aside-bottom">
                                         <div class="stepper-wrap">
                                             <p>Qty Available</p>
-                                            {{coffee.availableAmount}}
+                                            {{coffee.availableamount}}
                                         </div>
                                         <a ng-href="{{coffee.url}}" class="btn btn-icon btn-icon-left btn-primary product-control">
                                             <span>Buy or Sample</span>

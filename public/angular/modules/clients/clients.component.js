@@ -3,7 +3,7 @@
 angular.module('clients')
 
 .component('clients', {
-    templateUrl: '/angular/modules/clients/template.html',
+    templateUrl: '/angular/modules/clients/clients.template.html',
     controller: ['$http', '$scope', 'moment', function ($http, $scope, moment) {
         var self = this;
 
