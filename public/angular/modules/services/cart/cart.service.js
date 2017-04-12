@@ -27,12 +27,13 @@ service('cart', ['$http', function ($http) {
         });
     };
     
-    self.addToCart = function (cart) {
+    self.addToCart = function (cart, callback) {
         $http.post("/api/CartApi/add", cart).then(function (response) {
             if (!response.data.success) {
                 toastrErrorFromList(response.data.errors);
             } else {
                 self.getCartSize(cart.cookiekey, self.notify);
+                if (callback) { callback(response.data.writtenkey); }
             }
         });
     };

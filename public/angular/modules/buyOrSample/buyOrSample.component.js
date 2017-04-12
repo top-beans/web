@@ -7,7 +7,7 @@ angular.module('buyOrSample')
     bindings: {
         coffeeShopUrl: '@'
     },
-    controller: ['$http', function ($http) {
+    controller: ['$http', '$uibModal', 'mycookie', function ($http, $uibModal, mycookie) {
         var self = this;
 
         self.coffees = [];
@@ -38,31 +38,22 @@ angular.module('buyOrSample')
         };
         
 
-        self.addOrEditUser = function (oldUser) {
+        self.addToCart = function (coffee) {
             $uibModal.open({
                 backdrop: 'static',
-                templateUrl: '/angular/modals/user/user.template.html',
-                controller: ['$uibModalInstance', '$http', 'md5', modals.userCtrl],
+                templateUrl: '/angular/modals/addToCart/addToCart.template.html',
+                controller: ['$uibModalInstance', 'cart', 'coffeekey', 'cookiekey', modals.addToCartCtrl],
                 controllerAs: "$mctrl",
                 openedClass: 'page modal-open',
                 resolve: {
-                    user: oldUser,
-                    maxLoginTries: self.maxLoginTries,
-                    isReadOnly: false,
-                    isCustomerUser: false
+                    coffeekey: coffee.coffeekey,
+                    cookiekey: function () { return mycookie.get(); }
                 }
-            }).result.then(function (newUser) {
-                if (!newUser) {
-                    return;
-                } else if (!oldUser) {
-                    self.users.push(newUser);
-                    toastrSuccess("Added User Successfully");
-                } else {
-                    var index = _.indexOf(self.users, oldUser);
-                    self.users.splice(index, 1, newUser);
-                    toastrSuccess("Updated User Successfully");
-                }
-            }, function () { });
+            }).result.then(function () {
+                toastrSuccess("Added to Cart Successfully");
+            }, function () {
+                
+            });
         };
     }]
 });

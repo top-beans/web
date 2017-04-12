@@ -24,14 +24,13 @@ angular.module('adminUsers')
             $uibModal.open({
                 backdrop: 'static',
                 templateUrl: '/angular/modals/user/user.template.html',
-                controller: ['$uibModalInstance', '$http', 'md5', modals.userCtrl],
+                controller: ['$uibModalInstance', '$http', 'md5', 'user', 'maxLoginTries', 'isReadOnly', modals.userCtrl],
                 controllerAs: "$mctrl",
                 openedClass: 'page modal-open',
                 resolve: {
                     user: oldUser,
                     maxLoginTries: self.maxLoginTries,
-                    isReadOnly: false,
-                    isCustomerUser: false
+                    isReadOnly: false
                 }
             }).result.then(function (newUser) {
                 if (!newUser) {

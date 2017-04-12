@@ -1,12 +1,12 @@
 'use strict';
 
-namespace('modals').orderCtrl = function ($uibModalInstance, cart) {
+namespace('modals').addToCartCtrl = function ($uibModalInstance, cart, coffeekey, cookiekey) {
     var self = this;
 
     self.$onInit = function () {
         self.shoppingCart = new models.cart({
-            cookiekey: self.cookiekey,
-            coffeekey: self.coffeekey,
+            coffeekey: coffeekey,
+            cookiekey: cookiekey,
             requesttypekey: models.requestTypes.sample,
             quantity: 1
         });
@@ -26,11 +26,13 @@ namespace('modals').orderCtrl = function ($uibModalInstance, cart) {
         return errors.length === 0;
     };
 
-    self.order = function () {
+    self.addToCart = function () {
         if (!self.validate()) {
             return;
         } else {
-            cart.addToCart(self.shoppingCart);
+            cart.addToCart(self.shoppingCart, function (savedCart) {
+                $uibModalInstance.close(savedCart);
+            });
         }
     };
 

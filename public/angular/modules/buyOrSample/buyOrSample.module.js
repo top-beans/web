@@ -1,5 +1,7 @@
 'use strict';
 
 angular.module('buyOrSample', [
-    'angularMoment'
+    'ui.bootstrap',
+    'cart',
+    'mycookie'
 ]);

@@ -35,7 +35,7 @@
                                     <div class="product-description">
                                         <h6>{{coffee.producer}}</h6>
                                         <p>{{coffee.producerstory}}</p>
-                                    </div><a ng-href="{{coffee.url}}" class="btn btn-silver-outline product-details">Buy or Sample</a>
+                                    </div><a ng-click="$ctrl.addToCart(coffee)" class="btn btn-silver-outline product-details">Buy or Sample</a>
                                 </div>
                                 <div class="product-aside">
                                     <div class="product-aside-top">
@@ -48,7 +48,7 @@
                                             <p>Qty Available</p>
                                             {{coffee.availableamount}}
                                         </div>
-                                        <a ng-href="{{coffee.url}}" class="btn btn-icon btn-icon-left btn-primary product-control">
+                                        <a ng-click="$ctrl.addToCart(coffee)" class="btn btn-icon btn-icon-left btn-primary product-control">
                                             <span>Buy or Sample</span>
                                         </a>
                                     </div>

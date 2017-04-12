@@ -1,6 +1,6 @@
-'use strict';
+    'use strict';
 
-namespace('modals').userCtrl = function ($uibModalInstance, $http, md5, user, maxLoginTries, isReadOnly, isCustomerUser) {
+namespace('modals').userCtrl = function ($uibModalInstance, $http, md5, user, maxLoginTries, isReadOnly) {
     var self = this;
 
     self.user = new models.user(user);
