@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('mycookie', [
+angular.module('cookieService', [
     'angularUUID2',
     'ngCookies'
 ]);

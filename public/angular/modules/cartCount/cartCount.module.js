@@ -2,5 +2,5 @@
 
 angular.module('cartCount', [
     'cartService',
-    'mycookie'
+    'cookieService'
 ]);

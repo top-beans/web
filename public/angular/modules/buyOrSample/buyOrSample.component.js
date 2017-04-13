@@ -7,7 +7,7 @@ angular.module('buyOrSample')
     bindings: {
         coffeeShopUrl: '@'
     },
-    controller: ['$http', '$uibModal', 'mycookie', function ($http, $uibModal, mycookie) {
+    controller: ['$http', '$uibModal', 'cookieService', function ($http, $uibModal, cookieService) {
         var self = this;
 
         self.coffees = [];
@@ -47,7 +47,7 @@ angular.module('buyOrSample')
                 openedClass: 'page modal-open',
                 resolve: {
                     coffeekey: coffee.coffeekey,
-                    cookiekey: function () { return mycookie.get(); }
+                    cookiekey: function () { return cookieService.get(); }
                 }
             }).result.then(function () {
                 toastrSuccess("Added to Cart Successfully");

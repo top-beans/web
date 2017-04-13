@@ -4,7 +4,7 @@ angular.module('cartCount')
 
 .component('cartCount', {
     templateUrl: '/angular/modules/cartCount/cartCount.template.html',
-    controller: ['mycookie', 'cartService', function (mycookie, cartService) {
+    controller: ['cookieService', 'cartService', function (cookieService, cartService) {
         var self = this;
         self.cartSize = 0;
 
@@ -13,7 +13,7 @@ angular.module('cartCount')
         };
 
         self.$onInit = function () {
-            cartService.getCartSize(mycookie.get(), self.updateCartSize);
+            cartService.getCartSize(cookieService.get(), self.updateCartSize);
             cartService.subscribe(self.updateCartSize);
         };
     }]

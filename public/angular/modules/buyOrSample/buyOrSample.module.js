@@ -3,5 +3,5 @@
 angular.module('buyOrSample', [
     'ui.bootstrap',
     'cartService',
-    'mycookie'
+    'cookieService'
 ]);

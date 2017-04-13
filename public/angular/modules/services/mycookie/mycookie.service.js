@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('mycookie').
+angular.module('cookieService').
 
-service('mycookie', ['$cookies', 'uuid2', function ($cookies, uuid2) {
+service('cookieService', ['$cookies', 'uuid2', function ($cookies, uuid2) {
     var self = this;
     
     self.cookiekeyId = '__hy';
