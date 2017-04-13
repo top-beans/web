@@ -33,16 +33,22 @@ namespace Application\Controller {
             }
         }
         
-        public function addAction() {
+        public function patchAction() {
             try {
                 $jsonData = $this->getRequest()->getContent();
                 $cart = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Entity\Shoppingcart", "json");
                 
                 $cart->setCreateddate(new \DateTime());
-                $this->cartRepo->addToCart($cart);
+                $mergeErrors = $this->cartRepo->validateMergeCart($cart);
                 
-                $response = ResponseUtils::createWriteResponse($cart);
-                return $this->jsonResponse($response);
+                if (count($mergeErrors) > 0) {
+                    $response = ResponseUtils::createResponse($mergeErrors);
+                    return $this->jsonResponse($response);
+                } else {
+                    $this->cartRepo->mergeCart($cart);
+                    $response = ResponseUtils::createWriteResponse($cart);
+                    return $this->jsonResponse($response);
+                }
                 
             } catch (\Exception $ex) {
                 $response = ResponseUtils::createExceptionResponse($ex);

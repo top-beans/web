@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('cart').
+angular.module('cartService').
 
-service('cart', ['$http', function ($http) {
+service('cartService', ['$http', function ($http) {
     var self = this;
     
     self.subscriptions = [];
@@ -28,7 +28,7 @@ service('cart', ['$http', function ($http) {
     };
     
     self.addToCart = function (cart, callback) {
-        $http.post("/api/CartApi/add", cart).then(function (response) {
+        $http.patch("/api/CartApi/patch", cart).then(function (response) {
             if (!response.data.success) {
                 toastrErrorFromList(response.data.errors);
             } else {

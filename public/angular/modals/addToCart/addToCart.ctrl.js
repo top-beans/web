@@ -1,6 +1,6 @@
 'use strict';
 
-namespace('modals').addToCartCtrl = function ($uibModalInstance, cart, coffeekey, cookiekey) {
+namespace('modals').addToCartCtrl = function ($uibModalInstance, cartService, coffeekey, cookiekey) {
     var self = this;
 
     self.$onInit = function () {
@@ -8,15 +8,15 @@ namespace('modals').addToCartCtrl = function ($uibModalInstance, cart, coffeekey
             coffeekey: coffeekey,
             cookiekey: cookiekey,
             requesttypekey: models.requestTypes.sample,
-            quantity: 1
+            quantity: 0
         });
     };
 
     self.validate = function () {
         var errors = [];
 
-        if (!self.shoppingCart.requesttypekey === models.requestTypes.purchase && (!isValidInt(self.shoppingCart.quantity) || self.shoppingCart.quantity <= 0)) {
-            errors.push("quantity is required");
+        if (self.shoppingCart.requesttypekey === models.requestTypes.purchase && (!isValidInt(self.shoppingCart.quantity) || self.shoppingCart.quantity <= 0)) {
+            errors.push("A valid quantity greater than zero is required");
         }
 
         if (errors.length > 0) {
@@ -30,7 +30,7 @@ namespace('modals').addToCartCtrl = function ($uibModalInstance, cart, coffeekey
         if (!self.validate()) {
             return;
         } else {
-            cart.addToCart(self.shoppingCart, function (savedCart) {
+            cartService.addToCart(self.shoppingCart, function (savedCart) {
                 $uibModalInstance.close(savedCart);
             });
         }

@@ -1,6 +1,6 @@
 'use strict';
 
 angular.module('services', [
-    'cart',
+    'cartService',
     'mycookie'
 ]);

@@ -10,7 +10,8 @@ namespace Application\API\Repositories\Interfaces {
         
         public function addToCart(Shoppingcart $cart);
         public function updateCart(Shoppingcart $cart);
-        public function addOrUpdateCart(Shoppingcart $cart);
+        public function mergeCart(Shoppingcart $cart);
+        public function validateMergeCart(Shoppingcart $cart);
         public function deleteFromCart($cookiekey, $coffeeKey);
     }
 }

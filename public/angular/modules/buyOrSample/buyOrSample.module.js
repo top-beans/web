@@ -2,6 +2,6 @@
 
 angular.module('buyOrSample', [
     'ui.bootstrap',
-    'cart',
+    'cartService',
     'mycookie'
 ]);

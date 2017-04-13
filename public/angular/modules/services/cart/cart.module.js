@@ -1,3 +1,3 @@
 'use strict';
 
-angular.module('cart', []);
+angular.module('cartService', []);

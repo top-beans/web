@@ -42,7 +42,7 @@ angular.module('buyOrSample')
             $uibModal.open({
                 backdrop: 'static',
                 templateUrl: '/angular/modals/addToCart/addToCart.template.html',
-                controller: ['$uibModalInstance', 'cart', 'coffeekey', 'cookiekey', modals.addToCartCtrl],
+                controller: ['$uibModalInstance', 'cartService', 'coffeekey', 'cookiekey', modals.addToCartCtrl],
                 controllerAs: "$mctrl",
                 openedClass: 'page modal-open',
                 resolve: {

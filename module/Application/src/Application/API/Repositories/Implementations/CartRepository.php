@@ -34,7 +34,22 @@ namespace Application\API\Repositories\Implementations {
             $this->cartViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Shoppingcartview()))));
         }
 
-        public function addOrUpdateCart(Shoppingcart $cart) {
+        public function validateMergeCart(Shoppingcart $cart) {
+            $errors = [];
+            $matching = $this->cartRepo->findOneBy([
+                'cookiekey' => $cart->getCookiekey(),
+                'requesttypekey' => $cart->getRequesttypekey(),
+                'coffeekey' => $cart->getCoffeekey(),
+            ]);
+            
+            if ($matching != null && $cart->getShoppingcartkey() == null) {
+                $errors[] = "Item already on cart";
+            }
+            
+            return $errors;
+        }
+        
+        public function mergeCart(Shoppingcart $cart) {
             $this->cartRepo->addOrUpdate($cart);
         }
 
