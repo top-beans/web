@@ -1,14 +1,15 @@
 'use strict';
 
-namespace('modals').addToCartCtrl = function ($uibModalInstance, cartService, coffeekey, cookiekey) {
+namespace('modals').addToCartCtrl = function ($uibModalInstance, cartService, coffee, cookiekey) {
     var self = this;
 
     self.$onInit = function () {
+        self.packagingunit = coffee.packagingunit;
         self.shoppingCart = new models.cart({
-            coffeekey: coffeekey,
+            coffeekey: coffee.coffeekey,
             cookiekey: cookiekey,
             requesttypekey: models.requestTypes.sample,
-            quantity: 0
+            quantity: 1
         });
     };
 
@@ -16,7 +17,7 @@ namespace('modals').addToCartCtrl = function ($uibModalInstance, cartService, co
         var errors = [];
 
         if (self.shoppingCart.requesttypekey === models.requestTypes.purchase && (!isValidInt(self.shoppingCart.quantity) || self.shoppingCart.quantity <= 0)) {
-            errors.push("A valid quantity greater than zero is required");
+            errors.push("A valid integer greater than zero is required");
         }
 
         if (errors.length > 0) {

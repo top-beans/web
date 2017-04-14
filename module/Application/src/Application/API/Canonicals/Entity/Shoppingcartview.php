@@ -211,6 +211,14 @@ class Shoppingcartview
      * @Type("string")
      * @var string
      *
+     * @ORM\Column(name="packagingUnit", type="string", length=45, nullable=true)
+     */
+    private $packagingunit;
+    
+    /**
+     * @Type("string")
+     * @var string
+     *
      * @ORM\Column(name="sensorialDescriptors", type="text", length=65535, nullable=true)
      */
     private $sensorialdescriptors;
@@ -255,6 +263,7 @@ class Shoppingcartview
     function getRegion() { return $this->region; }
     function getProducer() { return $this->producer; }
     function getPricebaseunit() { return $this->pricebaseunit; }
+    function getPackagingunit() { return $this->packagingunit; }
     function getSensorialdescriptors() { return $this->sensorialdescriptors; }
     function getCultivars() { return $this->cultivars; }
     function getActive() { return $this->active; }
@@ -283,6 +292,7 @@ class Shoppingcartview
     function setRegion($val) { $this->region = $val; } 
     function setProducer($val) { $this->producer = $val; } 
     function setPricebaseunit($val) { $this->pricebaseunit = $val; } 
+    function setPackagingunit($val) { $this->packagingunit = $val; }
     function setSensorialdescriptors($val) { $this->sensorialdescriptors = $val; } 
     function setCultivars($val) { $this->cultivars = $val; } 
     function setActive($val) { $this->active = $val; } 
