@@ -9,5 +9,6 @@ angular.module('topbeans', [
     'buyOrSample',
     'clients',
     'client',
-    'cartCount'
+    'cartCount',
+    'shoppingCart'
 ]);

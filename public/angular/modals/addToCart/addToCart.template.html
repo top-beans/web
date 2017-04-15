@@ -13,16 +13,16 @@
               <label><input type="radio" name="optradio" ng-model="$mctrl.shoppingCart.requesttypekey" value="2">Make a Purchase</label>
             </div>
         </div>
-        <div class="col-md-6" style="margin-top: 15px;" ng-if="$mctrl.shoppingCart.requesttypekey === '2'">
+        <div class="col-md-6" style="margin: 15px 0;">
             <div class="input-group">
-                <input type="number" min="0" step="1" class="form-control"
-                   ng-model="$mctrl.shoppingCart.quantity"
-                   aria-describedby="basic-addon2">
-                <span class="input-group-addon" id="basic-addon2">x {{$mctrl.packagingunit}}</span>
-            </div>
+                <input type="number" min="0" step="1" class="form-control" 
+                       ng-disabled="$mctrl.shoppingCart.requesttypekey === '1'" 
+                       ng-model="$mctrl.shoppingCart.quantity"
+                       aria-describedby="basic-addon2">
+                <span class="input-group-addon" id="basic-addon2" 
+                      style='border-radius:0 5px 5px 0;' >x {{$mctrl.packagingunit}}</span>
         </div>
     </div>
-    
 </div>
 
 <div class="modal-footer">

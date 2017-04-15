@@ -26,6 +26,18 @@ service('cartService', ['$http', function ($http) {
             
         });
     };
+
+    self.getCart = function (cookieKey, callback) {
+        $http.get("/api/CartApi/getcart/" + cookieKey).then(function (response) {
+            if (!response.data.success) {
+                toastrErrorFromList(response.data.errors);
+            } else {
+                callback(response.data.items);
+            }
+        }, function (error) {
+            
+        });
+    };
     
     self.addToCart = function (cart, callback) {
         $http.patch("/api/CartApi/patch", cart).then(function (response) {
@@ -45,6 +57,8 @@ service('cartService', ['$http', function ($http) {
             } else {
                 self.getCartSize(cookieKey, self.notify);
             }
+        }, function (error) {
+            
         });
     };
 }]);

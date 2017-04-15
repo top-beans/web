@@ -32,6 +32,18 @@ namespace Application\Controller {
                 return $this->jsonResponse($response);
             }
         }
+
+        public function getcartAction() {
+            try {
+                $cookieKey = $this->p1;
+                $items = $this->cartRepo->getCart($cookieKey);
+                $response = ResponseUtils::createFetchResponse($items);
+                return $this->jsonResponse($response);
+            } catch (\Exception $ex) {
+                $response = ResponseUtils::createExceptionResponse($ex);
+                return $this->jsonResponse($response);
+            }
+        }
         
         public function patchAction() {
             try {
