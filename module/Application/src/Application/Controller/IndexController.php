@@ -55,6 +55,10 @@ namespace Application\Controller {
             ];
         }
         
+        public function shoppingcartAction() {
+            return [];
+        }
+        
         public function contactsAction() {
             return [
                 'phoneNumber'   => $this->wpRepo->fetchPostBySlug(PostSlugs::PhoneNumber),

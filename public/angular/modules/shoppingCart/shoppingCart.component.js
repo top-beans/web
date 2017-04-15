@@ -4,10 +4,7 @@ angular.module('shoppingCart')
 
 .component('shoppingCart', {
     templateUrl: '/angular/modules/shoppingCart/shoppingCart.template.html',
-    bindings: {
-        coffeeShopUrl: '@'
-    },
-    controller: ['$http', '$uibModal', 'cookieService', 'cartService', function ($http, $uibModal, cookieService, cartService) {
+    controller: ['cookieService', 'cartService', function (cookieService, cartService) {
         var self = this;
 
         self.cartItems = [];
@@ -34,7 +31,7 @@ angular.module('shoppingCart')
         };
         
         self.$onInit = function () {
-            self.getCoffees();
+            self.getCart();
         };
 
         self.updateCart = function (cartItem) {

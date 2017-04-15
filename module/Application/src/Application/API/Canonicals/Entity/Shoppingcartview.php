@@ -128,8 +128,8 @@ class Shoppingcartview
     private $cropyear;
 
     /**
-     * @Type("decimal")
-     * @var decimal
+     * @Type("string")
+     * @var string
      *
      * @ORM\Column(name="cuppingScore", type="decimal", precision=10, scale=2, nullable=false)
      */
