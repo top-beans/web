@@ -27,7 +27,7 @@ namespace Application\Controller {
                 }
                 
                 $items = $this->usersRepository->findAll();
-                $response = ResponseUtils::createFetchResponse($items);
+                $response = ResponseUtils::responseList($items);
                 return $this->jsonResponse($response);
                 
             } catch (\Exception $ex) {
@@ -46,7 +46,7 @@ namespace Application\Controller {
                 $user = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Entity\User", "json");
                 
                 $this->usersRepository->addUser($user);
-                $response = ResponseUtils::createWriteResponse($user);
+                $response = ResponseUtils::responseItem($user);
                 return $this->jsonResponse($response);
                 
             } catch (\Exception $ex) {
@@ -65,7 +65,7 @@ namespace Application\Controller {
                 $user = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Entity\User", "json");
                 
                 $this->usersRepository->updateUser($user, $user->getPassword());
-                $response = ResponseUtils::createWriteResponse($user);
+                $response = ResponseUtils::responseItem($user);
                 return $this->jsonResponse($response);
                 
             } catch (\Exception $ex) {
@@ -84,7 +84,7 @@ namespace Application\Controller {
                 $user = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Entity\User", "json");
                 
                 $this->usersRepository->addOrUpdateUser($user);
-                $response = ResponseUtils::createWriteResponse($user);
+                $response = ResponseUtils::responseItem($user);
                 return $this->jsonResponse($response);
                 
             } catch (\Exception $ex) {

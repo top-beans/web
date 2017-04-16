@@ -42,7 +42,7 @@ angular.module('client')
                 if (!response.data.success) {
                     toastrErrorFromList(response.data.errors, "Error Saving Client");
                 } else {
-                    self.callback({ newClient: response.data.writtenkey });
+                    self.callback({ newClient: response.data.item });
                     toastrSuccess("Saved Client Successfully");
                 }
             });

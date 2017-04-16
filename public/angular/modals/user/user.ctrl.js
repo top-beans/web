@@ -50,7 +50,7 @@ namespace('modals').userCtrl = function ($uibModalInstance, $http, md5, user, ma
             if (!response.data.success) {
                 toastrErrorFromList(response.data.errors);
             } else {
-                $uibModalInstance.close(response.data.writtenkey);
+                $uibModalInstance.close(response.data.item);
             }
         });
     };

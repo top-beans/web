@@ -24,7 +24,7 @@ namespace Application\Controller {
             try {
                 $cookieKey = $this->p1;
                 $cartSize = $this->cartRepo->getCartSize($cookieKey);
-                $response = ResponseUtils::createSingleFetchResponse($cartSize);
+                $response = ResponseUtils::responseItem($cartSize);
                 return $this->jsonResponse($response);
 
             } catch (\Exception $ex) {
@@ -37,7 +37,7 @@ namespace Application\Controller {
             try {
                 $cookieKey = $this->p1;
                 $items = $this->cartRepo->getCart($cookieKey);
-                $response = ResponseUtils::createFetchResponse($items);
+                $response = ResponseUtils::responseList($items);
                 return $this->jsonResponse($response);
             } catch (\Exception $ex) {
                 $response = ResponseUtils::createExceptionResponse($ex);
@@ -54,11 +54,11 @@ namespace Application\Controller {
                 $mergeErrors = $this->cartRepo->validateMergeCart($cart);
                 
                 if (count($mergeErrors) > 0) {
-                    $response = ResponseUtils::createResponse($mergeErrors);
+                    $response = ResponseUtils::response($mergeErrors);
                     return $this->jsonResponse($response);
                 } else {
                     $this->cartRepo->mergeCart($cart);
-                    $response = ResponseUtils::createWriteResponse($cart);
+                    $response = ResponseUtils::responseItem($cart);
                     return $this->jsonResponse($response);
                 }
                 
@@ -76,7 +76,7 @@ namespace Application\Controller {
                 $cart->setUpdateddate(new \DateTime());
                 $this->cartRepo->updateCart($cart);
                 
-                $response = ResponseUtils::createResponse();
+                $response = ResponseUtils::response();
                 return $this->jsonResponse($response);
                 
             } catch (\Exception $ex) {
@@ -90,7 +90,7 @@ namespace Application\Controller {
                 $cookieKey = $this->p1;
                 $coffeeKey = $this->p2;
                 $this->cartRepo->deleteFromCart($cookieKey, $coffeeKey);
-                $response = ResponseUtils::createResponse();
+                $response = ResponseUtils::response();
                 return $this->jsonResponse($response);
             } catch (\Exception $ex) {
                 $response = ResponseUtils::createExceptionResponse($ex);

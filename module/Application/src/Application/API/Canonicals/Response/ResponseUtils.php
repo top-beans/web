@@ -10,7 +10,7 @@ namespace Application\API\Canonicals\Response {
             return $response;
         }
         
-        public static function createResponse(array $errors = array(), array $warnings = array()) {
+        public static function response(array $errors = array(), array $warnings = array()) {
             $response = new Response();
             $response->errors = $errors;
             $response->warnings = $warnings;
@@ -18,26 +18,8 @@ namespace Application\API\Canonicals\Response {
             return $response;
         }
         
-        public static function createWriteResponse($writtenKey, array $errors = array(), array $warnings = array()) {
-            $response = new WriteResponse();
-            $response->errors = $errors;
-            $response->warnings = $warnings;
-            $response->success = count($errors) == 0;
-            $response->writtenkey = $response->success ? $writtenKey : null;
-            return $response;
-        }
-        
-        public static function createFetchResponse(array $items, array $errors = array(), array $warnings = array()) {
-            $response = new FetchResponse();
-            $response->errors = $errors;
-            $response->warnings = $warnings;
-            $response->success = count($errors) == 0;
-            $response->items = $response->success ? $items : array();
-            return $response;
-        }
-        
-        public static function createSingleFetchResponse($item, array $errors = array(), array $warnings = array()) {
-            $response = new SingleFetchResponse();
+        public static function responseItem($item, array $errors = array(), array $warnings = array()) {
+            $response = new ResponseItem();
             $response->errors = $errors;
             $response->warnings = $warnings;
             $response->success = count($errors) == 0;
@@ -45,12 +27,12 @@ namespace Application\API\Canonicals\Response {
             return $response;
         }
         
-        public static function createMultiWriteResponse(array $keyMap, array $errors = array(), array $warnings = array()) {
-            $response = new MultiWriteResponse();
+        public static function responseList(array $items, array $errors = array(), array $warnings = array()) {
+            $response = new ResponseList();
             $response->errors = $errors;
             $response->warnings = $warnings;
             $response->success = count($errors) == 0;
-            $response->keymap = $response->success ? $keyMap : null;
+            $response->items = $response->success ? $items : array();
             return $response;
         }
         

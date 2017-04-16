@@ -55,12 +55,12 @@ namespace Application\Controller {
                     throw new \Exception("This account has been locked");
                 } else if (!$result->isValid()) {
                     $this->usersRepository->incrementTries($username);
-                    $response = ResponseUtils::createResponse($result->getMessages());
+                    $response = ResponseUtils::response($result->getMessages());
                     return $this->jsonResponse($response);
                 } else {
                     $this->usersRepository->resetTriesAndLogin($username);
                     $this->authService->getStorage()->write($username);
-                    $response = ResponseUtils::createResponse();
+                    $response = ResponseUtils::response();
                     return $this->jsonResponse($response);
                 }
             } catch (\Exception $ex) {
@@ -72,7 +72,7 @@ namespace Application\Controller {
         public function logoutAction() {
             try {
                 $this->authService->clearIdentity();
-                $response = ResponseUtils::createResponse();
+                $response = ResponseUtils::response();
                 return $this->jsonResponse($response);
             } catch (\Exception $ex) {
                 $response = ResponseUtils::createExceptionResponse($ex);

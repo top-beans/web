@@ -23,7 +23,7 @@ namespace Application\Controller {
         public function getallactiveAction() {
             try {
                 $items = $this->coffeeRepo->findAllActive();
-                $response = ResponseUtils::createFetchResponse($items);
+                $response = ResponseUtils::responseList($items);
                 return $this->jsonResponse($response);
             } catch (\Exception $ex) {
                 $response = ResponseUtils::createExceptionResponse($ex);
@@ -41,7 +41,7 @@ namespace Application\Controller {
                 $coffee = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Entity\Coffee", "json");
                 
                 $this->coffeeRepo->addCoffee($coffee);
-                $response = ResponseUtils::createWriteResponse($coffee);
+                $response = ResponseUtils::responseItem($coffee);
                 return $this->jsonResponse($response);
                 
             } catch (\Exception $ex) {
@@ -60,7 +60,7 @@ namespace Application\Controller {
                 $coffee = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Entity\Coffee", "json");
                 
                 $this->coffeeRepo->updateCoffee($coffee);
-                $response = ResponseUtils::createWriteResponse($coffee);
+                $response = ResponseUtils::responseItem($coffee);
                 return $this->jsonResponse($response);
                 
             } catch (\Exception $ex) {
@@ -77,7 +77,7 @@ namespace Application\Controller {
                 
                 $coffeeKey = $this->p1;
                 $this->coffeeRepo->deactivateCoffee($coffeeKey);
-                $response = ResponseUtils::createResponse();
+                $response = ResponseUtils::response();
                 return $this->jsonResponse($response);
                 
             } catch (\Exception $ex) {

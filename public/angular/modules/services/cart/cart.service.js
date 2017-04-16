@@ -45,7 +45,7 @@ service('cartService', ['$http', function ($http) {
                 toastrErrorFromList(response.data.errors);
             } else {
                 self.getCartSize(cart.cookiekey, self.notify);
-                if (callback) { callback(response.data.writtenkey); }
+                if (callback) { callback(response.data.item); }
             }
         });
     };

@@ -2,7 +2,7 @@
 
 namespace Application\API\Canonicals\Response {
 
-    class SingleFetchResponse extends Response {
+    class ResponseItem extends Response {
         public $item = null;
     }
 

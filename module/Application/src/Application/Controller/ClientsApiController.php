@@ -92,7 +92,7 @@ namespace Application\Controller {
                 
                 $this->clientsRepository->addOrUpdateClient($client);
                 
-                $response = ResponseUtils::createWriteResponse($client);
+                $response = ResponseUtils::responseItem($client);
                 return $this->jsonResponse($response);
                 
             } catch (\Exception $ex) {

@@ -55,7 +55,7 @@ namespace Application\Controller {
                 $email = $this->enquiryRepo->createEmail($enquiry);
                 $this->emailSvc->sendMail($email);
                 
-                $response = ResponseUtils::createWriteResponse($enquiry);
+                $response = ResponseUtils::responseItem($enquiry);
                 return $this->jsonResponse($response);
                 
             } catch (\Exception $ex) {
