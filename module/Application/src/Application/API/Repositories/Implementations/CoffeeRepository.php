@@ -5,12 +5,10 @@ namespace Application\API\Repositories\Implementations {
     use Doctrine\ORM\EntityManager,
         Doctrine\ORM\EntityRepository,
         Doctrine\ORM\Mapping\ClassMetadata,
-        Doctrine\Common\Collections\Criteria,
         Application\API\Repositories\Interfaces\ICoffeeRepository,
         Application\API\Canonicals\Entity\Coffee,
         Application\API\Repositories\Base\IRepository,
-        Application\API\Repositories\Base\Repository,
-        Application\API\Canonicals\Dto\CoffeeSearch;
+        Application\API\Repositories\Base\Repository;
 
     class CoffeeRepository implements ICoffeeRepository {
         
@@ -64,11 +62,6 @@ namespace Application\API\Repositories\Implementations {
 
         public function exportAllCoffeeToExcel() {
             return $this->exportToExcel($coffees = $this->findAll());
-        }
-
-        public function exportCoffeeToExcel(array $criteria = [], array $orderBy = null, $page = 0, $pageSize = PHP_INT_MAX) {
-            $searchResult = $this->searchCoffee($criteria, $orderBy, $page, $pageSize);
-            return $this->exportToExcel($searchResult->items);
         }
 
         private function exportToExcel(array $coffee) {
@@ -132,28 +125,8 @@ namespace Application\API\Repositories\Implementations {
         public function findAll() {
             return $this->coffeeRepo->fetchAll();
         }
-
-        public function searchCoffee(array $criteria = [], array $orderBy = null, $page = 0, $pageSize = PHP_INT_MAX) {
-            $params = new CoffeeSearch($criteria);
-            $criteriaObj = new Criteria();
-
-            if ($params->getActive()) {
-                $criteriaObj->andWhere($criteriaObj->expr()->eq('active', 1));
-            }
-
-            if ($params->getSearchtext() != null) {
-                $criteriaObj->andWhere($criteriaObj->expr()->orX(
-                    $criteriaObj->expr()->contains('name', $params->getSearchtext()),
-                    $criteriaObj->expr()->contains('description', $params->getSearchtext()),
-                    $criteriaObj->expr()->contains('region', $params->getSearchtext())
-                ));
-            }
-            
-            if ($orderBy != null) {
-                $criteriaObj->orderBy($orderBy);
-            }
-            
-            return $this->coffeeRepo->searchByCriteria($criteriaObj, $page, $pageSize);
+        public function findAllActive() {
+            return $this->coffeeRepo->findBy(['active' => 1]);
         }
     }
 }

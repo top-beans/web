@@ -53,8 +53,7 @@ namespace Application\API\Repositories\Implementations {
             
             $matching = $this->cartRepo->findOneBy([
                 'cookiekey' => $cart->getCookiekey(),
-                'coffeekey' => $cart->getCoffeekey(),
-                'active' => 1
+                'coffeekey' => $cart->getCoffeekey()
             ]);
 
             if ($matching == null) {
@@ -81,8 +80,7 @@ namespace Application\API\Repositories\Implementations {
         public function mergeCart(Shoppingcart $cart) {
             $matching = $this->cartRepo->findOneBy([
                 'cookiekey' => $cart->getCookiekey(),
-                'coffeekey' => $cart->getCoffeekey(),
-                'active' => 1
+                'coffeekey' => $cart->getCoffeekey()
             ]);
 
             if ($matching == null) {

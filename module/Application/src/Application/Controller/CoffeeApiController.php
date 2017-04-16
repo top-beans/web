@@ -20,9 +20,9 @@ namespace Application\Controller {
             $this->coffeeRepo = $coffeeRepo;
         }
         
-        public function getallAction() {
+        public function getallactiveAction() {
             try {
-                $items = $this->coffeeRepo->findAll();
+                $items = $this->coffeeRepo->findAllActive();
                 $response = ResponseUtils::createFetchResponse($items);
                 return $this->jsonResponse($response);
             } catch (\Exception $ex) {
