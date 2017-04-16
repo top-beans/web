@@ -4,7 +4,7 @@ namespace('modals').addToCartCtrl = function ($uibModalInstance, cartService, co
     var self = this;
 
     self.$onInit = function () {
-        self.packagingunit = coffee.packagingunit;
+        self.coffee = coffee;
         self.shoppingCart = new models.cart({
             coffeekey: coffee.coffeekey,
             cookiekey: cookiekey,
@@ -17,7 +17,7 @@ namespace('modals').addToCartCtrl = function ($uibModalInstance, cartService, co
         var errors = [];
 
         if (self.shoppingCart.requesttypekey === models.requestTypes.purchase && (!isValidInt(self.shoppingCart.quantity) || self.shoppingCart.quantity <= 0)) {
-            errors.push("A valid integer greater than zero is required");
+            errors.push("A valid quantity greater than zero is required");
         }
 
         if (errors.length > 0) {

@@ -1,45 +1,60 @@
-<div class="product product-item-fullwidth" ng-repeat="coffee in $ctrl.cartItems">
-    <div class="product-main">
-        <div class="product-main-inner">
-            <div class="product-body">
-                <p class="product-brand">{{coffee.region}}{{(coffee.region == null ? '' : ',')}} {{coffee.country}}</p>
-                <h5 class="product-header"><a ng-href="{{coffee.url}}">{{coffee.name}}</a></h5>
-                <div class="product-rating">
-                    <ul class="list-rating">
+<div class="shell">
+    <div class="range">
+        <div class="cell-xs-12">
+            <h3>{{$ctrl.cartItems.length}} {{$ctrl.cartItems.length == 1 ? 'Item' : 'Items'}} in your cart</h3>
+        </div>
+        <div class="cell-xs-12 offset-top-40">
+      
+            <div class="product product-cart-item" ng-repeat="coffee in $ctrl.cartItems">
+                <div class="product-main">
+                    <div class="product-body">
+                        <p class="product-brand">{{coffee.region}}{{(coffee.region == null ? '' : ',')}} {{coffee.country}}</p>
+                        <h5>{{coffee.name}}</h5>
+                        <div class="product-rating" style='margin-top:0px'>
+                            <ul class="list-rating">
 
-                        <li ng-repeat="n in $ctrl.fullStars(coffee)">
-                            <span class="icon icon-xxs material-icons-star"></span>
-                        </li>
-                        <li ng-if="$ctrl.halfStar(coffee)">
-                            <span class="icon icon-xxs material-icons-star_half"></span>
-                        </li>
-                        <li ng-repeat="n in $ctrl.borderStars(coffee)">
-                            <span class="icon icon-xxs material-icons-star_border"></span>
-                        </li>
-                    </ul><span class="text-light">{{coffee.cuppingscore}} Cupping Score</span>
-                </div>
-                <div class="product-description">
-                    <h6>{{coffee.producer}}</h6>
-                    <p>{{coffee.producerstory}}</p>
-                </div><a ng-click="$ctrl.addToCart(coffee)" class="btn btn-silver-outline product-details">Buy or Sample</a>
-            </div>
-            <div class="product-aside">
-                <div class="product-aside-top">
-                    <p class="pricing-object pricing-object-xl price-current">
-                        <span class="small small-middle">{{coffee.currency}}</span><span class="price">{{coffee.price.substring(0, coffee.price.indexOf('.'))}}</span><span class="small small-bottom">{{coffee.price.substring(coffee.price.indexOf('.'))}}/{{coffee.pricebaseunit}}</span>
-                    </p>
-                </div>
-                <div class="product-aside-bottom">
-                    <div class="stepper-wrap">
-                        <p>Qty Available</p>
-                        {{coffee.availableamount}}
+                                <li ng-repeat="n in $ctrl.fullStars(coffee)">
+                                    <span class="icon icon-xxs material-icons-star"></span>
+                                </li>
+                                <li ng-if="$ctrl.halfStar(coffee)">
+                                    <span class="icon icon-xxs material-icons-star_half"></span>
+                                </li>
+                                <li ng-repeat="n in $ctrl.borderStars(coffee)">
+                                    <span class="icon icon-xxs material-icons-star_border"></span>
+                                </li>
+                            </ul><span class="text-light">{{coffee.cuppingscore}} Cupping Score</span>
+                        </div>
                     </div>
-                    <a ng-click="$ctrl.addToCart(coffee)" class="btn btn-icon btn-icon-left btn-primary product-control">
-                        <span>Buy or Sample</span>
-                    </a>
+                </div>
+                <div class="product-aside">
+                    <div class="product-group">
+                        <dl class="dl-inline">
+                            <dt>Color</dt>
+                            <dd><span style="background-color:#1b3164;" class="product-color"></span></dd>
+                        </dl>
+                        <dl class="dl-inline">
+                            <dt>Size</dt>
+                            <dd><span class="product-size">XXL</span></dd>
+                        </dl>
+                        <div class="stepper-wrap">
+                            <div class="stepper "><input type="number" data-zeros="true" value="1" min="1" max="20" class="stepper-input"><span class="stepper-arrow up"></span><span class="stepper-arrow down"></span></div>
+                        </div>
+                        <div class="pricing-object pricing-object-sm"><span class="small small-middle">$</span><span class="price">19</span><span class="small small-bottom">.89</span></div>
+                    </div>
+                    <div class="product-control"><a href="#" class="icon icon-sm link-gray-light material-icons-cancel"></a></div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="range offset-top-30 text-right">
+        <div class="cell-sm-11">
+            <dl class="dl-inline">
+                <dt>Total</dt>
+                <dd>
+                    <div class="pricing-object pricing-object-sm"><span class="small small-top">$</span><span>164</span><span class="small small-bottom">.89</span></div>
+                </dd>
+            </dl>
+        </div>
+        <div class="cell-xs-12 offset-top-30"><a href="shop-checkout.html" class="btn btn-xl btn-red-orange">proceed to checkout</a></div>
+    </div>
 </div>
-

@@ -1,6 +1,6 @@
 <div class="modal-header">
     <button type="button" class="close" aria-label="Close" ng-click="$mctrl.closeModal()"><span aria-hidden="true">&times;</span></button>
-    <span class="modal-title">Buy or Sample</span>
+    <h5 class="modal-title">{{$mctrl.coffee.name}}</h5>
 </div>
 
 <div class="modal-body">
@@ -20,7 +20,8 @@
                        ng-model="$mctrl.shoppingCart.quantity"
                        aria-describedby="basic-addon2">
                 <span class="input-group-addon" id="basic-addon2" 
-                      style='border-radius:0 5px 5px 0;' >x {{$mctrl.packagingunit}}</span>
+                      style='border-radius:0 5px 5px 0;' >x {{$mctrl.coffee.packagingunit}}</span>
+            </div>
         </div>
     </div>
 </div>
