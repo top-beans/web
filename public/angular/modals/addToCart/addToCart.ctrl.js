@@ -6,7 +6,7 @@ namespace('modals').addToCartCtrl = function ($uibModalInstance, cartService, co
     self.$onInit = function () {
         self.coffee = coffee;
         self.shoppingCart = new models.cart({
-            coffeekey: coffee.coffeekey,
+            coffeekey: self.coffee.coffeekey,
             cookiekey: cookiekey,
             requesttypekey: models.requestTypes.sample,
             quantity: 1
