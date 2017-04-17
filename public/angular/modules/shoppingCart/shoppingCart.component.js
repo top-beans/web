@@ -43,6 +43,15 @@ angular.module('shoppingCart')
         };
 
         self.deleteFromCart = function (cartItem) {
+            cartService.deleteFromCart(cookieService.get(), cartItem.coffeekey, function (data) {
+                if (!data.success) {
+                    toastrErrorFromList(data.errors);
+                } else {
+                    if (data.warnings.length) toastrWarningFromList(data.warnings);
+                    toastrSuccess("Deleted Item Successfully");
+                    self.cartItems.splice(_.findIndex(self.cartItems, cartItem.shoppingcartkey), 1);
+                }
+            });
         };
     }]
 });

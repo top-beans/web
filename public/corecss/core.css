@@ -3559,9 +3559,9 @@ tbody.collapse.in {
 }
 
 .input-group-addon {
-  padding: 15px 35px;
-  font-size: 14px;
-  font-weight: normal;
+  padding: 15px 10px;
+  font-size: 18px;
+  font-weight: bold;
   line-height: 1;
   color: #9f9f9f;
   text-align: center;

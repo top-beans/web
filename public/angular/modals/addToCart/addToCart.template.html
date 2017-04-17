@@ -13,13 +13,17 @@
               <label><input type="radio" name="optradio" ng-model="$mctrl.shoppingCart.requesttypekey" value="2">Make a Purchase</label>
             </div>
         </div>
-        <div class="col-md-6" style="margin: 12px 0;" ng-if="$mctrl.shoppingCart.requesttypekey === '2'">
+        <div class="col-md-6" style="margin: 12px 0;">
             <div class="input-group">
-                <input type="number" min="0" step="1" class="form-control" 
+                <input type="number" min="1" step="1" class="form-control" 
                        ng-model="$mctrl.shoppingCart.quantity"
                        aria-describedby="basic-addon2">
-                <span class="input-group-addon" id="basic-addon2" 
-                      style='border-radius:0 5px 5px 0;' >x {{$mctrl.coffee.packagingunit}}</span>
+                <strong class="input-group-addon" id="basic-addon2" 
+                        ng-if="$mctrl.shoppingCart.requesttypekey === '1'"
+                        style='border-radius:0 5px 5px 0;min-width:137px' >{{$mctrl.coffee.pricebaseunit}}</strong>
+                <strong class="input-group-addon" id="basic-addon2" 
+                        ng-if="$mctrl.shoppingCart.requesttypekey === '2'"
+                        style='border-radius:0 5px 5px 0;min-width:137px;' >x {{$mctrl.coffee.packagingunit}}</strong>
             </div>
         </div>
     </div>
