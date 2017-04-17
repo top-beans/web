@@ -214,6 +214,14 @@ class Shoppingcartview
      * @ORM\Column(name="packagingUnit", type="string", length=45, nullable=true)
      */
     private $packagingunit;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="baseUnitsPerPackage", type="integer", nullable=false)
+     */
+    private $baseunitsperpackage;
     
     /**
      * @Type("string")
@@ -264,6 +272,7 @@ class Shoppingcartview
     function getProducer() { return $this->producer; }
     function getPricebaseunit() { return $this->pricebaseunit; }
     function getPackagingunit() { return $this->packagingunit; }
+    function getBaseunitsperpackage() { return $this->baseunitsperpackage; }
     function getSensorialdescriptors() { return $this->sensorialdescriptors; }
     function getCultivars() { return $this->cultivars; }
     function getActive() { return $this->active; }
@@ -293,6 +302,7 @@ class Shoppingcartview
     function setProducer($val) { $this->producer = $val; } 
     function setPricebaseunit($val) { $this->pricebaseunit = $val; } 
     function setPackagingunit($val) { $this->packagingunit = $val; }
+    function setBaseunitsperpackage($val) { $this->baseunitsperpackage = $val; }
     function setSensorialdescriptors($val) { $this->sensorialdescriptors = $val; } 
     function setCultivars($val) { $this->cultivars = $val; } 
     function setActive($val) { $this->active = $val; } 

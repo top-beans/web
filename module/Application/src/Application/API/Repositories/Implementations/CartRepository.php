@@ -120,6 +120,21 @@ namespace Application\API\Repositories\Implementations {
         public function getCartSize($cookieKey) {
             return $this->cartViewRepo->count(['cookiekey' => $cookieKey]);
         }
+        
+        public function getCartTotal($cookieKey) {
+            $items = $this->cartViewRepo->findBy(['cookiekey' => $cookieKey]);
+            $total = 0;
+            
+            foreach($items as $item) {
+                if ($item->getRequesttypekey() == RequestTypes::Sample) {
+                    $total += $item->getQuantity() * $item->getPrice();
+                } else {
+                    $total += $item->getQuantity() * $item->getBaseunitsperpackage() * $item->getPrice();
+                }
+            }
+            
+            return $total;
+        }
 
         public function updateCart(Shoppingcart $cart) {
             $this->cartRepo->update($cart);

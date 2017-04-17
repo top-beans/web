@@ -18,8 +18,7 @@ angular.module('cartCount')
         };
 
         self.$onInit = function () {
-            cartService.getCartSize(cookieService.get(), self.updateCartSize);
-            cartService.subscribe(self.updateCartSize);
+            cartService.getCartSize(cookieService.get(), self.updateCartSize, true);
         };
     }]
 });

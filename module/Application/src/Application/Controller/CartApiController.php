@@ -33,6 +33,19 @@ namespace Application\Controller {
             }
         }
 
+        public function getcarttotalAction() {
+            try {
+                $cookieKey = $this->p1;
+                $total = $this->cartRepo->getCartTotal($cookieKey);
+                $response = ResponseUtils::responseItem($total);
+                return $this->jsonResponse($response);
+
+            } catch (\Exception $ex) {
+                $response = ResponseUtils::createExceptionResponse($ex);
+                return $this->jsonResponse($response);
+            }
+        }
+
         public function getcartAction() {
             try {
                 $cookieKey = $this->p1;

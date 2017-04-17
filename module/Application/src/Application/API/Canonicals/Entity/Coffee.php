@@ -160,6 +160,14 @@ class Coffee
     private $packagingunit;
     
     /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="baseUnitsPerPackage", type="integer", nullable=false)
+     */
+    private $baseunitsperpackage;
+    
+    /**
      * @Type("string")
      * @var string
      *
@@ -201,6 +209,7 @@ class Coffee
     function getProducerstory() { return $this->producerstory; }
     function getPricebaseunit() { return $this->pricebaseunit; }
     function getPackagingunit() { return $this->packagingunit; }
+    function getBaseunitsperpackage() { return $this->baseunitsperpackage; }
     function getSensorialdescriptors() { return $this->sensorialdescriptors; }
     function getCultivars() { return $this->cultivars; }
     function getActive() { return $this->active; }
@@ -223,6 +232,7 @@ class Coffee
     function setProducerstory($val) { $this->producerstory = $val; } 
     function setPricebaseunit($val) { $this->pricebaseunit = $val; } 
     function setPackagingunit($val) { $this->packagingunit = $val; }
+    function setBaseunitsperpackage($val) { $this->baseunitsperpackage = $val; }
     function setSensorialdescriptors($val) { $this->sensorialdescriptors = $val; } 
     function setCultivars($val) { $this->cultivars = $val; } 
     function setActive($val) { $this->active = $val; } 

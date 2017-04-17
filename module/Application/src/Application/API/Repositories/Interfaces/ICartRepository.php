@@ -7,6 +7,7 @@ namespace Application\API\Repositories\Interfaces {
     interface ICartRepository {
         public function getCart($cookieKey);
         public function getCartSize($cookieKey);
+        public function getCartTotal($cookieKey);
         
         public function addToCart(Shoppingcart $cart);
         public function updateCart(Shoppingcart $cart);
