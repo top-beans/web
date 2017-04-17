@@ -31,8 +31,12 @@ namespace('modals').addToCartCtrl = function ($uibModalInstance, cartService, co
         if (!self.validate()) {
             return;
         } else {
-            cartService.addToCart(self.shoppingCart, function (savedCart) {
-                $uibModalInstance.close(savedCart);
+            cartService.addToCart(self.shoppingCart, function (data) {
+                if (!data.success) {
+                    toastrErrorFromList(data.errors);
+                } else {
+                    $uibModalInstance.close(data);
+                }
             });
         }
     };

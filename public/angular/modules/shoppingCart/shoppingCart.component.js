@@ -10,8 +10,13 @@ angular.module('shoppingCart')
         self.cartItems = [];
         
         self.getCart = function() {
-            cartService.getCart(cookieService.get(), function (cartItems) {
-                self.cartItems = _(cartItems).sortBy(['createddate']).reverse().value();
+            cartService.getCart(cookieService.get(), function (data) {
+                if (!data.success) {
+                    toastrErrorFromList(data.errors);
+                } else {
+                    if (data.warnings.length) toastrWarningFromList(data.warnings);
+                    self.cartItems = _(data.items).sortBy(['createddate']).reverse().value();
+                }
             });
         };
         

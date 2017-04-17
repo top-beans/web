@@ -112,10 +112,10 @@ class Shoppingcartview
     private $screensize;
 
     /**
-     * @Type("string")
-     * @var string
+     * @Type("integer")
+     * @var integer
      *
-     * @ORM\Column(name="availableAmount", type="string", length=45, nullable=false)
+     * @ORM\Column(name="availableAmount", type="integer", nullable=false)
      */
     private $availableamount;
 

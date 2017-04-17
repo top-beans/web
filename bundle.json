@@ -15,6 +15,7 @@
             "public/vendor/toastr/toastr.min.js",
             "public/vendor/ladda/dist/ladda.min.js",
             "public/vendor/ladda/dist/spin.min.js",
+            "public/vendor/bootbox.js/bootbox.js",
             "public/js/**/*.js",
             "public/angular/utils/**/*.js",
             "public/angular/models/**/*.js",

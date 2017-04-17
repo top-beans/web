@@ -8,20 +8,18 @@ service('cartService', ['$http', function ($http) {
     self.subscriptions = [];
 
     self.notify = function (newCartSize) {
-        _.forEach(self.subscriptions, function (callback) { callback(newCartSize); } );
+        _.forEach(self.subscriptions, function (callback) { callback(newCartSize); });
     };
     
     self.subscribe = function (callback) {
-        self.subscriptions.push(callback);
+        if (callback) {
+            self.subscriptions.push(callback);
+        }
     };
 
     self.getCartSize = function (cookieKey, callback) {
         $http.get("/api/CartApi/getcartsize/" + cookieKey).then(function (response) {
-            if (!response.data.success) {
-                toastrErrorFromList(response.data.errors);
-            } else {
-                callback(response.data.item);
-            }
+            if (callback) callback(response.data);
         }, function (error) {
             
         });
@@ -29,11 +27,7 @@ service('cartService', ['$http', function ($http) {
 
     self.getCart = function (cookieKey, callback) {
         $http.get("/api/CartApi/getcart/" + cookieKey).then(function (response) {
-            if (!response.data.success) {
-                toastrErrorFromList(response.data.errors);
-            } else {
-                callback(response.data.items);
-            }
+            if (callback) callback(response.data);
         }, function (error) {
             
         });
@@ -41,22 +35,15 @@ service('cartService', ['$http', function ($http) {
     
     self.addToCart = function (cart, callback) {
         $http.patch("/api/CartApi/patch", cart).then(function (response) {
-            if (!response.data.success) {
-                toastrErrorFromList(response.data.errors);
-            } else {
-                self.getCartSize(cart.cookiekey, self.notify);
-                if (callback) { callback(response.data.item); }
-            }
+            if (response.data.success) self.getCartSize(cart.cookiekey, self.notify);
+            if (callback) callback(response.data);
         });
     };
     
-    self.deleteFromCart = function (cookieKey, coffeeKey) {
+    self.deleteFromCart = function (cookieKey, coffeeKey, callback) {
         $http.delete("/api/CartApi/delete/" + cookieKey + "/" + coffeeKey).then(function (response) {
-            if (!response.data.success) {
-                toastrErrorFromList(response.data.errors);
-            } else {
-                self.getCartSize(cookieKey, self.notify);
-            }
+            if (response.data.success) self.getCartSize(cookieKey, self.notify);
+            if (callback) callback(response.data);
         }, function (error) {
             
         });

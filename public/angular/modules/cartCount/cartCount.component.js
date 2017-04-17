@@ -8,8 +8,13 @@ angular.module('cartCount')
         var self = this;
         self.cartSize = 0;
 
-        self.updateCartSize = function (newCartSize) {
-            self.cartSize = newCartSize;
+        self.updateCartSize = function (data) {
+            if (!data.success) {
+                toastrErrorFromList(data.errors);
+            } else {
+                if (data.warnings.length) toastrWarningFromList(data.warnings);
+                self.cartSize = data.item;
+            }
         };
 
         self.$onInit = function () {

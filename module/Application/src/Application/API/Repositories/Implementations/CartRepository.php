@@ -11,6 +11,7 @@ namespace Application\API\Repositories\Implementations {
         Application\API\Canonicals\Entity\Shoppingcart,
         Application\API\Canonicals\Entity\Coffee,
         Application\API\Canonicals\Entity\RequestTypes,
+        Application\API\Canonicals\Response\ResponseUtils,
         Application\API\Canonicals\Entity\Shoppingcartview;
 
     class CartRepository implements ICartRepository {
@@ -44,11 +45,13 @@ namespace Application\API\Repositories\Implementations {
 
         public function validateMergeCart(Shoppingcart $cart) {
             if($cart->getCookiekey() == null || $cart->getCoffeekey() == null) {
-                return ["Your cart is missing either a coffee or cookie key (coffee goes with cookies bruv!)"];
+                return ResponseUtils::response(["Your cart is missing either a coffee or cookie key (coffee goes with cookies bruv!)"]);
             } 
             
-            if ($this->coffeeRepo->findOneBy(['coffeekey' => $cart->getCoffeekey(), 'active' => 1]) == null) {
-                return ["Your coffee could not be found"];
+            $coffee = $this->coffeeRepo->findOneBy(['coffeekey' => $cart->getCoffeekey(), 'active' => 1]);
+            
+            if ($coffee == null) {
+                return ResponseUtils::response(["Your coffee could not be found"]);
             }
             
             $matching = $this->cartRepo->findOneBy([
@@ -57,24 +60,29 @@ namespace Application\API\Repositories\Implementations {
             ]);
 
             if ($matching == null) {
-                return [];
+                return ResponseUtils::response([]);
             }
             
             $errors = [];
+            $warnings = [];
             
             if ($matching->getRequesttypekey() == RequestTypes::Sample) {
                 if ($cart->getRequesttypekey() == RequestTypes::Sample) {
                     $errors[] = "Sample already on Cart";
                 } else if ($cart->getQuantity() <= 0) {
                     $errors[] = "A valid quantity greater than zero is required";
+                } else if ($cart->getQuantity() > $coffee->getAvailableamount()) {
+                    $errors[] = "Your quantity exceeds the available amount of " + $coffee->getAvailableamount() + " " + $coffee->getPackagingunit();
                 }
-            } else if ($matching->getRequesttypekey() == RequestTypes::Purchase) {
-                if ($cart->getRequesttypekey() == RequestTypes::Purchase && $cart->getQuantity() <= 0) {
+            } else if ($matching->getRequesttypekey() == RequestTypes::Purchase && $cart->getRequesttypekey() == RequestTypes::Purchase) {
+                if ($cart->getQuantity() <= 0) {
                     $errors[] = "A valid quantity greater than zero is required";
+                } else if ($cart->getQuantity() > $coffee->getAvailableamount()) {
+                    $errors[] = "Your quantity exceeds the available amount of " + $coffee->getAvailableamount() + " " + $coffee->getPackagingunit();
                 }
             }
             
-            return $errors;
+            return ResponseUtils::response($errors, $warnings);
         }
         
         public function mergeCart(Shoppingcart $cart) {

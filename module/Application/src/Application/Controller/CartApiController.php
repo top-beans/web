@@ -51,14 +51,13 @@ namespace Application\Controller {
                 $cart = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Entity\Shoppingcart", "json");
                 
                 $cart->setCreateddate(new \DateTime());
-                $mergeErrors = $this->cartRepo->validateMergeCart($cart);
+                $response = $this->cartRepo->validateMergeCart($cart);
                 
-                if (count($mergeErrors) > 0) {
-                    $response = ResponseUtils::response($mergeErrors);
+                if (!$response->success) {
                     return $this->jsonResponse($response);
                 } else {
                     $this->cartRepo->mergeCart($cart);
-                    $response = ResponseUtils::responseItem($cart);
+                    $response = ResponseUtils::responseItem($cart, [], $response->warnings);
                     return $this->jsonResponse($response);
                 }
                 
