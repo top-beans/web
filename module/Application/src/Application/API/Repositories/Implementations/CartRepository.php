@@ -126,14 +126,10 @@ namespace Application\API\Repositories\Implementations {
             $total = 0;
             
             foreach($items as $item) {
-                if ($item->getRequesttypekey() == RequestTypes::Sample) {
-                    $total += $item->getQuantity() * $item->getPrice();
-                } else {
-                    $total += $item->getQuantity() * $item->getBaseunitsperpackage() * $item->getPrice();
-                }
+                $total += $item->getItemprice();
             }
             
-            return $total;
+            return number_format($total, 2, '.', '');
         }
 
         public function updateCart(Shoppingcart $cart) {

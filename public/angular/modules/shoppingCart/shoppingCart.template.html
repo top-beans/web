@@ -3,45 +3,41 @@
         <div class="cell-xs-12">
             <h3>{{$ctrl.cartItems.length}} {{$ctrl.cartItems.length == 1 ? 'Item' : 'Items'}} in your cart</h3>
         </div>
-        <div class="cell-xs-12 offset-top-40">
+        <div class="cell-xs-12 offset-top-22">
       
-            <div class="product product-cart-item" ng-repeat="coffee in $ctrl.cartItems">
+            <div class="product product-cart-item" ng-repeat="cartItem in $ctrl.cartItems">
                 <div class="product-main">
                     <div class="product-body">
-                        <p class="product-brand">{{coffee.region}}{{(coffee.region == null ? '' : ',')}} {{coffee.country}}</p>
-                        <h5>{{coffee.name}}</h5>
+                        <p class="product-brand">{{cartItem.region}}{{(coffee.region == null ? '' : ',')}} {{cartItem.country}}</p>
+                        <h5>{{cartItem.name}} {{(cartItem.requesttypekey === 1 ? '(Sample Only)' : '')}}</h5>
                         <div class="product-rating" style='margin-top:0px'>
                             <ul class="list-rating">
 
-                                <li ng-repeat="n in $ctrl.fullStars(coffee)">
+                                <li ng-repeat="n in $ctrl.fullStars(cartItem)">
                                     <span class="icon icon-xxs material-icons-star"></span>
                                 </li>
-                                <li ng-if="$ctrl.halfStar(coffee)">
+                                <li ng-if="$ctrl.halfStar(cartItem)">
                                     <span class="icon icon-xxs material-icons-star_half"></span>
                                 </li>
-                                <li ng-repeat="n in $ctrl.borderStars(coffee)">
+                                <li ng-repeat="n in $ctrl.borderStars(cartItem)">
                                     <span class="icon icon-xxs material-icons-star_border"></span>
                                 </li>
-                            </ul><span class="text-light">{{coffee.cuppingscore}} Cupping Score</span>
+                            </ul><span class="text-light">{{cartItem.cuppingscore}} Cupping Score</span>
                         </div>
                     </div>
                 </div>
                 <div class="product-aside">
                     <div class="product-group">
                         <dl class="dl-inline">
-                            <dt>Order Type</dt>
-                            <dd><span>Sample</span></dd>
+                            <dt>Quantity</dt>
+                            <dd ng-if="cartItem.requesttypekey == '1'"><span class="product-size">{{cartItem.quantity}} {{cartItem.pricebaseunit}}</span></dd>
+                            <dd ng-if="cartItem.requesttypekey == '2'"><span class="product-size">{{cartItem.quantity}} x {{cartItem.packagingunit}}</span></dd>
                         </dl>
-                        <dl class="dl-inline">
-                            <dt>Size</dt>
-                            <dd><span class="product-size">XXL</span></dd>
-                        </dl>
-                        <div class="stepper-wrap">
-                            <div class="stepper "><input type="number" data-zeros="true" value="1" min="1" max="20" class="stepper-input"><span class="stepper-arrow up"></span><span class="stepper-arrow down"></span></div>
+                        <div class="pricing-object pricing-object-sm">
+                            <span class="small small-middle">{{cartItem.currency}}</span><span class="price">{{cartItem.itemprice.substring(0, cartItem.itemprice.indexOf('.'))}}</span><span class="small small-bottom">{{cartItem.itemprice.substring(cartItem.itemprice.indexOf('.'))}}</span>
                         </div>
-                        <div class="pricing-object pricing-object-sm"><span class="small small-middle">$</span><span class="price">19</span><span class="small small-bottom">.89</span></div>
                     </div>
-                    <div class="product-control"><a ng-click="$ctrl.deleteFromCart(coffee)" class="icon icon-sm link-gray-light material-icons-cancel"></a></div>
+                    <div class="product-control"><a ng-click="$ctrl.deleteFromCart(cartItem)" class="icon icon-sm link-gray-light material-icons-cancel"></a></div>
                 </div>
             </div>
         </div>
@@ -51,7 +47,7 @@
             <dl class="dl-inline">
                 <dt>Total</dt>
                 <dd>
-                    <div class="pricing-object pricing-object-sm"><span class="small small-top">$</span><span>164</span><span class="small small-bottom">.89</span></div>
+                    <div class="pricing-object pricing-object-sm"><span class="small small-top">&pound;</span><span>{{$ctrl.cartTotal.substring(0, $ctrl.cartTotal.indexOf('.'))}}</span><span class="small small-bottom">{{$ctrl.cartTotal.substring($ctrl.cartTotal.indexOf('.'))}}</span></div>
                 </dd>
             </dl>
         </div>

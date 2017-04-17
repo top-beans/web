@@ -8,7 +8,22 @@ angular.module('shoppingCart')
         var self = this;
 
         self.cartItems = [];
-        
+        self.cartTotal = 0;
+
+        self.$onInit = function () {
+            self.getCart();
+            cartService.getCartTotal(cookieService.get(), self.updateCartTotal, true);
+        };
+
+        self.updateCartTotal = function (data) {
+            if (!data.success) {
+                toastrErrorFromList(data.errors);
+            } else {
+                if (data.warnings.length) toastrWarningFromList(data.warnings);
+                self.cartTotal = data.item;
+            }
+        };
+
         self.getCart = function() {
             cartService.getCart(cookieService.get(), function (data) {
                 if (!data.success) {
@@ -35,10 +50,6 @@ angular.module('shoppingCart')
             return _.range(10 - Math.ceil(score / 10));
         };
         
-        self.$onInit = function () {
-            self.getCart();
-        };
-
         self.updateCart = function (cartItem) {
         };
 

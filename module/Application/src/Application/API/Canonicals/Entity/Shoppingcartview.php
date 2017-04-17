@@ -155,6 +155,14 @@ class Shoppingcartview
      * @Type("string")
      * @var string
      *
+     * @ORM\Column(name="itemPrice", type="decimal", precision=30, scale=2, nullable=false)
+     */
+    private $itemprice;
+
+    /**
+     * @Type("string")
+     * @var string
+     *
      * @ORM\Column(name="name", type="string", length=45, nullable=false)
      */
     private $name;
@@ -264,6 +272,7 @@ class Shoppingcartview
     function getCuppingscore() { return $this->cuppingscore; }
     function getCurrency() { return $this->currency; }
     function getPrice() { return $this->price; }
+    function getItemprice() { return $this->itemprice; }
     function getName() { return $this->name; }
     function getProducerstory() { return $this->producerstory; }
     function getProcessingmethod() { return $this->processingmethod; }
@@ -294,6 +303,7 @@ class Shoppingcartview
     function setCuppingscore($val) { $this->cuppingscore = $val; } 
     function setCurrency($val) { $this->currency = $val; } 
     function setPrice($val) { $this->price = $val; } 
+    function setItemprice($val) { $this->itemprice = $val; } 
     function setName($val) { $this->name = $val; } 
     function setProducerstory($val) { $this->producerstory = $val; } 
     function setProcessingmethod($val) { $this->processingmethod = $val; } 
