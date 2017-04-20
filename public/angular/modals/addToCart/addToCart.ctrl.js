@@ -15,9 +15,12 @@ namespace('modals').addToCartCtrl = function ($uibModalInstance, cartService, co
 
     self.validate = function () {
         var errors = [];
+        var isPurchase = self.shoppingCart.requesttypekey === models.requestTypes.purchase;
 
-        if (self.shoppingCart.requesttypekey === models.requestTypes.purchase && (!isValidInt(self.shoppingCart.quantity) || self.shoppingCart.quantity <= 0)) {
+        if (!isValidInt(self.shoppingCart.quantity) || self.shoppingCart.quantity <= 0) {
             errors.push("A valid quantity greater than zero is required");
+        } else if (self.shoppingCart.quantity > self.coffee.availableamount * (isPurchase ? 1 : self.coffee.baseunitsperpackage)) {
+            errors.push("Your quantity exceeds the available amount of " + self.coffee.availableamount + " x " + self.coffee.packagingunit);
         }
 
         if (errors.length > 0) {

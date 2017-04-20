@@ -168,6 +168,14 @@ class Coffee
     private $baseunitsperpackage;
     
     /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="maxFreeSampleQuantity", type="integer", nullable=false)
+     */
+    private $maxfreesamplequantity;
+    
+    /**
      * @Type("string")
      * @var string
      *
@@ -210,6 +218,7 @@ class Coffee
     function getPricebaseunit() { return $this->pricebaseunit; }
     function getPackagingunit() { return $this->packagingunit; }
     function getBaseunitsperpackage() { return $this->baseunitsperpackage; }
+    function getMaxfreesamplequantity() { return $this->maxfreesamplequantity; }
     function getSensorialdescriptors() { return $this->sensorialdescriptors; }
     function getCultivars() { return $this->cultivars; }
     function getActive() { return $this->active; }
@@ -233,6 +242,7 @@ class Coffee
     function setPricebaseunit($val) { $this->pricebaseunit = $val; } 
     function setPackagingunit($val) { $this->packagingunit = $val; }
     function setBaseunitsperpackage($val) { $this->baseunitsperpackage = $val; }
+    function setMaxfreesamplequantity($val) { $this->maxfreesamplequantity = $val; }
     function setSensorialdescriptors($val) { $this->sensorialdescriptors = $val; } 
     function setCultivars($val) { $this->cultivars = $val; } 
     function setActive($val) { $this->active = $val; } 

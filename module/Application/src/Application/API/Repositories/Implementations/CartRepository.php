@@ -65,23 +65,14 @@ namespace Application\API\Repositories\Implementations {
             
             $errors = [];
             $warnings = [];
+            $isPurchase = $cart->getRequesttypekey() == RequestTypes::Purchase;
             
-            if ($matching->getRequesttypekey() == RequestTypes::Sample) {
-                if ($cart->getRequesttypekey() == RequestTypes::Sample) {
-                    $errors[] = "Sample already on Cart";
-                } else if ($cart->getQuantity() <= 0) {
-                    $errors[] = "A valid quantity greater than zero is required";
-                } else if ($cart->getQuantity() > $coffee->getAvailableamount()) {
-                    $errors[] = "Your quantity exceeds the available amount of " + $coffee->getAvailableamount() + " " + $coffee->getPackagingunit();
-                }
-            } else if ($matching->getRequesttypekey() == RequestTypes::Purchase && $cart->getRequesttypekey() == RequestTypes::Purchase) {
-                if ($cart->getQuantity() <= 0) {
-                    $errors[] = "A valid quantity greater than zero is required";
-                } else if ($cart->getQuantity() > $coffee->getAvailableamount()) {
-                    $errors[] = "Your quantity exceeds the available amount of " + $coffee->getAvailableamount() + " " + $coffee->getPackagingunit();
-                }
+            if ($cart->getQuantity() <= 0) {
+                $errors[] = "A valid quantity greater than zero is required";
+            } else if ($cart->getQuantity() > $coffee->getAvailableamount() * ($isPurchase ? 1 : $coffee->getBaseunitsperpackage())) {
+                $errors[] = "Your quantity exceeds the available amount of " + $coffee->getAvailableamount() + " " + $coffee->getPackagingunit();
             }
-            
+
             return ResponseUtils::response($errors, $warnings);
         }
         

@@ -30,8 +30,8 @@
                     <div class="product-group">
                         <dl class="dl-inline">
                             <dt>Quantity</dt>
-                            <dd ng-if="cartItem.requesttypekey == '1'"><span class="product-size">{{cartItem.quantity}} {{cartItem.pricebaseunit}}</span></dd>
-                            <dd ng-if="cartItem.requesttypekey == '2'"><span class="product-size">{{cartItem.quantity}} x {{cartItem.packagingunit}}</span></dd>
+                            <dd ng-if="cartItem.requesttypekey === 1"><span class="product-size">{{cartItem.quantity}} {{cartItem.pricebaseunit}}</span></dd>
+                            <dd ng-if="cartItem.requesttypekey === 2"><span class="product-size">{{cartItem.quantity}} x {{cartItem.packagingunit}}</span></dd>
                         </dl>
                         <div class="pricing-object pricing-object-sm">
                             <span class="small small-middle">{{cartItem.currency}}</span><span class="price">{{cartItem.itemprice.substring(0, cartItem.itemprice.indexOf('.'))}}</span><span class="small small-bottom">{{cartItem.itemprice.substring(cartItem.itemprice.indexOf('.'))}}</span>
