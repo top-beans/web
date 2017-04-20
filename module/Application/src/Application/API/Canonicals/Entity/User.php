@@ -47,6 +47,14 @@ class User
      */
     private $lastlogin;
 
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="userTypeKey", type="integer", nullable=false)
+     */
+    private $usertypekey;
+
     function getUsername() {
         return $this->username;
     }
@@ -63,6 +71,10 @@ class User
         return $this->lastlogin;
     }
 
+    function getUsertypekey() {
+        return $this->usertypekey;
+    }
+
     function setUsername($val) {
         $this->username = $val;
     }
@@ -77,5 +89,9 @@ class User
 
     function setLastlogin($val) {
         $this->lastlogin = $val;
+    }
+
+    function setUsertypekey($val) {
+        $this->usertypekey = $val;
     }
 }
