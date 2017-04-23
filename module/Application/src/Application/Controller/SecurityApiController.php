@@ -59,7 +59,8 @@ namespace Application\Controller {
                     return $this->jsonResponse($response);
                 } else {
                     $this->usersRepository->resetTriesAndLogin($username);
-                    $this->authService->getStorage()->write($username);
+                    $user = $this->usersRepository->find($username);
+                    $this->authService->getStorage()->write($user);
                     $response = ResponseUtils::response();
                     return $this->jsonResponse($response);
                 }

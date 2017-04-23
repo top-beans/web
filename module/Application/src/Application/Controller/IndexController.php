@@ -82,6 +82,10 @@ namespace Application\Controller {
             $this->navService->findOneById(Navigation::Preview)->setVisible(true);
             $theLoop = $this->wpRepo->fetchTheLoop($this->getRequest()->getQuery()->toString());
             return array('posts' => $theLoop);
-        }        
+        }
+        
+        public function checkoutAction() {
+            return [];
+        }
     }
 }

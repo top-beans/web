@@ -3,8 +3,9 @@
 namespace Application\API\Canonicals\Constants {
 
     class Navigation {
-        const Admin   = "Admin";
-        const Home    = "Home";
-        const Preview = "Preview";
+        const Admin    = "Admin";
+        const Customer = "Customer";
+        const Home     = "Home";
+        const Preview  = "Preview";
     }
 }

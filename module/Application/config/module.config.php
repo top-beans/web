@@ -3,7 +3,6 @@
 namespace Application {
     
     use Application\API\Canonicals\Constants\Navigation;
-    use Application\API\Canonicals\WordPress\CategorySlugs;
 
     return [
         'controllers' => [
@@ -11,6 +10,7 @@ namespace Application {
             'factories' => [
                 'Admin'         => 'Application\ControllerFactory\AdminControllerFactory',
                 'Index'         => 'Application\ControllerFactory\IndexControllerFactory',
+                'Customer'      => 'Application\ControllerFactory\CustomerControllerFactory',
                 'SecurityApi'   => 'Application\ControllerFactory\SecurityApiControllerFactory',
                 'UsersApi'      => 'Application\ControllerFactory\UsersApiControllerFactory',
                 'EnquiryApi'    => 'Application\ControllerFactory\EnquiryApiControllerFactory',
@@ -154,7 +154,7 @@ namespace Application {
                             'controller' => 'Admin',
                             'action' => 'enquiries',
                             'visible' => false,
-                            'requireslogin' => true,
+                            'requiresAdminLogin' => true,
                         ],
                         'useradmin' => [
                             'id' => 'Admin.useradmin',
@@ -163,7 +163,7 @@ namespace Application {
                             'controller' => 'Admin',
                             'action' => 'useradmin',
                             'visible' => false,
-                            'requireslogin' => true,
+                            'requiresAdminLogin' => true,
                         ],
                         'Clients' => [
                             'id' => 'Admin.Clients',
@@ -172,7 +172,7 @@ namespace Application {
                             'controller' => 'Admin',
                             'action' => 'clients',
                             'visible' => false,
-                            'requireslogin' => true,
+                            'requiresAdminLogin' => true,
                         ],
                         'logout' => [
                             'id' => 'Admin.logout',
@@ -181,7 +181,26 @@ namespace Application {
                             'controller' => 'Admin',
                             'action' => 'logout',
                             'visible' => false,
-                            'requireslogin' => true,
+                            'requiresAdminLogin' => true,
+                        ],
+                    ],
+                ],
+                'Customer' => [
+                    'id' => Navigation::Customer,
+                    'label' => 'Customer',
+                    'route' => 'web',
+                    'controller' => 'Customer',
+                    'action' => 'index',
+                    'visible' => false,
+                    'pages' => [
+                        'orders' => [
+                            'id' => 'Customer.orders',
+                            'label' => 'Orders',
+                            'route' => 'web',
+                            'controller' => 'Customer',
+                            'action' => 'orders',
+                            'visible' => false,
+                            'requiresCustomerLogin' => true,
                         ],
                     ],
                 ],
@@ -191,7 +210,6 @@ namespace Application {
                     'route' => 'web',
                     'controller' => 'Index',
                     'action' => 'index',
-                    'requireslogin' => false,
                 ],
                 'Index.approach' => [
                     'id' => 'Approach',
@@ -199,7 +217,6 @@ namespace Application {
                     'route' => 'web',
                     'controller' => 'Index',
                     'action' => 'approach',
-                    'requireslogin' => false,
                 ],
                 'Index.buyorsample' => [
                     'id' => 'Buy',
@@ -207,7 +224,6 @@ namespace Application {
                     'route' => 'web',
                     'controller' => 'Index',
                     'action' => 'buyorsample',
-                    'requireslogin' => false,
                 ],
                 'Index.contacts' => [
                     'id' => 'Contacts',
@@ -215,7 +231,6 @@ namespace Application {
                     'route' => 'web',
                     'controller' => 'Index',
                     'action' => 'contacts',
-                    'requireslogin' => false,
                 ],
             ],
         ],
