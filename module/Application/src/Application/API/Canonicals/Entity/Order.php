@@ -52,9 +52,9 @@ class Order
     /**
      * @var string
      *
-     * @ORM\Column(name="totalPrice", type="decimal", precision=10, scale=2, nullable=false)
+     * @ORM\Column(name="itemPrice", type="decimal", precision=10, scale=2, nullable=false)
      */
-    private $totalprice;
+    private $itemprice;
 
     /**
      * @Type("integer")
@@ -76,28 +76,47 @@ class Order
      * @Type("integer")
      * @var integer
      *
-     * @ORM\Column(name="requestTypeypeKey", type="integer", nullable=false)
+     * @ORM\Column(name="requestTypeKey", type="integer", nullable=false)
      */
-    private $requesttypeypekey;
+    private $requestypekey;
 
-    function getOrderkey() { return $this->orderkey; } 
-    function getQuantity() { return $this->quantity; } 
-    function getPrice() { return $this->price; } 
-    function getPricebaseunit() { return $this->pricebaseunit; } 
-    function getPackagingunit() { return $this->packagingunit; } 
-    function getTotalprice() { return $this->totalprice; } 
-    function getCoffeekey() { return $this->coffeekey; } 
-    function getCustomerkey() { return $this->customerkey; } 
-    function getRequesttypeypekey() { return $this->requesttypeypekey; } 
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="statusKey", type="integer", nullable=false)
+     */
+    private $statuskey;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="groupKey", type="string", length=45, nullable=false)
+     */
+    private $groupkey;
+
+    function getOrderkey() { return $this->orderkey; }
+    function getQuantity() { return $this->quantity; }
+    function getPrice() { return $this->price; }
+    function getPricebaseunit() { return $this->pricebaseunit; }
+    function getPackagingunit() { return $this->packagingunit; }
+    function getItemprice() { return $this->itemprice; }
+    function getCoffeekey() { return $this->coffeekey; }
+    function getCustomerkey() { return $this->customerkey; }
+    function getRequestypekey() { return $this->requestypekey; }
+    function getStatuskey() { return $this->statuskey; }
+    function getGroupkey() { return $this->groupkey; } 
+    
     function setOrderkey($val) { $this->orderkey = $val; } 
     function setQuantity($val) { $this->quantity = $val; } 
     function setPrice($val) { $this->price = $val; } 
     function setPricebaseunit($val) { $this->pricebaseunit = $val; } 
     function setPackagingunit($val) { $this->packagingunit = $val; } 
-    function setTotalprice($val) { $this->totalprice = $val; } 
+    function setItemprice($val) { $this->itemprice = $val; } 
     function setCoffeekey($val) { $this->coffeekey = $val; } 
     function setCustomerkey($val) { $this->customerkey = $val; } 
-    function setRequesttypeypekey($val) { $this->requesttypeypekey = $val; } 
+    function setRequestypekey($val) { $this->requestypekey = $val; } 
+    function setStatuskey($val) { $this->statuskey = $val; } 
+    function setGroupkey($val) { $this->groupkey = $val; } 
 }
 
