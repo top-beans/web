@@ -95,6 +95,14 @@ class Order
      */
     private $groupkey;
 
+    /**
+     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="createdDate", type="datetime", nullable=false)
+     */
+    private $createddate;
+
     function getOrderkey() { return $this->orderkey; }
     function getQuantity() { return $this->quantity; }
     function getPrice() { return $this->price; }
@@ -106,6 +114,7 @@ class Order
     function getRequestypekey() { return $this->requestypekey; }
     function getStatuskey() { return $this->statuskey; }
     function getGroupkey() { return $this->groupkey; } 
+    function getCreateddate() { return $this->createddate; }
     
     function setOrderkey($val) { $this->orderkey = $val; } 
     function setQuantity($val) { $this->quantity = $val; } 
@@ -118,5 +127,6 @@ class Order
     function setRequestypekey($val) { $this->requestypekey = $val; } 
     function setStatuskey($val) { $this->statuskey = $val; } 
     function setGroupkey($val) { $this->groupkey = $val; } 
+    function setCreateddate($val) { $this->createddate = $val; } 
 }
 

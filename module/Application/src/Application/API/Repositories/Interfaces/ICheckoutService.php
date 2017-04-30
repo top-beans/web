@@ -7,5 +7,6 @@ namespace Application\API\Repositories\Interfaces {
     interface ICheckoutService {
         public function addAnonymousOrder($cookieKey, Address $deliveryAddress, Address $billingAddress);
         public function addUserOrder($cookieKey, $username, $password);
+        public function createCheckoutEmail($orderGroupKey);
     }
 }
