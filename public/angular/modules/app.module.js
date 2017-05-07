@@ -10,5 +10,6 @@ angular.module('topbeans', [
     'clients',
     'client',
     'cartCount',
-    'shoppingCart'
+    'shoppingCart',
+    'checkout'
 ]);

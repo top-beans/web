@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('buyOrSample', [
+angular.module('checkout', [
     'ui.bootstrap',
     'cartService',
     'cookieService'
