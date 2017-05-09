@@ -5,6 +5,7 @@ namespace Application\API\Repositories\Base {
     use Doctrine\Common\Collections\Criteria;
     
     interface IRepository {
+        public function em();
         public function fetch($id);
         public function fetchAll();
         public function searchBy(array $criteria, array $orderBy = null, $page = 0, $pageSize = 10);

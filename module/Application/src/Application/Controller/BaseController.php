@@ -114,17 +114,15 @@ namespace Application\Controller {
         
         private function setPermissions(AbstractController $self) {
             $user = $self->authService->getIdentity();
-            $restrictedAreas = [
-                [
-                    'baseNode'          => $self->navService->findOneById(Navigation::Admin),
-                    'restrictedNodes'   => $self->navService->findAllBy("requiresAdminLogin", true),
-                    'hasAccess'         => $self->authService->hasIdentity() && $user->getUsertypekey() == UserTypes::Admin,
-                ], [
-                    'baseNode'          => $self->navService->findOneById(Navigation::Customer),
-                    'restrictedNodes'   => $self->navService->findAllBy("requiresCustomerLogin", true),
-                    'hasAccess'         => $self->authService->hasIdentity() && $user->getUsertypekey() == UserTypes::Customer,
-                ]
-            ];
+            $restrictedAreas = [[
+                'baseNode'          => $self->navService->findOneById(Navigation::Admin),
+                'restrictedNodes'   => $self->navService->findAllBy("requiresAdminLogin", true),
+                'hasAccess'         => $self->authService->hasIdentity() && $user->getUsertypekey() == UserTypes::Admin,
+            ], [
+                'baseNode'          => $self->navService->findOneById(Navigation::Customer),
+                'restrictedNodes'   => $self->navService->findAllBy("requiresCustomerLogin", true),
+                'hasAccess'         => $self->authService->hasIdentity() && $user->getUsertypekey() == UserTypes::Customer,
+            ]];
 
             foreach ($restrictedAreas as $area) {
                 $baseNode= $area['baseNode'];
@@ -137,20 +135,21 @@ namespace Application\Controller {
                     $self->navService->findOneById($rec->get("id"))->setVisible($hasAccess);
                 }
 
-                if (!$hasAccess) {
-                    $controller = strtolower($self->controller);
-                    $action = strtolower($self->action);
-
-                    $unauthorizedAttempt = array_filter($restrictedNodes, function ($item) use ($controller, $action) {
-                        return strtolower($item->get("controller")) == $controller && strtolower($item->get("action")) == $action;
-                    });
-
-                    if (count($unauthorizedAttempt) > 0) {
-                        return $self->redirect()->toUrl("/Index/index");
-                    }
+                if ($hasAccess) { 
+                    continue;
                 }
-            }
-            
+                
+                $controller = strtolower($self->controller);
+                $action = strtolower($self->action);
+
+                $unauthorizedAttempt = array_filter($restrictedNodes, function ($item) use ($controller, $action) {
+                    return strtolower($item->get("controller")) == $controller && strtolower($item->get("action")) == $action;
+                });
+
+                if (count($unauthorizedAttempt) > 0) {
+                    return $self->redirect()->toUrl("/Index/index");
+                }
+            }            
         }
     }
 }

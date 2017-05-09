@@ -5,13 +5,13 @@ namespace Application\API\Repositories\Base {
     use Doctrine\Common\Collections\Criteria,
         Doctrine\ORM\EntityRepository,
         Doctrine\ORM\Query\Expr,
-        Doctrine\ORM\EntityManager,
+        Doctrine\ORM\EntityManagerInterface,
         Application\API\Canonicals\Response\ResponseUtils;
     
     class Repository implements IRepository {
         
         /**
-         * @var EntityManager 
+         * @var EntityManagerInterface 
          */
         protected $em;
         
@@ -20,7 +20,7 @@ namespace Application\API\Repositories\Base {
          */
         public $repository;
         
-        public function __construct(EntityManager $em, EntityRepository $repository) {
+        public function __construct(EntityManagerInterface $em, EntityRepository $repository) {
             $this->em = $em;
             $this->repository = $repository;
         }
@@ -229,5 +229,9 @@ namespace Application\API\Repositories\Base {
                 }
             });
         }
-   }
+
+        public function em() {
+            return $this->em;
+        }
+    }
 }
