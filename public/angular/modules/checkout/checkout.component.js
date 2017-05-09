@@ -11,7 +11,7 @@ angular.module('checkout')
         self.checkout = null;
         
         self.getCountries = function() {
-            $http.get('/api/CountriesApi/getcountries').then(function (response) {
+            $http.get('/api/CountryApi/getcountries').then(function (response) {
                 if (!response.data.success) {
                     toastrErrorFromList(response.data.errors);
                 } else {

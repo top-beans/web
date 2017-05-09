@@ -134,7 +134,7 @@ namespace Application\API\Repositories\Base {
         }
         
         public function add($entity) {
-            $this->em->transactional(function(EntityManager $em) use($entity) {
+            $this->em->transactional(function(EntityManagerInterface $em) use($entity) {
                 $em->persist($entity);
             });
         }
@@ -142,7 +142,7 @@ namespace Application\API\Repositories\Base {
         public function addOrUpdate($entity) {
             $repo = $this->repository;
             
-            $this->em->transactional(function(EntityManager $em) use($entity, $repo) {
+            $this->em->transactional(function(EntityManagerInterface $em) use($entity, $repo) {
                 
                 $metadata = $em->getClassMetadata($repo->getClassName());
                 $id = $metadata->getIdentifierValues($entity);
@@ -164,7 +164,7 @@ namespace Application\API\Repositories\Base {
         public function update($entity) {
             $repo = $this->repository;
             
-            $this->em->transactional(function(EntityManager $em) use($entity, $repo) {
+            $this->em->transactional(function(EntityManagerInterface $em) use($entity, $repo) {
                 
                 $metadata = $em->getClassMetadata($repo->getClassName());
                 $id = $metadata->getIdentifierValues($entity);
@@ -181,7 +181,7 @@ namespace Application\API\Repositories\Base {
         public function delete($entity) {
             $repo = $this->repository;
             
-            $this->em->transactional(function(EntityManager $em) use($entity, $repo) {
+            $this->em->transactional(function(EntityManagerInterface $em) use($entity, $repo) {
                 
                 $metadata = $em->getClassMetadata($repo->getClassName());
                 $id = $metadata->getIdentifierValues($entity);
@@ -198,7 +198,7 @@ namespace Application\API\Repositories\Base {
         public function deleteList(array $entities) {
             $repo = $this->repository;
             
-            $this->em->transactional(function(EntityManager $em) use($entities, $repo) {
+            $this->em->transactional(function(EntityManagerInterface $em) use($entities, $repo) {
                 
                 $metadata = $em->getClassMetadata($repo->getClassName());
                 
@@ -218,7 +218,7 @@ namespace Application\API\Repositories\Base {
         public function deleteByKey($id) {
             $repo = $this->repository;
             
-            $this->em->transactional(function(EntityManager $em) use($id, $repo) {
+            $this->em->transactional(function(EntityManagerInterface $em) use($id, $repo) {
                 
                 $oneRecord = $repo->find($id);
                 
