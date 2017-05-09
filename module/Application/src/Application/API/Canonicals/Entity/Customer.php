@@ -33,7 +33,7 @@ class Customer
      * @Type("integer")
      * @var integer
      *
-     * @ORM\Column(name="billingAddressKey", type="integer", nullable=true)
+     * @ORM\Column(name="billingAddressKey", type="integer", nullable=false)
      */
     private $billingaddresskey;
 
