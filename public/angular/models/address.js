@@ -10,5 +10,5 @@ namespace('models').address = function (data) {
     self.city = !data ? null : data.city;
     self.email = !data ? null : data.email;
     self.phone = !data ? null : data.phone;
-    self.countrykey = !data ? null : data.countrykey;
+    self.countrykey = !data ? models.countries.UK : data.countrykey;
 };

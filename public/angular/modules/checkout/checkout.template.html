@@ -1,1 +1,138 @@
-<span></span>
+<div class="shell">
+    <div class="range range-md-justify">
+        <div class="cell-md-6 cell-lg-6 offset-top-22 offset-md-top-0">
+            <h3>Delivery Address</h3>
+            <form class="rd-mailform form-modern offset-top-22">
+                <div class="range">
+                    <div class="cell-xs-12">
+                        <div class="form-group">
+                            Fullname
+                            <input ng-model="$ctrl.order.deliveryaddress.fullname" type="text" placeholder="Fullname" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-12">
+                        <div class="form-group">
+                            Address Line 1
+                            <input ng-model="$ctrl.order.deliveryaddress.address1" type="text" placeholder="Address Line 1" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Address Line 2
+                            <input ng-model="$ctrl.order.deliveryaddress.address2" type="text" placeholder="Address Line 2" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Post Code
+                            <input ng-model="$ctrl.order.deliveryaddress.postcode" type="text" placeholder="Post Code" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            City
+                            <input ng-model="$ctrl.order.deliveryaddress.city" type="text" placeholder="City" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Country
+                            <select ng-model="$ctrl.order.deliveryaddress.countrykey" class="form-control">
+                                <option ng-repeat="x in $ctrl.countries" value="{{x.countrykey}}">{{x.name}}</option>
+                            </select>                            
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Email
+                            <input ng-model="$ctrl.order.deliveryaddress.email" type="email" placeholder="Email" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Phone
+                            <input ng-model="$ctrl.order.deliveryaddress.phone" type="text" placeholder="Phone" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-12">
+                        <div class="form-group">
+                            <label><input type="checkbox" ng-model="$ctrl.billingDifferent" /> &nbsp;<span>My Billing Address is different</span></label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="cell-md-6 cell-lg-6 offset-top-22 offset-md-top-0">
+            <h3>Summary</h3>
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+                        <tr><td>Order Total</td><td>£234</td></tr>
+                        <tr><td>Free Shipping</td><td>£0</td></tr>
+                    </tbody>
+                </table>
+                <div class="cell-xs-12 offset-top-30"><a href="/Index/checkout" class="btn btn-xl btn-red-orange">Place order</a></div>
+            </div>
+        </div>
+        <div class="cell-md-6 cell-lg-6 offset-top-22" ng-show="$ctrl.billingDifferent">
+            <h3>Billing Address</h3>
+            <form class="rd-mailform form-modern offset-top-22">
+                <div class="range">
+                    <div class="cell-xs-12">
+                        <div class="form-group">
+                            Fullname
+                            <input ng-model="$ctrl.order.billingaddress.fullname" type="text" placeholder="Fullname" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-12">
+                        <div class="form-group">
+                            Address Line 1
+                            <input ng-model="$ctrl.order.billingaddress.address1" type="text" placeholder="Address Line 1" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Address Line 2
+                            <input ng-model="$ctrl.order.billingaddress.address2" type="text" placeholder="Address Line 2" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Post Code
+                            <input ng-model="$ctrl.order.billingaddress.postcode" type="text" placeholder="Post Code" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            City
+                            <input ng-model="$ctrl.order.billingaddress.city" type="text" placeholder="City" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Country
+                            <select ng-model="$ctrl.order.billingaddress.countrykey" class="form-control">
+                                <option ng-repeat="x in $ctrl.countries" value="{{x.countrykey}}">{{x.name}}</option>
+                            </select>                            
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Email
+                            <input ng-model="$ctrl.order.billingaddress.email" type="email" placeholder="Email" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Phone
+                            <input ng-model="$ctrl.order.billingaddress.phone" type="text" placeholder="Phone" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+            

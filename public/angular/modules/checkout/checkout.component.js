@@ -7,9 +7,6 @@ angular.module('checkout')
     controller: ['$http', 'cartService', 'cookieService', function ($http, cartService, cookieService) {
         var self = this;
 
-        self.countries = [];
-        self.checkout = null;
-        
         self.getCountries = function() {
             $http.get('/api/CountryApi/getcountries').then(function (response) {
                 if (!response.data.success) {
@@ -20,14 +17,25 @@ angular.module('checkout')
             });
         };
         
-        self.initCheckout = function () {
-            self.checkout = new models.checkout();            
-            self.checkout.cookie = cookieService.get();
+        self.getCart = function() {
+            cartService.getCart(cookieService.get(), function (data) {
+                if (!data.success) {
+                    toastrErrorFromList(data.errors);
+                } else {
+                    if (data.warnings.length) toastrWarningFromList(data.warnings);
+                    self.cartItems = _(data.items).sortBy(['createddate']).reverse().value();
+                }
+            });
         };
         
         self.$onInit = function () {
+            self.countries = [];
+            self.cartItems = [];
+            self.order = new models.checkout({ cookie: cookieService.get() });
+            self.billingDifferent = false;
+            
             self.getCountries();
-            self.initCheckout();
+            self.getCart();
         };
     }]
 });

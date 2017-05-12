@@ -7975,7 +7975,7 @@ html.lt-ie-10 * + [class*='cell-'],
 * + [class*='cell-'],
 html.lt-ie-10 * + .range-sm,
 * + .range-sm {
-  margin-top: 30px;
+  margin-top: 15px;
 }
 
 html.lt-ie-10 * + .range-lg,
@@ -10548,7 +10548,7 @@ html {
 body {
   font-family: "Lato", Helvetica, Arial, sans-serif;
   -webkit-text-size-adjust: none;
-  color: #9f9f9f;
+  color: #333;
   background-color: #fff;
   font-weight: 400;
   -webkit-font-smoothing: subpixel-antialiased;
@@ -25723,11 +25723,10 @@ textarea.form-control {
 
 .form-control {
   height: auto;
-  min-height: 52px;
+  min-height: 36px;
   padding: 12.1px 16.1px;
   border: 1px solid;
   border-radius: 5px;
-  -webkit-appearance: none;
   line-height: 23.8px;
 }
 
@@ -26215,12 +26214,12 @@ form.label-outside .form-validation {
 
 .page .form-modern .form-control,
 .page .form-modern .form-label {
-  color: #9f9f9f;
+  color: #000;
 }
 
 .page .form-modern input {
   height: auto;
-  min-height: 20px;
+  min-height: 12px;
 }
 
 .page .form-modern .form-control:focus {
@@ -26231,7 +26230,7 @@ form.label-outside .form-validation {
   padding: 6px 5px;
   border-radius: 0;
   border-width: 1px 1px 1px 1px;
-  border-color: #dedede;
+  border-color: #999;
   background-color: transparent;
   margin: 5px 0;
 }
@@ -33448,6 +33447,10 @@ blockquote cite {
 
 html .page .offset-top-0 {
   margin-top: 0;
+}
+
+html .page .offset-top-10 {
+  margin-top: 10px;
 }
 
 html .page .offset-top-15 {
