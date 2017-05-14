@@ -7,6 +7,7 @@ namespace Application\Controller {
     use JMS\Serializer\SerializerInterface;
     use Application\API\Repositories\Interfaces\ICartRepository;
     use Application\API\Canonicals\Response\ResponseUtils;
+    use Application\API\Canonicals\Entity\RequestTypes;
 
     class CartApiController extends BaseController {
         
@@ -51,6 +52,18 @@ namespace Application\Controller {
                 $cookieKey = $this->p1;
                 $items = $this->cartRepo->getCart($cookieKey);
                 $response = ResponseUtils::responseList($items);
+                return $this->jsonResponse($response);
+            } catch (\Exception $ex) {
+                $response = ResponseUtils::createExceptionResponse($ex);
+                return $this->jsonResponse($response);
+            }
+        }
+
+        public function getcartbreakdownAction() {
+            try {
+                $cookieKey = $this->p1;
+                $item = $this->cartRepo->getCartBreakdown($cookieKey);
+                $response = ResponseUtils::responseItem($item);
                 return $this->jsonResponse($response);
             } catch (\Exception $ex) {
                 $response = ResponseUtils::createExceptionResponse($ex);

@@ -65,13 +65,46 @@
         <div class="cell-md-6 cell-lg-6 offset-top-22 offset-md-top-0">
             <h3>Summary</h3>
             <div class="table-responsive">
-                <table class="table">
-                    <tbody>
-                        <tr><td>Order Total</td><td>£234</td></tr>
-                        <tr><td>Free Shipping</td><td>£0</td></tr>
+                <table class="table table-condensed">
+                    <thead ng-if="$ctrl.cartBreakDown.coffees.items.length > 0">
+                        <tr><th colspan="2">Coffees</th></tr>
+                    </thead>
+                    <tbody ng-if="$ctrl.cartBreakDown.coffees.items.length > 0">
+                        <tr ng-repeat="item in $ctrl.cartBreakDown.coffees.items">
+                            <td class="col-md-10">{{item.name}}: {{item.quantity}} x {{item.packagingunit}}</td>
+                            <td class="col-md-2">&pound; {{item.itemprice}}</td>
+                        </tr>
                     </tbody>
+                    
+                    <thead ng-if="$ctrl.cartBreakDown.paidSamples.items.length > 0">
+                        <tr><th colspan="2">Samples</th></tr>
+                    </thead>
+                    <tbody ng-if="$ctrl.cartBreakDown.paidSamples.items.length > 0">
+                        <tr ng-repeat="item in $ctrl.cartBreakDown.paidSamples.items">
+                            <td>{{item.name}}: {{item.quantity}} {{item.pricebaseunit}}</td>
+                            <td>&pound; {{item.itemprice}}</td>
+                        </tr>
+                    </tbody>
+                    
+                    <thead ng-if="$ctrl.cartBreakDown.freeSamples.length > 0">
+                        <tr><th colspan="2">Free Samples</th></tr>
+                    </thead>
+                    <tbody ng-if="$ctrl.cartBreakDown.freeSamples.length > 0">
+                        <tr ng-repeat="item in $ctrl.cartBreakDown.freeSamples">
+                            <td>{{item.name}}: {{item.quantity}} {{item.pricebaseunit}}</td>
+                            <td>&pound; 0.00</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr><td>Shipping (Free)</td><td>&pound; 0.00</td></tr>
+                        <tr><td>Total</td><td>&pound; {{$ctrl.cartBreakDown.total}}</td></tr>
+                    </tfoot>
                 </table>
-                <div class="cell-xs-12 offset-top-30"><a href="/Index/checkout" class="btn btn-xl btn-red-orange">Place order</a></div>
+                <div class=" text-right">
+                    <div class="cell-xs-12 offset-top-30">
+                        <a href="/Index/checkout" class="btn btn-sm btn-red-orange">Place order</a>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="cell-md-6 cell-lg-6 offset-top-22" ng-show="$ctrl.billingDifferent">

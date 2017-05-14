@@ -17,25 +17,25 @@ angular.module('checkout')
             });
         };
         
-        self.getCart = function() {
-            cartService.getCart(cookieService.get(), function (data) {
+        self.getCartBreakDown = function() {
+            cartService.getCartBreakDown(cookieService.get(), function (data) {
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
                 } else {
                     if (data.warnings.length) toastrWarningFromList(data.warnings);
-                    self.cartItems = _(data.items).sortBy(['createddate']).reverse().value();
+                    self.cartBreakDown = data.item;
                 }
             });
         };
         
         self.$onInit = function () {
             self.countries = [];
-            self.cartItems = [];
+            self.cartBreakDown = null;
             self.order = new models.checkout({ cookie: cookieService.get() });
             self.billingDifferent = false;
             
             self.getCountries();
-            self.getCart();
+            self.getCartBreakDown();
         };
     }]
 });

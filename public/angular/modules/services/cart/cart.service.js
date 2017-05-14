@@ -41,6 +41,14 @@ service('cartService', ['$http', function ($http) {
             
         });
     };
+
+    self.getCartBreakDown = function (cookieKey, callback) {
+        $http.get("/api/CartApi/getcartbreakdown/" + cookieKey).then(function (response) {
+            if (callback) callback(response.data);
+        }, function (error) {
+            
+        });
+    };
     
     self.addToCart = function (cart, callback) {
         $http.patch("/api/CartApi/patch", cart).then(function (response) {

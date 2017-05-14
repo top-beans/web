@@ -117,10 +117,48 @@ namespace Application\API\Repositories\Implementations {
             $total = 0;
             
             foreach($items as $item) {
-                $total += $item->getItemprice();
+                if ($item->getRequesttypekey() == RequestTypes::Purchase || $item->getQuantity() > $item->getMaxfreesamplequantity()) {
+                    $total += $item->getItemprice();
+                }
             }
             
             return number_format($total, 2, '.', '');
+        }
+        
+        public function getCartBreakdown($cookieKey) {
+            $coffees = $this->cartViewRepo->findBy(['cookiekey' => $cookieKey, 'requesttypekey' => RequestTypes::Purchase]);
+            $coffeeTotal = 0;
+            
+            foreach($coffees as $item) {
+                $coffeeTotal += $item->getItemprice();
+            }
+            
+            $samples = $this->cartViewRepo->findBy(['cookiekey' => $cookieKey, 'requesttypekey' => RequestTypes::Sample]);
+            $paidSampleTotal = 0;
+            $paidSampleItems = [];
+            $freeSampleItems = [];
+            
+            foreach($samples as $item) {
+                if ($item->getQuantity() <= $item->getMaxfreesamplequantity()) {
+                    $freeSampleItems[] = $item;
+                } else {
+                    $paidSampleTotal += $item->getItemprice();
+                    $paidSampleItems = $item;
+                }
+            }
+            
+            return [
+                'coffees' => [
+                    'items' => $coffees,
+                    'total' => $coffeeTotal,
+                ],
+                'paidSamples' => [
+                    'items' => $paidSampleItems,
+                    'total' => $paidSampleTotal,
+                ],
+                'freeSamples' => $freeSampleItems,
+                'total' => number_format($coffeeTotal + $paidSampleTotal, 2, '.', '')
+            ];
         }
 
         public function updateCart(Shoppingcart $cart) {

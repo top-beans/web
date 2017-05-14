@@ -8,6 +8,7 @@ namespace Application\API\Repositories\Interfaces {
         public function getCart($cookieKey);
         public function getCartSize($cookieKey);
         public function getCartTotal($cookieKey);
+        public function getCartBreakdown($cookieKey);
         
         public function addToCart(Shoppingcart $cart);
         public function updateCart(Shoppingcart $cart);
