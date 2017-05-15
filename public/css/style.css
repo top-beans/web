@@ -142,3 +142,14 @@ i.cart-icon {
     border-radius: 50%;
     text-align: center;
 }
+
+.cart-actions {
+    font-size: 20px;
+    color: #666;
+}
+.cart-actions > span {
+    cursor: pointer;
+}
+.cart-actions > span:hover {
+    color: #58c4a7;
+}

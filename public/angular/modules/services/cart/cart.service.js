@@ -71,4 +71,26 @@ service('cartService', ['$http', function ($http) {
             
         });
     };
+    
+    self.incrementCartItem = function (cookieKey, coffeeKey, callback) {
+        $http.delete("/api/CartApi/increment/" + cookieKey + "/" + coffeeKey).then(function (response) {
+            if (callback) callback(response.data);
+            if (response.data.success) {
+                self.getCartTotal(cookieKey, self.notifyTotalSubscriptions);
+            }
+        }, function (error) {
+            
+        });
+    };
+    
+    self.decrementCartItem = function (cookieKey, coffeeKey, callback) {
+        $http.delete("/api/CartApi/decrement/" + cookieKey + "/" + coffeeKey).then(function (response) {
+            if (callback) callback(response.data);
+            if (response.data.success) {
+                self.getCartTotal(cookieKey, self.notifyTotalSubscriptions);
+            }
+        }, function (error) {
+            
+        });
+    };
 }]);

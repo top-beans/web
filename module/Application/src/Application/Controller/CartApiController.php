@@ -122,5 +122,31 @@ namespace Application\Controller {
                 return $this->jsonResponse($response);
             }
         }
+        
+        public function incrementAction() {
+            try {
+                $cookieKey = $this->p1;
+                $coffeeKey = $this->p2;
+                $updatedItem = $this->cartRepo->incrementCartItem($cookieKey, $coffeeKey);
+                $response = ResponseUtils::responseItem($updatedItem);
+                return $this->jsonResponse($response);
+            } catch (\Exception $ex) {
+                $response = ResponseUtils::createExceptionResponse($ex);
+                return $this->jsonResponse($response);
+            }
+        }
+        
+        public function decrementAction() {
+            try {
+                $cookieKey = $this->p1;
+                $coffeeKey = $this->p2;
+                $updatedItem = $this->cartRepo->decrementCartItem($cookieKey, $coffeeKey);
+                $response = ResponseUtils::responseItem($updatedItem);
+                return $this->jsonResponse($response);
+            } catch (\Exception $ex) {
+                $response = ResponseUtils::createExceptionResponse($ex);
+                return $this->jsonResponse($response);
+            }
+        }
    }
 }

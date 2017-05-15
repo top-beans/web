@@ -19,22 +19,22 @@ namespace Application\API\Repositories\Implementations {
         /**
          * @var EntityManager 
          */
-        protected $em;
+        private $em;
         
         /**
          * @var IRepository
          */
-        protected $cartRepo;
+        private $cartRepo;
         
         /**
          * @var IRepository
          */
-        protected $coffeeRepo;
+        private $coffeeRepo;
         
         /**
          * @var IRepository
          */
-        protected $cartViewRepo;
+        private $cartViewRepo;
         
         public function __construct(EntityManager $em) {
             $this->em = $em;
@@ -143,7 +143,7 @@ namespace Application\API\Repositories\Implementations {
                     $freeSampleItems[] = $item;
                 } else {
                     $paidSampleTotal += $item->getItemprice();
-                    $paidSampleItems = $item;
+                    $paidSampleItems[] = $item;
                 }
             }
             
@@ -163,6 +163,41 @@ namespace Application\API\Repositories\Implementations {
 
         public function updateCart(Shoppingcart $cart) {
             $this->cartRepo->update($cart);
+        }
+
+        public function decrementCartItem($cookiekey, $coffeeKey) {
+            $matching = $this->cartRepo->findOneBy(['cookiekey' => $cookiekey, 'coffeekey' => $coffeeKey]);
+            
+            if ($matching == null) {
+                throw new \Exception("Could not find matching item");
+            } else {
+                if ($matching->getQuantity() <= 1) {
+                    throw new \Exception("Cannot Decrement further");
+                } else {
+                    $matching->setQuantity($matching->getQuantity() - 1);
+                    $this->cartRepo->update($matching);
+                    return $this->cartViewRepo->findOneBy(['cookiekey' => $cookiekey, 'coffeekey' => $coffeeKey]);
+                }
+            }
+        }
+
+        public function incrementCartItem($cookiekey, $coffeeKey) {
+            $matching = $this->cartRepo->findOneBy(['cookiekey' => $cookiekey, 'coffeekey' => $coffeeKey]);
+            
+            if ($matching == null) {
+                throw new \Exception("Could not find matching item");
+            } else {
+                $coffee = $this->coffeeRepo->fetch($coffeeKey);
+                $isPurchase = $matching->getRequesttypekey() == RequestTypes::Purchase;
+
+                if ($matching->getQuantity() >= $coffee->getAvailableamount() * ($isPurchase ? 1 : $coffee->getBaseunitsperpackage())) {
+                    throw new \Exception("Cannot Increment further");
+                } else {
+                    $matching->setQuantity($matching->getQuantity() + 1);
+                    $this->cartRepo->update($matching);
+                    return $this->cartViewRepo->findOneBy(['cookiekey' => $cookiekey, 'coffeekey' => $coffeeKey]);
+                }
+            }
         }
     }
 }

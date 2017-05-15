@@ -67,37 +67,41 @@
             <div class="table-responsive">
                 <table class="table table-condensed">
                     <thead ng-if="$ctrl.cartBreakDown.coffees.items.length > 0">
-                        <tr><th colspan="2">Coffees</th></tr>
-                    </thead>
-                    <tbody ng-if="$ctrl.cartBreakDown.coffees.items.length > 0">
-                        <tr ng-repeat="item in $ctrl.cartBreakDown.coffees.items">
-                            <td class="col-md-10">{{item.name}}: {{item.quantity}} x {{item.packagingunit}}</td>
-                            <td class="col-md-2">&pound; {{item.itemprice}}</td>
+                        <tr>
+                            <th class="col-md-3">Type</th>
+                            <th class="col-md-4">Name</th>
+                            <th class="col-md-3">Qty</th>
+                            <th class="col-md-2">Cost</th>
                         </tr>
-                    </tbody>
-                    
-                    <thead ng-if="$ctrl.cartBreakDown.paidSamples.items.length > 0">
-                        <tr><th colspan="2">Samples</th></tr>
                     </thead>
-                    <tbody ng-if="$ctrl.cartBreakDown.paidSamples.items.length > 0">
-                        <tr ng-repeat="item in $ctrl.cartBreakDown.paidSamples.items">
-                            <td>{{item.name}}: {{item.quantity}} {{item.pricebaseunit}}</td>
-                            <td>&pound; {{item.itemprice}}</td>
-                        </tr>
-                    </tbody>
-                    
-                    <thead ng-if="$ctrl.cartBreakDown.freeSamples.length > 0">
-                        <tr><th colspan="2">Free Samples</th></tr>
-                    </thead>
-                    <tbody ng-if="$ctrl.cartBreakDown.freeSamples.length > 0">
+                    <tbody>
                         <tr ng-repeat="item in $ctrl.cartBreakDown.freeSamples">
-                            <td>{{item.name}}: {{item.quantity}} {{item.pricebaseunit}}</td>
-                            <td>&pound; 0.00</td>
+                            <th>Sample (Free)</th>
+                            <td>{{item.name}}</td>
+                            <td>{{item.quantity}} {{item.pricebaseunit}}</td>
+                            <td>&pound;0.00</td>
+                        </tr>
+                        
+                        <tr ng-repeat="item in $ctrl.cartBreakDown.paidSamples.items">
+                            <th>Sample</th>
+                            <td>{{item.name}}</td>
+                            <td>{{item.quantity}} {{item.pricebaseunit}}</td>
+                            <td>&pound;{{item.itemprice}}</td>
+                        </tr>
+                        
+                        <tr ng-repeat="item in $ctrl.cartBreakDown.coffees.items">
+                            <th>Purchase</th>
+                            <td>{{item.name}}</td>
+                            <td>{{item.quantity}} &times; {{item.packagingunit}}</td>
+                            <td>&pound;{{item.itemprice}}</td>
                         </tr>
                     </tbody>
+                    
                     <tfoot>
-                        <tr><td>Shipping (Free)</td><td>&pound; 0.00</td></tr>
-                        <tr><td>Total</td><td>&pound; {{$ctrl.cartBreakDown.total}}</td></tr>
+                        <tr>
+                            <td colspan="3">Total (Free Shipping)</td>
+                            <td>&pound;{{$ctrl.cartBreakDown.total}}</td>
+                        </tr>
                     </tfoot>
                 </table>
                 <div class=" text-right">

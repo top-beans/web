@@ -29533,16 +29533,6 @@ p + p {
   margin-top: 28px;
 }
 
-* + .btn {
-  margin-top: 30px;
-}
-
-@media (min-width: 1200px) {
-  * + .btn {
-    margin-top: 44px;
-  }
-}
-
 * + .link {
   margin-top: 18px;
 }

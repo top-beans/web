@@ -33,15 +33,15 @@ namespace('modals').addToCartCtrl = function ($uibModalInstance, cartService, co
     self.addToCart = function () {
         if (!self.validate()) {
             return;
-        } else {
-            cartService.addToCart(self.shoppingCart, function (data) {
-                if (!data.success) {
-                    toastrErrorFromList(data.errors);
-                } else {
-                    $uibModalInstance.close(data);
-                }
-            });
         }
+        
+        cartService.addToCart(self.shoppingCart, function (data) {
+            if (!data.success) {
+                toastrErrorFromList(data.errors);
+            } else {
+                $uibModalInstance.close(data);
+            }
+        });
     };
 
     self.closeModal = function () {

@@ -15,6 +15,8 @@ namespace Application\API\Repositories\Interfaces {
         public function mergeCart(Shoppingcart $cart);
         public function validateMergeCart(Shoppingcart $cart);
         public function deleteFromCart($cookiekey, $coffeeKey);
+        public function incrementCartItem($cookiekey, $coffeeKey);
+        public function decrementCartItem($cookiekey, $coffeeKey);
     }
 }
 

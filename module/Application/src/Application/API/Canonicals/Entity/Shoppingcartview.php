@@ -235,6 +235,38 @@ class Shoppingcartview
      * @Type("integer")
      * @var integer
      *
+     * @ORM\Column(name="isPurchase", type="integer", nullable=false)
+     */
+    private $ispurchase;
+    
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="isSample", type="integer", nullable=false)
+     */
+    private $issample;
+    
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="isPaidSample", type="integer", nullable=false)
+     */
+    private $ispaidsample;
+    
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="isFreeSample", type="integer", nullable=false)
+     */
+    private $isfreesample;
+    
+    /**
+     * @Type("integer")
+     * @var integer
+     *
      * @ORM\Column(name="maxFreeSampleQuantity", type="integer", nullable=false)
      */
     private $maxfreesamplequantity;
@@ -290,6 +322,10 @@ class Shoppingcartview
     function getPricebaseunit() { return $this->pricebaseunit; }
     function getPackagingunit() { return $this->packagingunit; }
     function getBaseunitsperpackage() { return $this->baseunitsperpackage; }
+    function getIspurchase() { return $this->ispurchase; }
+    function getIssample() { return $this->issample; }
+    function getIspaidsample() { return $this->ispaidsample; }
+    function getIsfreesample() { return $this->isfreesample; }
     function getMaxfreesamplequantity() { return $this->maxfreesamplequantity; }
     function getSensorialdescriptors() { return $this->sensorialdescriptors; }
     function getCultivars() { return $this->cultivars; }
@@ -322,6 +358,10 @@ class Shoppingcartview
     function setPricebaseunit($val) { $this->pricebaseunit = $val; } 
     function setPackagingunit($val) { $this->packagingunit = $val; }
     function setBaseunitsperpackage($val) { $this->baseunitsperpackage = $val; }
+    function setIspurchase($val) { $this->ispurchase = $val; }
+    function setIssample($val) { $this->issample = $val; }
+    function setIspaidsample($val) { $this->ispaidsample = $val; }
+    function setIsfreesample($val) { $this->isfreesample = $val; }
     function setMaxfreesamplequantity($val) { $this->maxfreesamplequantity = $val; }
     function setSensorialdescriptors($val) { $this->sensorialdescriptors = $val; } 
     function setCultivars($val) { $this->cultivars = $val; } 

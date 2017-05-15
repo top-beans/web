@@ -4,47 +4,49 @@
             <h3>{{$ctrl.cartItems.length}} {{$ctrl.cartItems.length == 1 ? 'Item' : 'Items'}} in your cart</h3>
         </div>
         <div class="cell-xs-12 offset-top-22">
-      
-            <div class="product product-cart-item" ng-repeat="cartItem in $ctrl.cartItems">
-                <div class="product-main">
-                    <div class="product-body">
-                        <p class="product-brand">{{cartItem.region}}{{(coffee.region == null ? '' : ',')}} {{cartItem.country}}</p>
-                        <h5>{{cartItem.name}} {{(cartItem.requesttypekey === 1 ? '(Sample Only)' : '')}}</h5>
-                        <div class="product-rating" style='margin-top:0px'>
-                            <ul class="list-rating">
-
-                                <li ng-repeat="n in $ctrl.fullStars(cartItem)">
-                                    <span class="icon icon-xxs material-icons-star"></span>
-                                </li>
-                                <li ng-if="$ctrl.halfStar(cartItem)">
-                                    <span class="icon icon-xxs material-icons-star_half"></span>
-                                </li>
-                                <li ng-repeat="n in $ctrl.borderStars(cartItem)">
-                                    <span class="icon icon-xxs material-icons-star_border"></span>
-                                </li>
-                            </ul><span class="text-light">{{cartItem.cuppingscore}} Cupping Score</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-aside">
-                    <div class="product-group">
-                        <dl class="dl-inline">
-                            <dt>Quantity</dt>
-                            <dd ng-if="cartItem.requesttypekey === 1"><span class="product-size">{{cartItem.quantity}} {{cartItem.pricebaseunit}}</span></dd>
-                            <dd ng-if="cartItem.requesttypekey === 2"><span class="product-size">{{cartItem.quantity}} x {{cartItem.packagingunit}}</span></dd>
-                        </dl>
-                        <div ng-if="(cartItem.requesttypekey === 2 || cartItem.quantity > cartItem.maxfreesamplequantity)" class="pricing-object pricing-object-sm">
-                            <span class="small small-middle">{{cartItem.currency}}</span>
-                            <span class="price">{{cartItem.itemprice.substring(0, cartItem.itemprice.indexOf('.'))}}</span><span class="small small-bottom">{{cartItem.itemprice.substring(cartItem.itemprice.indexOf('.'))}}</span>
-                        </div>
-                        <div ng-if="(cartItem.requesttypekey === 1 && cartItem.quantity <= cartItem.maxfreesamplequantity)" class="pricing-object pricing-object-sm">
-                            <span class="small small-middle">{{cartItem.currency}}</span>
-                            <span class="price">0</span><span class="small small-bottom">.00 <span style="color:red;">(Free Sample)</span></span>
-                        </div>
-                    </div>
-                    <div class="product-control"><a ng-click="$ctrl.deleteFromCart(cartItem)" class="icon icon-sm link-gray-light material-icons-cancel"></a></div>
-                </div>
-            </div>
+            <table class="table table-condensed" ng-if="$ctrl.cartItems.length > 0">
+                <thead>
+                    <tr>
+                        <th class="col-md-2 hidden-xs">Type</th>
+                        <th class="col-md-4">Name</th>
+                        <th class="col-md-2">Qty</th>
+                        <th class="col-md-2 hidden-xs hidden-sm">Cost</th>
+                        <th class="col-md-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in $ctrl.cartItems">
+                        <th class="hidden-xs">
+                            <span ng-if="item.ispurchase">Purchase</span>
+                            <span ng-if="item.ispaidsample">Sample</span>
+                            <span ng-if="item.isfreesample">Sample (Free)</span>
+                        </th>
+                        <td>{{item.name}}</td>
+                        <td>
+                            <span ng-if="item.ispurchase">{{item.quantity}} &times; {{item.packagingunit}}</span>
+                            <span ng-if="item.issample">{{item.quantity}} {{item.pricebaseunit}}</span>
+                        </td>
+                        <td class="hidden-xs hidden-sm">
+                            <span ng-if="item.ispurchase || item.ispaidsample">&pound;{{item.itemprice}}</span>
+                            <span ng-if="item.isfreesample">&pound;0.00</span>
+                        </td>
+                        <td class="cart-actions">
+                            <span class="glyphicon glyphicon-plus-sign"  ng-click="$ctrl.incrementItem(item)"></span>&nbsp;
+                            <span class="glyphicon glyphicon-minus-sign"  ng-click="$ctrl.decrementItem(item)"></span>&nbsp;&nbsp;
+                            <span class="glyphicon glyphicon-remove-circle" ng-click="$ctrl.deleteFromCart(item)"></span>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>Free Shipping</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>&pound; 0.00</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
     <div class="range offset-top-30 text-right">

@@ -7,10 +7,9 @@ angular.module('shoppingCart')
     controller: ['cookieService', 'cartService', function (cookieService, cartService) {
         var self = this;
 
-        self.cartItems = [];
-        self.cartTotal = 0;
-
         self.$onInit = function () {
+            self.cartItems = [];
+            self.cartTotal = 0;
             self.getCart();
             cartService.getCartTotal(cookieService.get(), self.updateCartTotal, true);
         };
@@ -54,13 +53,56 @@ angular.module('shoppingCart')
         };
 
         self.deleteFromCart = function (cartItem) {
-            cartService.deleteFromCart(cookieService.get(), cartItem.coffeekey, function (data) {
+            bootbox.confirm({
+                title: "Confirm",
+                message: "Are you sure?",
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Cancel',
+                        className: 'btn btn-default btn-xs'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirm',
+                        className: 'btn btn-primary btn-xs'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        cartService.deleteFromCart(cookieService.get(), cartItem.coffeekey, function (data) {
+                            if (!data.success) {
+                                toastrErrorFromList(data.errors);
+                            } else {
+                                if (data.warnings.length) toastrWarningFromList(data.warnings);
+                                var index = _.findIndex(self.cartItems, function (o) { return o.shoppingcartkey === cartItem.shoppingcartkey; });
+                                self.cartItems.splice(index, 1);
+                                toastrSuccess("Deleted Item Successfully");
+                            }
+                        });
+                    }
+                }
+            });            
+        };
+
+        self.incrementItem = function (cartItem) {
+            cartService.incrementCartItem(cookieService.get(), cartItem.coffeekey, function (data) {
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
                 } else {
                     if (data.warnings.length) toastrWarningFromList(data.warnings);
-                    toastrSuccess("Deleted Item Successfully");
-                    self.cartItems.splice(_.findIndex(self.cartItems, cartItem.shoppingcartkey), 1);
+                    var index = _.findIndex(self.cartItems, function (o) { return o.shoppingcartkey === cartItem.shoppingcartkey; });
+                    self.cartItems.splice(index, 1, data.item);
+                }
+            });
+        };
+
+        self.decrementItem = function (cartItem) {
+            cartService.decrementCartItem(cookieService.get(), cartItem.coffeekey, function (data) {
+                if (!data.success) {
+                    toastrErrorFromList(data.errors);
+                } else {
+                    if (data.warnings.length) toastrWarningFromList(data.warnings);
+                    var index = _.findIndex(self.cartItems, function (o) { return o.shoppingcartkey === cartItem.shoppingcartkey; });
+                    self.cartItems.splice(index, 1, data.item);
                 }
             });
         };
