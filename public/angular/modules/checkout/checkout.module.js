@@ -3,5 +3,6 @@
 angular.module('checkout', [
     'ui.bootstrap',
     'cartService',
-    'cookieService'
+    'cookieService',
+    'orderService'
 ]);

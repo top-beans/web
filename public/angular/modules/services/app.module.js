@@ -2,5 +2,6 @@
 
 angular.module('services', [
     'cartService',
-    'cookieService'
+    'cookieService',
+    'orderService'
 ]);

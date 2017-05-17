@@ -4,7 +4,7 @@ angular.module('checkout')
 
 .component('checkout', {
     templateUrl: '/angular/modules/checkout/checkout.template.html',
-    controller: ['$http', 'cartService', 'cookieService', function ($http, cartService, cookieService) {
+    controller: ['$http', 'cartService', 'cookieService', 'orderService', function ($http, cartService, cookieService, orderService) {
         var self = this;
 
         self.$onInit = function () {

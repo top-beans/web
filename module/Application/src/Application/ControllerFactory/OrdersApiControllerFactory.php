@@ -15,10 +15,9 @@ namespace Application\ControllerFactory {
             $authService = $serviceLocator->get('AdminAuthService');
             $serializer = SerializerBuilder::create()->build();
             $ordersRepo = $serviceLocator->get('OrdersRepo');
-            $cartRepo = $serviceLocator->get('CartRepo');
-            $coffeeRepo = $serviceLocator->get('CoffeeRepo');
+            $emailSvc = $serviceLocator->get('EMailSvc');
             
-            return new OrdersApiController($navRepo, $authService, $serializer, $ordersRepo, $cartRepo, $coffeeRepo);
+            return new OrdersApiController($navRepo, $authService, $serializer, $ordersRepo, $emailSvc);
         }
     }
 }

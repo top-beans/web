@@ -93,7 +93,6 @@ namespace Application {
                 'OrdersRepo'        => 'Application\API\Repositories\Factories\OrdersRepositoryFactory',
                 'CartRepo'          => 'Application\API\Repositories\Factories\CartRepositoryFactory',
                 'EnquiryRepo'       => 'Application\API\Repositories\Factories\EnquiryRepositoryFactory',
-                'CheckoutSvc'       => 'Application\API\Repositories\Factories\CheckoutServiceFactory',
             ],
         ],
 
