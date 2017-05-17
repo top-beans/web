@@ -153,3 +153,19 @@ i.cart-icon {
 .cart-actions > span:hover {
     color: #58c4a7;
 }
+
+.my-underline {
+  border-bottom: 1px solid #999;
+  margin-bottom: 10px;
+}
+
+.my-overline {
+  border-top: 1px solid #999;
+  margin-top: 10px;
+}
+
+form input.ng-touched.ng-invalid-required,
+form input.ng-touched.ng-valid-required.ng-invalid-email {
+    border-color: red!important;
+}
+

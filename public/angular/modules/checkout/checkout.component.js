@@ -7,6 +7,16 @@ angular.module('checkout')
     controller: ['$http', 'cartService', 'cookieService', function ($http, cartService, cookieService) {
         var self = this;
 
+        self.$onInit = function () {
+            self.countries = [];
+            self.cartBreakDown = null;
+            self.order = new models.checkout({ cookie: cookieService.get() });
+            self.billingDifferent = false;
+            
+            self.getCountries();
+            self.getCartBreakDown();
+        };
+        
         self.getCountries = function() {
             $http.get('/api/CountryApi/getcountries').then(function (response) {
                 if (!response.data.success) {
@@ -28,14 +38,8 @@ angular.module('checkout')
             });
         };
         
-        self.$onInit = function () {
-            self.countries = [];
-            self.cartBreakDown = null;
-            self.order = new models.checkout({ cookie: cookieService.get() });
-            self.billingDifferent = false;
+        self.proceed = function() {
             
-            self.getCountries();
-            self.getCartBreakDown();
         };
     }]
 });

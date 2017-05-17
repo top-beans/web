@@ -7968,7 +7968,7 @@ html p a:hover {
 
 html.lt-ie-10 * + .range,
 * + .range {
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 html.lt-ie-10 * + [class*='cell-'],

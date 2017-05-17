@@ -1,19 +1,21 @@
 <div class="shell">
     <div class="range range-md-justify">
         <div class="cell-md-6 cell-lg-6 offset-top-22 offset-md-top-0">
-            <h3>Delivery Address</h3>
-            <form class="rd-mailform form-modern offset-top-22">
+            <form class="rd-mailform form-modern" name="deliveryForm" novalidate>
                 <div class="range">
+                    <div class="cell-xs-12">
+                        <h4 class="my-underline">Delivery Address</h4>
+                    </div>
                     <div class="cell-xs-12">
                         <div class="form-group">
                             Fullname
-                            <input ng-model="$ctrl.order.deliveryaddress.fullname" type="text" placeholder="Fullname" class="form-control">
+                            <input ng-model="$ctrl.order.deliveryaddress.fullname" type="text" placeholder="Fullname" class="form-control" required>
                         </div>
                     </div>
                     <div class="cell-xs-12">
                         <div class="form-group">
                             Address Line 1
-                            <input ng-model="$ctrl.order.deliveryaddress.address1" type="text" placeholder="Address Line 1" class="form-control">
+                            <input ng-model="$ctrl.order.deliveryaddress.address1" type="text" placeholder="Address Line 1" class="form-control" required>
                         </div>
                     </div>
                     <div class="cell-xs-6">
@@ -25,19 +27,19 @@
                     <div class="cell-xs-6">
                         <div class="form-group">
                             Post Code
-                            <input ng-model="$ctrl.order.deliveryaddress.postcode" type="text" placeholder="Post Code" class="form-control">
+                            <input ng-model="$ctrl.order.deliveryaddress.postcode" type="text" placeholder="Post Code" class="form-control" required>
                         </div>
                     </div>
                     <div class="cell-xs-6">
                         <div class="form-group">
                             City
-                            <input ng-model="$ctrl.order.deliveryaddress.city" type="text" placeholder="City" class="form-control">
+                            <input ng-model="$ctrl.order.deliveryaddress.city" type="text" placeholder="City" class="form-control" required>
                         </div>
                     </div>
                     <div class="cell-xs-6">
                         <div class="form-group">
                             Country
-                            <select ng-model="$ctrl.order.deliveryaddress.countrykey" class="form-control">
+                            <select ng-model="$ctrl.order.deliveryaddress.countrykey" class="form-control" required>
                                 <option ng-repeat="x in $ctrl.countries" value="{{x.countrykey}}">{{x.name}}</option>
                             </select>                            
                         </div>
@@ -45,7 +47,7 @@
                     <div class="cell-xs-6">
                         <div class="form-group">
                             Email
-                            <input ng-model="$ctrl.order.deliveryaddress.email" type="email" placeholder="Email" class="form-control">
+                            <input ng-model="$ctrl.order.deliveryaddress.email" type="email" placeholder="Email" class="form-control" required>
                         </div>
                     </div>
                     <div class="cell-xs-6">
@@ -61,70 +63,21 @@
                     </div>
                 </div>
             </form>
-        </div>
-        <div class="cell-md-6 cell-lg-6 offset-top-22 offset-md-top-0">
-            <h3>Summary</h3>
-            <div class="table-responsive">
-                <table class="table table-condensed">
-                    <thead ng-if="$ctrl.cartBreakDown.coffees.items.length > 0">
-                        <tr>
-                            <th class="col-md-3">Type</th>
-                            <th class="col-md-4">Name</th>
-                            <th class="col-md-3">Qty</th>
-                            <th class="col-md-2">Cost</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="item in $ctrl.cartBreakDown.freeSamples">
-                            <th>Sample (Free)</th>
-                            <td>{{item.name}}</td>
-                            <td>{{item.quantity}} {{item.pricebaseunit}}</td>
-                            <td>&pound;0.00</td>
-                        </tr>
-                        
-                        <tr ng-repeat="item in $ctrl.cartBreakDown.paidSamples.items">
-                            <th>Sample</th>
-                            <td>{{item.name}}</td>
-                            <td>{{item.quantity}} {{item.pricebaseunit}}</td>
-                            <td>&pound;{{item.itemprice}}</td>
-                        </tr>
-                        
-                        <tr ng-repeat="item in $ctrl.cartBreakDown.coffees.items">
-                            <th>Purchase</th>
-                            <td>{{item.name}}</td>
-                            <td>{{item.quantity}} &times; {{item.packagingunit}}</td>
-                            <td>&pound;{{item.itemprice}}</td>
-                        </tr>
-                    </tbody>
-                    
-                    <tfoot>
-                        <tr>
-                            <td colspan="3">Total (Free Shipping)</td>
-                            <td>&pound;{{$ctrl.cartBreakDown.total}}</td>
-                        </tr>
-                    </tfoot>
-                </table>
-                <div class=" text-right">
-                    <div class="cell-xs-12 offset-top-30">
-                        <a href="/Index/checkout" class="btn btn-sm btn-red-orange">Place order</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="cell-md-6 cell-lg-6 offset-top-22" ng-show="$ctrl.billingDifferent">
-            <h3>Billing Address</h3>
-            <form class="rd-mailform form-modern offset-top-22">
+            <form class="rd-mailform form-modern offset-top-22" name="billingForm" ng-show="$ctrl.billingDifferent" novalidate>
                 <div class="range">
+                    <div class="cell-xs-12">
+                        <h4 class="my-underline">Billing Address</h4>
+                    </div>
                     <div class="cell-xs-12">
                         <div class="form-group">
                             Fullname
-                            <input ng-model="$ctrl.order.billingaddress.fullname" type="text" placeholder="Fullname" class="form-control">
+                            <input ng-model="$ctrl.order.billingaddress.fullname" type="text" placeholder="Fullname" class="form-control" required>
                         </div>
                     </div>
                     <div class="cell-xs-12">
                         <div class="form-group">
                             Address Line 1
-                            <input ng-model="$ctrl.order.billingaddress.address1" type="text" placeholder="Address Line 1" class="form-control">
+                            <input ng-model="$ctrl.order.billingaddress.address1" type="text" placeholder="Address Line 1" class="form-control" required>
                         </div>
                     </div>
                     <div class="cell-xs-6">
@@ -136,19 +89,19 @@
                     <div class="cell-xs-6">
                         <div class="form-group">
                             Post Code
-                            <input ng-model="$ctrl.order.billingaddress.postcode" type="text" placeholder="Post Code" class="form-control">
+                            <input ng-model="$ctrl.order.billingaddress.postcode" type="text" placeholder="Post Code" class="form-control" required>
                         </div>
                     </div>
                     <div class="cell-xs-6">
                         <div class="form-group">
                             City
-                            <input ng-model="$ctrl.order.billingaddress.city" type="text" placeholder="City" class="form-control">
+                            <input ng-model="$ctrl.order.billingaddress.city" type="text" placeholder="City" class="form-control" required>
                         </div>
                     </div>
                     <div class="cell-xs-6">
                         <div class="form-group">
                             Country
-                            <select ng-model="$ctrl.order.billingaddress.countrykey" class="form-control">
+                            <select ng-model="$ctrl.order.billingaddress.countrykey" class="form-control" required>
                                 <option ng-repeat="x in $ctrl.countries" value="{{x.countrykey}}">{{x.name}}</option>
                             </select>                            
                         </div>
@@ -167,6 +120,73 @@
                     </div>
                 </div>
             </form>
+        </div>
+        <div class="cell-md-6 cell-lg-6 offset-top-22 offset-md-top-0">
+            <div class="range">
+                <div class="cell-xs-12">
+                    <h4 class="my-underline">Order Summary</h4>
+                </div>
+                <div class="cell-xs-12">
+                    <table class="table table-condensed">
+                        <thead ng-if="$ctrl.cartBreakDown.coffees.items.length > 0">
+                            <tr>
+                                <th  class="hidden-xs col-md-3">Type</th>
+                                <th class="col-md-4">Name</th>
+                                <th class="col-md-3">Qty</th>
+                                <th class="col-md-2">Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in $ctrl.cartBreakDown.freeSamples">
+                                <th class="hidden-xs">Sample (Free)</th>
+                                <td>{{item.name}}</td>
+                                <td>{{item.quantity}} {{item.pricebaseunit}}</td>
+                                <td>&pound;0.00</td>
+                            </tr>
+
+                            <tr ng-repeat="item in $ctrl.cartBreakDown.paidSamples.items">
+                                <th class="hidden-xs">Sample</th>
+                                <td>{{item.name}}</td>
+                                <td>{{item.quantity}} {{item.pricebaseunit}}</td>
+                                <td>&pound;{{item.itemprice}}</td>
+                            </tr>
+
+                            <tr ng-repeat="item in $ctrl.cartBreakDown.coffees.items">
+                                <th class="hidden-xs">Purchase</th>
+                                <td>{{item.name}}</td>
+                                <td>{{item.quantity}} &times; {{item.packagingunit}}</td>
+                                <td>&pound;{{item.itemprice}}</td>
+                            </tr>
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <td class="hidden-xs"></td>
+                                <td></td>
+                                <td>Shipping</td>
+                                <td>Free</td>
+                            </tr>
+                            <tr>
+                                <td class="hidden-xs"></td>
+                                <td></td>
+                                <td>Total</td>
+                                <td>&pound;{{$ctrl.cartBreakDown.total}}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    
+                    <div class=" text-right">
+                        <div class="cell-xs-12 offset-top-30">
+                            <button ng-disabled="(deliveryForm.$invalid || ($ctrl.billingDifferent && billingForm.$invalid))"
+                                    ng-click="$ctrl.proceed"
+                                    class="btn btn-sm btn-red-orange">Proceed</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cell-md-12 cell-lg-12 offset-top-22 offset-md-top-0">
+            <div class="offset-top-22 my-underline"></div>
         </div>
     </div>
 </div>
