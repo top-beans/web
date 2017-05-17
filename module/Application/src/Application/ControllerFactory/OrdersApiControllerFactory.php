@@ -16,8 +16,11 @@ namespace Application\ControllerFactory {
             $serializer = SerializerBuilder::create()->build();
             $ordersRepo = $serviceLocator->get('OrdersRepo');
             $emailSvc = $serviceLocator->get('EMailSvc');
+            $usersRepo = $serviceLocator->get('UsersRepo');
+            $config = $serviceLocator->get('Config');
+            $maxLoginTries = $config["MaxLoginTries"];
             
-            return new OrdersApiController($navRepo, $authService, $serializer, $ordersRepo, $emailSvc);
+            return new OrdersApiController($navRepo, $authService, $serializer, $ordersRepo, $emailSvc, $usersRepo, $maxLoginTries);
         }
     }
 }

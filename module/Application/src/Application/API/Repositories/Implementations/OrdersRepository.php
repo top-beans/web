@@ -7,10 +7,12 @@ namespace Application\API\Repositories\Implementations {
     use Doctrine\ORM\Mapping\ClassMetadata;
     use Application\API\Canonicals\Entity\Order;
     use Application\API\Canonicals\Entity\Customer;
+    use Application\API\Canonicals\Entity\User;
     use Application\API\Canonicals\Entity\Address;
     use Application\API\Canonicals\Entity\Shoppingcartview;
     use Application\API\Canonicals\Entity\Orderview;
     use Application\API\Canonicals\Entity\OrderStatuses;
+    use Application\API\Canonicals\Entity\UserTypes;
     use Application\API\Repositories\Base\IRepository;
     use Application\API\Repositories\Base\Repository;
     use Application\API\Repositories\Interfaces\IOrdersRepository;
@@ -19,7 +21,7 @@ namespace Application\API\Repositories\Implementations {
     class OrdersRepository implements IOrdersRepository {
         
         /**
-         * @var EntityManager 
+         * @var EntityManagerInterface 
          */
         private $em;
         
@@ -32,6 +34,11 @@ namespace Application\API\Repositories\Implementations {
          * @var IRepository
          */
         private $customerRepo;
+        
+        /**
+         * @var IRepository
+         */
+        private $userRepo;
         
         /**
          * @var IRepository
@@ -52,6 +59,7 @@ namespace Application\API\Repositories\Implementations {
             $this->em = $em;
             $this->ordersRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Order()))));
             $this->customerRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Customer()))));
+            $this->userRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new User()))));
             $this->addressRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Address()))));
             $this->cartViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Shoppingcartview()))));
             $this->orderViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Orderview()))));
@@ -60,7 +68,7 @@ namespace Application\API\Repositories\Implementations {
         public function addAnonymousOrder($cookieKey, Address $deliveryAddress, Address $billingAddress) {
             
             $orders = $this->orderViewRepo->findBy(['groupkey' => $cookieKey]);
-            $customer = null;
+            $customer = new Customer();
             
             if (count($orders) > 0) {
                 $customer = $this->customerRepo->fetch($orders[0]->getCustomerkey());
@@ -73,8 +81,6 @@ namespace Application\API\Repositories\Implementations {
                 
                 $this->ordersRepo->deleteList($orders);
             } else {
-                $customer = new Customer();
-
                 $this->addressRepo->add($deliveryAddress);
                 $customer->setDeliveryaddresskey($deliveryAddress->getAddresskey());
 
@@ -93,8 +99,13 @@ namespace Application\API\Repositories\Implementations {
             foreach($cartItems as $cartItem) {
                 $order = new Order();
                 $order->setGroupkey($cookieKey);
-                $order->setStatuskey(OrderStatuses::Creating);
-                if ($cartItem->getIspaidsample()) { $requiresPayment = true; }
+                
+                if (!$cartItem->getIspaidsample()) { 
+                    $order->setStatuskey(OrderStatuses::Received);
+                } else {
+                    $requiresPayment = true; 
+                    $order->setStatuskey(OrderStatuses::Creating);
+                }
                 
                 $order->setCustomerkey($customer->getCustomerkey());
                 $order->setCoffeekey($cartItem->getCookiekey());
@@ -112,9 +123,10 @@ namespace Application\API\Repositories\Implementations {
         }
 
         public function addUserOrder($cookieKey, $username, $password) {
-            $customer = $this->customerRepo->findOneBy(['username' => $username, 'password' => $password]);
+            $customer = $this->customerRepo->findOneBy(['username' => $username]);
+            $user = $this->userRepo->findOneBy(['username' => $username, 'password' => $password, 'usertypekey' => UserTypes::Customer]);
             
-            if ($customer == null) {
+            if ($customer == null || $user == null) {
                 throw new \Exception("Could not find the customer");
             }
             
@@ -131,8 +143,13 @@ namespace Application\API\Repositories\Implementations {
             foreach($cartItems as $cartItem) {
                 $order = new Order();
                 $order->setGroupkey($cookieKey);
-                $order->setStatuskey(OrderStatuses::Creating);
-                if ($cartItem->getIspaidsample()) { $requiresPayment = true; }
+                
+                if (!$cartItem->getIspaidsample()) { 
+                    $order->setStatuskey(OrderStatuses::Received);
+                } else {
+                    $requiresPayment = true; 
+                    $order->setStatuskey(OrderStatuses::Creating);
+                }
                 
                 $order->setCustomerkey($customer->getCustomerkey());
                 $order->setCoffeekey($cartItem->getCookiekey());
@@ -181,8 +198,12 @@ namespace Application\API\Repositories\Implementations {
             $request = new EmailRequest();
             $request->recipient = $deliveryAddress->getEmail();
             $request->subject = "Your Order has been Received";
-            $request->htmlbody = "";
-            $request->textbody = "";
+            $request->htmlbody = "
+                
+            ";
+            $request->textbody = "
+                
+            ";
             
             return $request;
         }
