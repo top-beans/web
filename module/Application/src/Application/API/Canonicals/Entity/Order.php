@@ -96,6 +96,22 @@ class Order
     private $groupkey;
 
     /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="shoppingCartKey", type="integer", nullable=false)
+     */
+    private $shoppingcartkey;
+    
+    /**
+     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updatedDate", type="datetime", nullable=false)
+     */
+    private $updateddate;
+
+    /**
      * @Type("DateTime<'Y-m-d\TH:i:sO'>")
      * @var \DateTime
      *
@@ -114,6 +130,8 @@ class Order
     function getRequestypekey() { return $this->requestypekey; }
     function getStatuskey() { return $this->statuskey; }
     function getGroupkey() { return $this->groupkey; } 
+    function getShoppingcartkey() { return $this->shoppingcartkey; }
+    function getUpdateddate() { return $this->updateddate; }
     function getCreateddate() { return $this->createddate; }
     
     function setOrderkey($val) { $this->orderkey = $val; } 
@@ -127,6 +145,8 @@ class Order
     function setRequestypekey($val) { $this->requestypekey = $val; } 
     function setStatuskey($val) { $this->statuskey = $val; } 
     function setGroupkey($val) { $this->groupkey = $val; } 
+    function setShoppingcartkey($val) { $this->shoppingcartkey = $val; } 
+    function setUpdateddate($val) { $this->updateddate = $val; } 
     function setCreateddate($val) { $this->createddate = $val; } 
 }
 

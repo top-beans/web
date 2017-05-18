@@ -56,6 +56,14 @@ class Shoppingcartview
     private $requesttypekey;
 
     /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="checkedOut", type="integer", nullable=false)
+     */
+    private $checkedout;
+    
+    /**
      * @Type("DateTime<'Y-m-d\TH:i:sO'>")
      * @var \DateTime
      *
@@ -300,6 +308,7 @@ class Shoppingcartview
     function getCoffeekey() { return $this->coffeekey; }
     function getQuantity() { return $this->quantity; }
     function getRequesttypekey() { return $this->requesttypekey; }
+    function getCheckedout() { return $this->checkedout; }
     function getUpdateddate() { return $this->updateddate; }
     function getCreateddate() { return $this->createddate; }
     function getRequesttype() { return $this->requesttype; }
@@ -335,7 +344,8 @@ class Shoppingcartview
     function setCookiekey($val) { $this->cookiekey = $val; } 
     function setCoffeekey($val) { $this->coffeekey = $val; } 
     function setQuantity($val) { $this->quantity = $val; } 
-    function setRequesttypekey($val) { $this->requesttypekey = $val; } 
+    function setRequesttypekey($val) { $this->requesttypekey = $val; }
+    function setCheckedout($val) { $this->checkedout = $val; } 
     function setUpdateddate($val) { $this->updateddate = $val; } 
     function setCreateddate($val) { $this->createddate = $val; } 
     function setRequesttype($val) { $this->requesttype = $val; } 

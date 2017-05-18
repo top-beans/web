@@ -56,6 +56,14 @@ class Shoppingcart
     private $requesttypekey;
 
     /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="checkedOut", type="integer", nullable=false)
+     */
+    private $checkedout;
+    
+    /**
      * @Type("DateTime<'Y-m-d\TH:i:sO'>")
      * @var \DateTime
      *
@@ -76,6 +84,7 @@ class Shoppingcart
     function getCoffeekey() { return $this->coffeekey; }
     function getQuantity() { return $this->quantity; }
     function getRequesttypekey() { return $this->requesttypekey; }
+    function getCheckedout() { return $this->checkedout; }
     function getUpdateddate() { return $this->updateddate; }
     function getCreateddate() { return $this->createddate; }
 
@@ -84,6 +93,7 @@ class Shoppingcart
     function setCoffeekey($val) { $this->coffeekey = $val; } 
     function setQuantity($val) { $this->quantity = $val; } 
     function setRequesttypekey($val) { $this->requesttypekey = $val; } 
+    function setCheckedout($val) { $this->checkedout = $val; } 
     function setUpdateddate($val) { $this->updateddate = $val; } 
     function setCreateddate($val) { $this->createddate = $val; } 
 }
