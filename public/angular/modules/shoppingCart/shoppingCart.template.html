@@ -1,10 +1,22 @@
 <div class="shell">
-    <div class="range">
+    <div class="range" ng-if="$ctrl.cartItems.length === 0">
         <div class="cell-xs-12">
-            <h3>{{$ctrl.cartItems.length}} {{$ctrl.cartItems.length == 1 ? 'Item' : 'Items'}} in your cart</h3>
+            <h3>Your have no items in your cart</h3>
+            <a href="/Index/buyorsample" class="btn btn-xl btn-red-orange">Buy or sample</a>
+        </div>
+    </div>
+    
+    <div class="range" ng-if="$ctrl.cartItems.length > 0">
+        <div class="cell-xs-12">
+            <h3 ng-if="$ctrl.cartItems.length === 1">
+                You have one item in your cart
+            </h3>
+            <h3 ng-if="$ctrl.cartItems.length > 1">
+                You have {{$ctrl.cartItems.length}} items in your cart
+            </h3>
         </div>
         <div class="cell-xs-12 offset-top-22">
-            <table class="table table-condensed" ng-if="$ctrl.cartItems.length > 0">
+            <table class="table table-condensed">
                 <thead>
                     <tr>
                         <th class="col-md-2 hidden-xs">Type</th>
@@ -39,9 +51,7 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    <div class="range offset-top-30 text-right">
-        <div class="cell-sm-11">
+        <div class="cell-sm-11 offset-top-22 text-right">
             <dl class="dl-inline">
                 <dt>Total</dt>
                 <dd>
@@ -49,6 +59,6 @@
                 </dd>
             </dl>
         </div>
-        <div class="cell-xs-12 offset-top-30"><a ng-if="$ctrl.cartItems.length > 0" href="/Index/checkout" class="btn btn-xl btn-red-orange">Place order</a></div>
+        <div class="cell-xs-12 offset-top-22 text-right"><a href="/Index/checkout" class="btn btn-xl btn-red-orange">Place order</a></div>
     </div>
 </div>

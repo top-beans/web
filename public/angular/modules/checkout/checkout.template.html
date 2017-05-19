@@ -1,5 +1,15 @@
 <div class="shell">
-    <div class="range range-md-justify">
+    <div class="range range-md-justify" ng-if="$ctrl.cartBreakDown.totalItems === 0">
+        <div class="cell-md-12 cell-lg-12 offset-top-22 offset-md-top-0">
+            <div class="range">
+                <div class="cell-xs-12">
+                    <h3>Your have no items to place an order</h3>
+                    <a href="/Index/buyorsample" class="btn btn-xl btn-red-orange">Buy or sample</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="range range-md-justify" ng-if="$ctrl.cartBreakDown.totalItems > 0">
         <div class="cell-md-6 cell-lg-6 offset-top-22 offset-md-top-0">
             <form class="rd-mailform form-modern" name="deliveryForm" novalidate>
                 <div class="range">
@@ -9,37 +19,37 @@
                     <div class="cell-xs-12">
                         <div class="form-group">
                             Fullname
-                            <input ng-model="$ctrl.order.deliveryaddress.fullname" type="text" placeholder="Fullname" class="form-control" required>
+                            <input ng-model="$ctrl.order.deliveryaddress.fullname" type="text" name="fullname" placeholder="Fullname" class="form-control" required>
                         </div>
                     </div>
                     <div class="cell-xs-12">
                         <div class="form-group">
                             Address Line 1
-                            <input ng-model="$ctrl.order.deliveryaddress.address1" type="text" placeholder="Address Line 1" class="form-control" required>
+                            <input ng-model="$ctrl.order.deliveryaddress.address1" type="text" name="addressline1" placeholder="Address Line 1" class="form-control" required>
                         </div>
                     </div>
                     <div class="cell-xs-6">
                         <div class="form-group">
                             Address Line 2
-                            <input ng-model="$ctrl.order.deliveryaddress.address2" type="text" placeholder="Address Line 2" class="form-control">
+                            <input ng-model="$ctrl.order.deliveryaddress.address2" type="text" name="addressline2" placeholder="Address Line 2" class="form-control">
                         </div>
                     </div>
                     <div class="cell-xs-6">
                         <div class="form-group">
                             Post Code
-                            <input ng-model="$ctrl.order.deliveryaddress.postcode" type="text" placeholder="Post Code" class="form-control" required>
+                            <input ng-model="$ctrl.order.deliveryaddress.postcode" type="text" name="postcode" placeholder="Post Code" class="form-control" required>
                         </div>
                     </div>
                     <div class="cell-xs-6">
                         <div class="form-group">
                             City
-                            <input ng-model="$ctrl.order.deliveryaddress.city" type="text" placeholder="City" class="form-control" required>
+                            <input ng-model="$ctrl.order.deliveryaddress.city" type="text" name="city" placeholder="City" class="form-control" required>
                         </div>
                     </div>
                     <div class="cell-xs-6">
                         <div class="form-group">
                             Country
-                            <select ng-model="$ctrl.order.deliveryaddress.countrykey" class="form-control" required>
+                            <select ng-model="$ctrl.order.deliveryaddress.countrykey" class="form-control" name="country" required>
                                 <option ng-repeat="x in $ctrl.countries" value="{{x.countrykey}}">{{x.name}}</option>
                             </select>                            
                         </div>
@@ -47,13 +57,13 @@
                     <div class="cell-xs-6">
                         <div class="form-group">
                             Email
-                            <input ng-model="$ctrl.order.deliveryaddress.email" type="email" placeholder="Email" class="form-control" required>
+                            <input ng-model="$ctrl.order.deliveryaddress.email" type="email" name="email" placeholder="Email" class="form-control" required>
                         </div>
                     </div>
                     <div class="cell-xs-6">
                         <div class="form-group">
                             Phone
-                            <input ng-model="$ctrl.order.deliveryaddress.phone" type="text" placeholder="Phone" class="form-control">
+                            <input ng-model="$ctrl.order.deliveryaddress.phone" type="text" name="phone" placeholder="Phone" class="form-control">
                         </div>
                     </div>
                     <div class="cell-xs-12">
@@ -128,7 +138,7 @@
                 </div>
                 <div class="cell-xs-12">
                     <table class="table table-condensed">
-                        <thead ng-if="$ctrl.cartBreakDown.coffees.items.length > 0">
+                        <thead>
                             <tr>
                                 <th  class="hidden-xs col-md-3">Type</th>
                                 <th class="col-md-4">Name</th>

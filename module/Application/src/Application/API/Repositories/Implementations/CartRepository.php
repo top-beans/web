@@ -168,13 +168,14 @@ namespace Application\API\Repositories\Implementations {
             return [
                 'coffees' => [
                     'items' => $coffees,
-                    'total' => $coffeeTotal,
+                    'total' => number_format($coffeeTotal, 2, '.', ''),
                 ],
                 'paidSamples' => [
                     'items' => $paidSampleItems,
-                    'total' => $paidSampleTotal,
+                    'total' => number_format($paidSampleTotal, 2, '.', ''),
                 ],
                 'freeSamples' => $freeSampleItems,
+                'totalItems' => (count($coffees) + count($paidSampleItems)),
                 'total' => number_format($coffeeTotal + $paidSampleTotal, 2, '.', '')
             ];
         }
