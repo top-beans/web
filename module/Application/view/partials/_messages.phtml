@@ -2,7 +2,7 @@
 
     <script type="text/javascript">
         $(function () {
-            var messages = ko.toJS(<?php echo json_encode($this->succ); ?>);
+            var messages = <?php echo json_encode($this->succ); ?>;
             toastrSuccessFromList(messages);
         });
     </script>
@@ -11,7 +11,7 @@
 
     <script type="text/javascript">
         $(function () {
-            var messages = ko.toJS(<?php echo json_encode($this->err); ?>);
+            var messages = <?php echo json_encode($this->err); ?>;
             toastrErrorFromList(messages);
         });
     </script>
@@ -20,7 +20,7 @@
 
     <script type="text/javascript">
         $(function () {
-            var messages = ko.toJS(<?php echo json_encode($this->info); ?>);
+            var messages = <?php echo json_encode($this->info); ?>;
             toastrInfoFromList(messages);
         });
     </script>
@@ -29,7 +29,7 @@
 
     <script type="text/javascript">
         $(function () {
-            var messages = ko.toJS(<?php echo json_encode($this->info); ?>);
+            var messages = <?php echo json_encode($this->info); ?>;
             toastrWarningFromList(messages);
         });
     </script>

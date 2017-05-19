@@ -60,9 +60,9 @@ angular.module('checkout')
             orderService.addAnonymousOrder(self.order, function (data) {
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
-                } else if (!data.item) {
+                } else if (!data.item.requirespayment) {
                     cookieService.remove();
-                    toastrSuccess("Your Order has been placed Successfully");
+                    location.href = "/Index/shoppingcart";
                 } else {
                     location.href = "/Index/payment";
                 }

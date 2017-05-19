@@ -5,14 +5,15 @@ namespace Application\API\Repositories\Implementations {
     use Doctrine\ORM\EntityManagerInterface;
     use Doctrine\ORM\EntityRepository;
     use Doctrine\ORM\Mapping\ClassMetadata;
+    use Application\API\Canonicals\Dto\OrderResult;
     use Application\API\Canonicals\Entity\Order;
     use Application\API\Canonicals\Entity\Customer;
     use Application\API\Canonicals\Entity\User;
     use Application\API\Canonicals\Entity\Address;
     use Application\API\Canonicals\Entity\Shoppingcartview;
+    use Application\API\Canonicals\Entity\Shoppingcart;
     use Application\API\Canonicals\Entity\Orderview;
     use Application\API\Canonicals\Entity\OrderStatuses;
-    use Application\API\Canonicals\Entity\UserTypes;
     use Application\API\Repositories\Base\IRepository;
     use Application\API\Repositories\Base\Repository;
     use Application\API\Repositories\Interfaces\IOrdersRepository;
@@ -53,6 +54,11 @@ namespace Application\API\Repositories\Implementations {
         /**
          * @var IRepository
          */
+        private $cartRepo;
+        
+        /**
+         * @var IRepository
+         */
         private $orderViewRepo;
         
         public function __construct(EntityManagerInterface $em) {
@@ -62,108 +68,115 @@ namespace Application\API\Repositories\Implementations {
             $this->userRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new User()))));
             $this->addressRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Address()))));
             $this->cartViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Shoppingcartview()))));
+            $this->cartRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Shoppingcart()))));
             $this->orderViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Orderview()))));
+        }
+
+        public function getGroupByCookie($cookieKey) {
+            $cartItems = $this->cartRepo->findBy(['cookiekey' => $cookieKey]);
+            
+            if (count($cartItems) == 0) {
+                return null;
+            }
+            
+            $shoppingCartKey = $cartItems[0]->getShoppingcartkey();
+            $orderItems = $this->ordersRepo->findBy(['shoppingcartkey' => $shoppingCartKey]);
+            
+            if (count($orderItems) == 0) {
+                return null;
+            }
+            
+            return $orderItems[0]->getGroupkey();
+        }
+        
+        public function getCustomerByGroup($groupKey) {
+            $orders = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
+            
+            if (count($orders) == 0) {
+                return null;
+            } else {
+                $customerKey = $orders[0]->getCustomerkey();
+                return $this->customerRepo->fetch($customerKey);
+            }
+        }
+
+        public function getAddress($key) {
+            return $this->addressRepo->fetch($key);
         }
 
         public function addAnonymousOrder($cookieKey, Address $deliveryAddress, Address $billingAddress) {
             
-            $orders = $this->orderViewRepo->findBy(['groupkey' => $cookieKey]);
-            $customer = new Customer();
-            
-            if (count($orders) > 0) {
-                $customer = $this->customerRepo->fetch($orders[0]->getCustomerkey());
-                
-                $deliveryAddress->setAddresskey($customer->getDeliveryaddresskey());
-                $billingAddress->setAddresskey($customer->getBillingaddresskey());
-                
-                $this->addressRepo->update($deliveryAddress);
-                $this->addressRepo->update($billingAddress);
-                
-                $this->ordersRepo->deleteList($orders);
-            } else {
-                $this->addressRepo->add($deliveryAddress);
-                $customer->setDeliveryaddresskey($deliveryAddress->getAddresskey());
+            try {
+                $this->em->getConnection()->beginTransaction();
+                $orderResult = new OrderResult();
+                $orderResult->groupkey = $this->getGroupByCookie($cookieKey);
 
-                $this->addressRepo->add($billingAddress);
-                $customer->setBillingaddresskey($billingAddress->getAddresskey());
+                if ($orderResult->groupkey == null) {
+                    $orderResult->groupkey = uniqid();
+                    $customer = new Customer();
 
-                $this->customerRepo->add($customer);
-            }
-            
-            // Now Adding Order
-            $cartItems = $this->cartViewRepo->findBy(['cookiekey' => $cookieKey]);
-            
-            $createdDate = new \DateTime();
-            $requiresPayment = false;
-            
-            foreach($cartItems as $cartItem) {
-                $order = new Order();
-                $order->setGroupkey($cookieKey);
-                
-                if (!$cartItem->getIspaidsample()) { 
-                    $order->setStatuskey(OrderStatuses::Received);
+                    $this->addressRepo->add($deliveryAddress);
+                    $this->addressRepo->add($billingAddress);
+                    $customer->setDeliveryaddresskey($deliveryAddress->getAddresskey());
+                    $customer->setBillingaddresskey($billingAddress->getAddresskey());
+                    $this->customerRepo->add($customer);
                 } else {
-                    $requiresPayment = true; 
-                    $order->setStatuskey(OrderStatuses::Creating);
+                    $customer = $this->getCustomerByGroup($orderResult->groupkey);
+                    $deliveryAddress->setAddresskey($customer->getDeliveryaddresskey());
+                    $billingAddress->setAddresskey($customer->getBillingaddresskey());
+                    $this->addressRepo->update($deliveryAddress);
+                    $this->addressRepo->update($billingAddress);
+                    $this->ordersRepo->deleteList($this->ordersRepo->findBy(['groupkey' => $orderResult->groupkey]));
                 }
-                
-                $order->setCustomerkey($customer->getCustomerkey());
-                $order->setCoffeekey($cartItem->getCookiekey());
-                $order->setRequestypekey($cartItem->getRequesttypekey());
-                $order->setQuantity($cartItem->getQuantity());
-                $order->setPrice($cartItem->getPrice());
-                $order->setPricebaseunit($cartItem->getPricebaseunit());
-                $order->setPackagingunit($cartItem->getPackagingunit());
-                $order->setItemprice($cartItem->getItemPrice());
-                $order->setCreateddate($createdDate);
-                $this->orderRepo->add($order);
-            }
-            
-            return $requiresPayment;
-        }
 
-        public function addUserOrder($cookieKey, $username, $password) {
-            $customer = $this->customerRepo->findOneBy(['username' => $username]);
-            $user = $this->userRepo->findOneBy(['username' => $username, 'password' => $password, 'usertypekey' => UserTypes::Customer]);
-            
-            if ($customer == null || $user == null) {
-                throw new \Exception("Could not find the customer");
-            }
-            
-            $orders = $this->orderViewRepo->findBy(['groupkey' => $cookieKey]);
-            
-            if (count($orders) > 0) {
-                $this->ordersRepo->deleteList($orders);
-            }
-            
-            $cartItems = $this->cartViewRepo->findBy(['cookiekey' => $cookieKey]);
-            $createdDate = new \DateTime();
-            $requiresPayment = false;
-            
-            foreach($cartItems as $cartItem) {
-                $order = new Order();
-                $order->setGroupkey($cookieKey);
-                
-                if (!$cartItem->getIspaidsample()) { 
-                    $order->setStatuskey(OrderStatuses::Received);
-                } else {
-                    $requiresPayment = true; 
-                    $order->setStatuskey(OrderStatuses::Creating);
+                $cartItems = $this->cartViewRepo->findBy(['cookiekey' => $cookieKey]);
+                $createdDate = new \DateTime();
+                $orderResult->requirespayment = false;
+                $orders = [];
+
+                foreach($cartItems as $cartItem) {
+                    $order = new Order();
+                    $order->setGroupkey($orderResult->groupkey);
+
+                    if (!$cartItem->getIspaidsample()) { 
+                        $order->setStatuskey(OrderStatuses::Received);
+                    } else {
+                        $orderResult->requirespayment = true; 
+                        $order->setStatuskey(OrderStatuses::Creating);
+                    }
+
+                    $order->setCustomerkey($customer->getCustomerkey());
+                    $order->setCoffeekey($cartItem->getCoffeekey());
+                    $order->setRequestypekey($cartItem->getRequesttypekey());
+                    $order->setQuantity($cartItem->getQuantity());
+                    $order->setPrice($cartItem->getPrice());
+                    $order->setPricebaseunit($cartItem->getPricebaseunit());
+                    $order->setPackagingunit($cartItem->getPackagingunit());
+                    $order->setItemprice($cartItem->getItemPrice());
+                    $order->setShoppingcartkey($cartItem->getShoppingcartkey());
+                    $order->setCreateddate($createdDate);
+                    $this->ordersRepo->add($order);
+                    $orders[] = $order;
                 }
+
+                if(!$orderResult->requirespayment) {
+                    foreach ($orders as $order) {
+                        $order->setShoppingcartkey(null);
+                        $this->ordersRepo->update($order);
+                    }
+
+                    $this->cartRepo->deleteList($this->cartRepo->findBy(['cookiekey' => $cookieKey]));
+                }
+
+                $this->em->flush();
+                $this->em->getConnection()->commit();
                 
-                $order->setCustomerkey($customer->getCustomerkey());
-                $order->setCoffeekey($cartItem->getCookiekey());
-                $order->setRequestypekey($cartItem->getRequesttypekey());
-                $order->setQuantity($cartItem->getQuantity());
-                $order->setPrice($cartItem->getPrice());
-                $order->setPricebaseunit($cartItem->getPricebaseunit());
-                $order->setPackagingunit($cartItem->getPackagingunit());
-                $order->setItemprice($cartItem->getItemPrice());
-                $order->setCreateddate($createdDate);
-                $this->orderRepo->add($order);
+                return $orderResult;
+                
+            } catch (\Exception $ex) {
+                $this->em->getConnection()->rollBack();
+                throw $ex;
             }
-            
-            return $requiresPayment;
         }
 
         public function createDispatchedEmail($orderGroupKey) {

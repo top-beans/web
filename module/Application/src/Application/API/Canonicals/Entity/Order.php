@@ -107,7 +107,7 @@ class Order
      * @Type("integer")
      * @var integer
      *
-     * @ORM\Column(name="shoppingCartKey", type="integer", nullable=false)
+     * @ORM\Column(name="shoppingCartKey", type="integer", nullable=true)
      */
     private $shoppingcartkey;
     

@@ -49,25 +49,27 @@ namespace Application\Controller {
                 if ($groupKey == null) {
                     $deliveryAddress = null;
                     $billingAddress = null;
+                    $billingDifferent = false;
                 } else {
                     $customer = $this->ordersRepo->getCustomerByGroup($groupKey);
                     $deliveryAddress = $this->ordersRepo->getAddress($customer->getDeliveryaddresskey());
                     $billingAddress = $this->ordersRepo->getAddress($customer->getBillingaddresskey());
+                    $billingDifferent = (
+                        $deliveryAddress->getFullname() != $billingAddress->getFullname() ||
+                        $deliveryAddress->getAddress1() != $billingAddress->getAddress1() ||
+                        $deliveryAddress->getAddress2() != $billingAddress->getAddress2() ||
+                        $deliveryAddress->getPostcode() != $billingAddress->getPostcode() ||
+                        $deliveryAddress->getCity() != $billingAddress->getCity() ||
+                        $deliveryAddress->getEmail() != $billingAddress->getEmail() ||
+                        $deliveryAddress->getPhone() != $billingAddress->getPhone() ||
+                        $deliveryAddress->getCountrykey() != $billingAddress->getCountrykey()
+                    );
                 }
                 
                 $response = ResponseUtils::responseItem([
                     'deliveryaddress' => $deliveryAddress, 
                     'billingaddress' => $billingAddress,
-                    'billingDifferent' => (
-                        $deliveryAddress->getFullname()   != $billingAddress->getFullname() ||
-                        $deliveryAddress->getAddress1()   != $billingAddress->getAddress1() ||
-                        $deliveryAddress->getAddress2()   != $billingAddress->getAddress2() ||
-                        $deliveryAddress->getPostcode()   != $billingAddress->getPostcode() ||
-                        $deliveryAddress->getCity()       != $billingAddress->getCity() ||
-                        $deliveryAddress->getEmail()      != $billingAddress->getEmail() ||
-                        $deliveryAddress->getPhone()      != $billingAddress->getPhone() ||
-                        $deliveryAddress->getCountrykey() != $billingAddress->getCountrykey()
-                    )
+                    'billingDifferent' => $billingDifferent
                 ]);
                 
                 return $this->jsonResponse($response);
@@ -83,14 +85,15 @@ namespace Application\Controller {
                 $jsonData = $this->getRequest()->getContent();
                 $data = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Dto\Checkout", "json");
                 
-                $requiresPayment = $this->ordersRepo->addAnonymousOrder($data->cookie, $data->deliveryaddress, $data->billingaddress);
+                $orderResult = $this->ordersRepo->addAnonymousOrder($data->cookie, $data->deliveryaddress, $data->billingaddress);
                 
-                if (!$requiresPayment) {
-                    $emailRequest = $this->ordersRepo->createReceivedEmail($data->cookie);
+                if (!$orderResult->requirespayment) {
+                    $emailRequest = $this->ordersRepo->createReceivedEmail($orderResult->groupkey);
                     $this->emailSvc->sendMail($emailRequest);
+                    $this->addFlashSuccessMsgs(["Your Order has been placed Successfully"]);
                 }
                 
-                $response = ResponseUtils::responseItem($requiresPayment);
+                $response = ResponseUtils::responseItem($orderResult);
                 return $this->jsonResponse($response);
                 
             } catch (\Exception $ex) {
