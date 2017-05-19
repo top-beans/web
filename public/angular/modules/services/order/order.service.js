@@ -10,4 +10,10 @@ service('orderService', ['$http', function ($http) {
             if (callback) callback(response.data);
         });
     };
+    
+    self.getCustomerAddresses = function (cookieKey, callback) {
+        $http.get("/api/OrdersApi/getcustomeraddresses/" + cookieKey).then(function (response) {
+            if (callback) callback(response.data);
+        });
+    };
 }]);

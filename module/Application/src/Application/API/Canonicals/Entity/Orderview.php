@@ -3,16 +3,18 @@
 namespace Application\API\Canonicals\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\AccessType;
+use JMS\Serializer\Annotation\Type;
 
 /**
- * Orders
- *
+ * @AccessType("public_method")
  * @ORM\Table(name="OrderView")
  * @ORM\Entity
  */
 class Orderview
 {
     /**
+     * @Type("integer")
      * @var integer
      *
      * @ORM\Column(name="orderKey", type="integer", nullable=false)
@@ -22,6 +24,7 @@ class Orderview
     private $orderkey;
 
     /**
+     * @Type("integer")
      * @var integer
      *
      * @ORM\Column(name="quantity", type="integer", nullable=false)
@@ -29,6 +32,7 @@ class Orderview
     private $quantity;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="price", type="decimal", precision=10, scale=2, nullable=false)
@@ -36,6 +40,7 @@ class Orderview
     private $price;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="priceBaseUnit", type="string", length=45, nullable=false)
@@ -43,6 +48,7 @@ class Orderview
     private $pricebaseunit;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="packagingUnit", type="string", length=45, nullable=false)
@@ -50,6 +56,7 @@ class Orderview
     private $packagingunit;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="itemPrice", type="decimal", precision=10, scale=2, nullable=false)
@@ -120,6 +127,7 @@ class Orderview
     private $createddate;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="requestType", type="string", length=45, nullable=false)
@@ -127,6 +135,7 @@ class Orderview
     private $requesttype;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="orderStatus", type="string", length=45, nullable=false)
@@ -335,6 +344,7 @@ class Orderview
     
     
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="deliveryFullName", type="string", length=200, nullable=true)
@@ -342,6 +352,7 @@ class Orderview
     private $deliveryfullname;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="deliveryAddress1", type="string", length=200, nullable=false)
@@ -349,6 +360,7 @@ class Orderview
     private $deliveryaddress1;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="deliveryAddress2", type="string", length=200, nullable=true)
@@ -356,6 +368,7 @@ class Orderview
     private $deliveryaddress2;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="deliveryPostCode", type="string", length=45, nullable=true)
@@ -363,6 +376,7 @@ class Orderview
     private $deliverypostcode;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="deliveryCity", type="string", length=100, nullable=false)
@@ -370,6 +384,7 @@ class Orderview
     private $deliverycity;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="deliveryEmail", type="string", length=100, nullable=false)
@@ -377,6 +392,7 @@ class Orderview
     private $deliveryemail;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="deliveryPhone", type="string", length=100, nullable=true)
@@ -392,6 +408,7 @@ class Orderview
     private $deliverycountrykey;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="deliveryCountry", type="string", length=200, nullable=false)
@@ -399,6 +416,7 @@ class Orderview
     private $deliverycountry;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="deliveryCountryCode", type="string", length=45, nullable=false)
@@ -406,6 +424,7 @@ class Orderview
     private $deliverycountrycode;
     
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="billingFullName", type="string", length=200, nullable=true)
@@ -413,6 +432,7 @@ class Orderview
     private $billingfullname;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="billingAddress1", type="string", length=200, nullable=false)
@@ -420,6 +440,7 @@ class Orderview
     private $billingaddress1;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="billingAddress2", type="string", length=200, nullable=true)
@@ -427,6 +448,7 @@ class Orderview
     private $billingaddress2;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="billingPostCode", type="string", length=45, nullable=true)
@@ -434,6 +456,7 @@ class Orderview
     private $billingpostcode;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="billingCity", type="string", length=100, nullable=false)
@@ -441,6 +464,7 @@ class Orderview
     private $billingcity;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="billingEmail", type="string", length=100, nullable=false)
@@ -448,6 +472,7 @@ class Orderview
     private $billingemail;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="billingPhone", type="string", length=100, nullable=true)
@@ -463,6 +488,7 @@ class Orderview
     private $billingcountrykey;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="billingCountry", type="string", length=200, nullable=false)
@@ -470,6 +496,7 @@ class Orderview
     private $billingcountry;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="billingCountryCode", type="string", length=45, nullable=false)

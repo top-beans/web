@@ -7,7 +7,6 @@ namespace Application\Controller {
     use JMS\Serializer\SerializerInterface;
     use Application\API\Repositories\Interfaces\ICartRepository;
     use Application\API\Canonicals\Response\ResponseUtils;
-    use Application\API\Canonicals\Entity\RequestTypes;
 
     class CartApiController extends BaseController {
         
@@ -76,7 +75,6 @@ namespace Application\Controller {
                 $jsonData = $this->getRequest()->getContent();
                 $cart = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Entity\Shoppingcart", "json");
                 
-                $cart->setCreateddate(new \DateTime());
                 $response = $this->cartRepo->validateMergeCart($cart);
                 
                 if (!$response->success) {
@@ -98,7 +96,6 @@ namespace Application\Controller {
                 $jsonData = $this->getRequest()->getContent();
                 $cart = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Entity\Shoppingcart", "json");
                 
-                $cart->setUpdateddate(new \DateTime());
                 $this->cartRepo->updateCart($cart);
                 
                 $response = ResponseUtils::response();

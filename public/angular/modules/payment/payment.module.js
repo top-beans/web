@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('checkout', [
+angular.module('payment', [
     'cartService',
     'cookieService',
     'orderService'

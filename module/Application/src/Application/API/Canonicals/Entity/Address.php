@@ -3,16 +3,18 @@
 namespace Application\API\Canonicals\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\AccessType;
+use JMS\Serializer\Annotation\Type;
 
 /**
- * Addresses
- *
+ * @AccessType("public_method")
  * @ORM\Table(name="Addresses")
  * @ORM\Entity
  */
 class Address
 {
     /**
+     * @Type("integer")
      * @var integer
      *
      * @ORM\Column(name="addressKey", type="integer", nullable=false)
@@ -22,6 +24,7 @@ class Address
     private $addresskey;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="fullName", type="string", length=200, nullable=true)
@@ -29,6 +32,7 @@ class Address
     private $fullname;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="address1", type="string", length=200, nullable=false)
@@ -36,6 +40,7 @@ class Address
     private $address1;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
@@ -43,6 +48,7 @@ class Address
     private $address2;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="postCode", type="string", length=45, nullable=true)
@@ -50,6 +56,7 @@ class Address
     private $postcode;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="city", type="string", length=100, nullable=false)
@@ -57,6 +64,7 @@ class Address
     private $city;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=100, nullable=false)
@@ -64,6 +72,7 @@ class Address
     private $email;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="phone", type="string", length=100, nullable=true)

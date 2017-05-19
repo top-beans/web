@@ -175,10 +175,15 @@
                         </tfoot>
                     </table>
                     
-                    <div class=" text-right">
-                        <div class="cell-xs-12 offset-top-30">
+                    <div class=" text-right offset-top-30">
+                        <div class="cell-xs-12">
+                            <strong ng-if="(deliveryForm.$invalid || ($ctrl.billingDifferent && billingForm.$invalid))"
+                                class="text-danger">
+                                Please complete the address details to proceed
+                            </strong>
+                            &nbsp;
                             <button ng-disabled="(deliveryForm.$invalid || ($ctrl.billingDifferent && billingForm.$invalid))"
-                                    ng-click="$ctrl.proceed"
+                                    ng-click="$ctrl.proceed()"
                                     class="btn btn-sm btn-red-orange">Proceed</button>
                         </div>
                     </div>

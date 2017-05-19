@@ -3,16 +3,18 @@
 namespace Application\API\Canonicals\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\AccessType;
+use JMS\Serializer\Annotation\Type;
 
 /**
- * Orders
- *
+ * @AccessType("public_method")
  * @ORM\Table(name="Orders")
  * @ORM\Entity
  */
 class Order
 {
     /**
+     * @Type("integer")
      * @var integer
      *
      * @ORM\Column(name="orderKey", type="integer", nullable=false)
@@ -22,6 +24,7 @@ class Order
     private $orderkey;
 
     /**
+     * @Type("integer")
      * @var integer
      *
      * @ORM\Column(name="quantity", type="integer", nullable=false)
@@ -29,6 +32,7 @@ class Order
     private $quantity;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="price", type="decimal", precision=10, scale=2, nullable=false)
@@ -36,6 +40,7 @@ class Order
     private $price;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="priceBaseUnit", type="string", length=45, nullable=false)
@@ -43,6 +48,7 @@ class Order
     private $pricebaseunit;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="packagingUnit", type="string", length=45, nullable=false)
@@ -50,6 +56,7 @@ class Order
     private $packagingunit;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="itemPrice", type="decimal", precision=10, scale=2, nullable=false)
@@ -89,6 +96,7 @@ class Order
     private $statuskey;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="groupKey", type="string", length=45, nullable=false)

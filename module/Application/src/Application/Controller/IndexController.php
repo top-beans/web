@@ -87,5 +87,9 @@ namespace Application\Controller {
         public function checkoutAction() {
             return [];
         }
+        
+        public function paymentAction() {
+            return [];
+        }
     }
 }

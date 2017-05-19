@@ -15,6 +15,7 @@ angular.module('checkout')
             
             self.getCountries();
             self.getCartBreakDown();
+            self.getCustomerAddresses();
         };
         
         self.getCountries = function() {
@@ -38,8 +39,34 @@ angular.module('checkout')
             });
         };
         
+        self.getCustomerAddresses = function () {
+            orderService.getCustomerAddresses(cookieService.get(), function (data) {
+                if (!data.success) {
+                    toastrErrorFromList(data.errors);
+                } else {
+                    self.order.deliveryaddress = new models.address(data.item.deliveryaddress);
+                    self.order.billingaddress = new models.address(data.item.billingaddress);
+                    self.billingDifferent = data.item.billingDifferent;
+                }
+            });
+        };
+        
         self.proceed = function() {
             
+            if (!self.billingDifferent) {
+                self.order.billingaddress = new models.address(self.order.deliveryaddress);
+            }
+            
+            orderService.addAnonymousOrder(self.order, function (data) {
+                if (!data.success) {
+                    toastrErrorFromList(data.errors);
+                } else if (!data.item) {
+                    cookieService.remove();
+                    toastrSuccess("Your Order has been placed Successfully");
+                } else {
+                    location.href = "/Index/payment";
+                }
+            });
         };
     }]
 });

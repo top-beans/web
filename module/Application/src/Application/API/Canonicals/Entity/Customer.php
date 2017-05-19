@@ -3,16 +3,18 @@
 namespace Application\API\Canonicals\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\AccessType;
+use JMS\Serializer\Annotation\Type;
 
 /**
- * Customers
- *
+ * @AccessType("public_method")
  * @ORM\Table(name="Customers")
  * @ORM\Entity
  */
 class Customer
 {
     /**
+     * @Type("integer")
      * @var integer
      *
      * @ORM\Column(name="customerKey", type="integer", nullable=false)

@@ -18,4 +18,7 @@ service('cookieService', ['$cookies', 'uuid2', function ($cookies, uuid2) {
         return $cookies.get(self.cookiekeyId);
     };
     
+    self.remove = function () {
+        $cookies.remove(self.cookiekeyId);
+    };
 }]);

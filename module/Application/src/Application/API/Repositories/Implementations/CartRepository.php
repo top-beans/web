@@ -12,7 +12,8 @@ namespace Application\API\Repositories\Implementations {
         Application\API\Canonicals\Entity\Coffee,
         Application\API\Canonicals\Entity\RequestTypes,
         Application\API\Canonicals\Response\ResponseUtils,
-        Application\API\Canonicals\Entity\Shoppingcartview;
+        Application\API\Canonicals\Entity\Shoppingcartview,
+        Application\API\Canonicals\Entity\Order;
 
     class CartRepository implements ICartRepository {
         
@@ -36,11 +37,17 @@ namespace Application\API\Repositories\Implementations {
          */
         private $cartViewRepo;
         
+        /**
+         * @var IRepository
+         */
+        private $ordersRepo;
+        
         public function __construct(EntityManager $em) {
             $this->em = $em;
             $this->cartRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Shoppingcart()))));
             $this->coffeeRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Coffee()))));
             $this->cartViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Shoppingcartview()))));
+            $this->ordersRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Order()))));
         }
 
         public function validateMergeCart(Shoppingcart $cart) {
@@ -83,14 +90,18 @@ namespace Application\API\Repositories\Implementations {
             ]);
 
             if ($matching == null) {
+                $cart->setUpdateddate(null);
+                $cart->setCreateddate(new \DateTime());
                 $this->cartRepo->add($cart);
             } else {
                 $cart->setShoppingcartkey($matching->getShoppingcartkey());
+                $cart->setUpdateddate(new \DateTime());
                 $this->cartRepo->update($cart);
             }
         }
 
         public function addToCart(Shoppingcart $cart) {
+            $cart->setCreateddate(new \DateTime());
             $this->cartRepo->add($cart);
         }
 
@@ -99,9 +110,16 @@ namespace Application\API\Repositories\Implementations {
             
             if ($items == null || count($items) == 0) {
                 return;
-            } else {
-                $this->cartRepo->deleteList($items);
             }
+
+            foreach ($items as $item) {
+                $order = $this->ordersRepo->findOneBy(['shoppingcartkey' => $item->getShoppingcartkey()]);
+                if ($order != null) {
+                    $this->ordersRepo->delete($order);
+                }
+            }
+            
+            $this->cartRepo->deleteList($items);
         }
 
         public function getCart($cookieKey) {
@@ -162,6 +180,7 @@ namespace Application\API\Repositories\Implementations {
         }
 
         public function updateCart(Shoppingcart $cart) {
+            $cart->setUpdateddate(new \DateTime());
             $this->cartRepo->update($cart);
         }
 
@@ -175,6 +194,7 @@ namespace Application\API\Repositories\Implementations {
                     throw new \Exception("Cannot Decrement further");
                 } else {
                     $matching->setQuantity($matching->getQuantity() - 1);
+                    $matching->setUpdateddate(new \DateTime());
                     $this->cartRepo->update($matching);
                     return $this->cartViewRepo->findOneBy(['cookiekey' => $cookiekey, 'coffeekey' => $coffeeKey]);
                 }
@@ -194,6 +214,7 @@ namespace Application\API\Repositories\Implementations {
                     throw new \Exception("Cannot Increment further");
                 } else {
                     $matching->setQuantity($matching->getQuantity() + 1);
+                    $matching->setUpdateddate(new \DateTime());
                     $this->cartRepo->update($matching);
                     return $this->cartViewRepo->findOneBy(['cookiekey' => $cookiekey, 'coffeekey' => $coffeeKey]);
                 }

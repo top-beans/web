@@ -7,8 +7,6 @@ use JMS\Serializer\Annotation\AccessType;
 use JMS\Serializer\Annotation\Type;
 
 /**
- * Emails
- *
  * @AccessType("public_method")
  * @ORM\Table(name="Emails")
  * @ORM\Entity

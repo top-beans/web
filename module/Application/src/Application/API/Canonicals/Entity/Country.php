@@ -3,16 +3,18 @@
 namespace Application\API\Canonicals\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\AccessType;
+use JMS\Serializer\Annotation\Type;
 
 /**
- * Countries
- *
+ * @AccessType("public_method")
  * @ORM\Table(name="Countries")
  * @ORM\Entity
  */
 class Country
 {
     /**
+     * @Type("integer")
      * @var integer
      *
      * @ORM\Column(name="countryKey", type="integer", nullable=false)
@@ -22,6 +24,7 @@ class Country
     private $countrykey;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=200, nullable=false)
@@ -29,6 +32,7 @@ class Country
     private $name;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="code", type="string", length=45, nullable=false)

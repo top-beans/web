@@ -11,17 +11,17 @@ namespace Application\API\Canonicals\Dto {
         public $cookie;
         
         /**
-         * @Type(<Application\API\Canonicals\Dto\Credentials>)
+         * @Type("Application\API\Canonicals\Dto\Credentials")
          */
         public $user;
 
         /**
-         * @Type(<Application\API\Canonicals\Entity\Address>)
+         * @Type("Application\API\Canonicals\Entity\Address")
          */
         public $deliveryaddress;
 
         /**
-         * @Type(<Application\API\Canonicals\Entity\Address>)
+         * @Type("Application\API\Canonicals\Entity\Address")
          */
         public $billingaddress;
     }

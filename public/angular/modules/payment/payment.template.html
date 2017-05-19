@@ -1,0 +1,35 @@
+<div class="shell">
+    <div class="range">
+        <div class="cell-xs-12">
+            <h3>{{$ctrl.cartBreakDown.paidSamples.items.length}} {{$ctrl.cartBreakDown.paidSamples.items.length == 1 ? 'Item' : 'Items'}} in your cart require payment</h3>
+        </div>
+        <div class="cell-xs-12 offset-top-22">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th class="col-md-2 hidden-xs">Type</th>
+                        <th class="col-md-4">Name</th>
+                        <th class="col-md-2">Qty</th>
+                        <th class="col-md-2">Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in $ctrl.cartBreakDown.paidSamples.items">
+                        <th class="hidden-xs">Sample</th>
+                        <td>{{item.name}}</td>
+                        <td>{{item.quantity}} {{item.pricebaseunit}}</td>
+                        <td>&pound;{{item.itemprice}}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="hidden-xs"></td>
+                        <td></td>
+                        <td>Total</td>
+                        <td>&pound;{{$ctrl.cartBreakDown.paidSamples.total}}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
