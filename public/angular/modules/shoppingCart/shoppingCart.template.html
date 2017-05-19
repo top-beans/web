@@ -1,21 +1,21 @@
 <div class="shell">
     <div class="range" ng-if="$ctrl.cartItems.length === 0">
         <div class="cell-xs-12">
-            <h3>Your have no items in your cart</h3>
+            <h3 class="my-underline">Your have no items in your cart</h3>
             <a href="/Index/buyorsample" class="btn btn-xl btn-red-orange">Buy or sample</a>
         </div>
     </div>
     
     <div class="range" ng-if="$ctrl.cartItems.length > 0">
         <div class="cell-xs-12">
-            <h3 ng-if="$ctrl.cartItems.length === 1">
+            <h3 class="my-underline" ng-if="$ctrl.cartItems.length === 1">
                 You have one item in your cart
             </h3>
-            <h3 ng-if="$ctrl.cartItems.length > 1">
+            <h3 class="my-underline" ng-if="$ctrl.cartItems.length > 1">
                 You have {{$ctrl.cartItems.length}} items in your cart
             </h3>
         </div>
-        <div class="cell-xs-12 offset-top-22">
+        <div class="cell-xs-12">
             <table class="table table-condensed">
                 <thead>
                     <tr>

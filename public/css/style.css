@@ -157,6 +157,7 @@ i.cart-icon {
 .my-underline {
   border-bottom: 1px solid #999;
   margin-bottom: 10px;
+  padding-bottom: 10px;
 }
 
 .my-overline {

@@ -1,21 +1,21 @@
 <div class="shell">
     <div class="range" ng-if="$ctrl.cartBreakDown.paidSamples.items.length === 0">
         <div class="cell-xs-12">
-            <h3>You have no items that require payment</h3>
+            <h3 class="my-underline">You have no items that require payment</h3>
             <a href="/Index/buyorsample" class="btn btn-xl btn-red-orange">Buy or sample</a>
         </div>
     </div>
     
     <div class="range" ng-if="$ctrl.cartBreakDown.paidSamples.items.length > 0">
         <div class="cell-xs-12">
-            <h3 ng-if="$ctrl.cartBreakDown.paidSamples.items.length === 1">
+            <h3 class="my-underline" ng-if="$ctrl.cartBreakDown.paidSamples.items.length === 1">
                 You have one item that requires payment
             </h3>
-            <h3 ng-if="$ctrl.cartBreakDown.paidSamples.items.length > 1">
+            <h3 class="my-underline" ng-if="$ctrl.cartBreakDown.paidSamples.items.length > 1">
                 You have {{$ctrl.cartBreakDown.paidSamples.items.length}} items that require payment
             </h3>
         </div>
-        <div class="cell-xs-12 offset-top-22">
+        <div class="cell-xs-6 offset-top-22">
             <table class="table table-condensed">
                 <thead>
                     <tr>
@@ -43,5 +43,45 @@
                 </tfoot>
             </table>
         </div>
+        <div class="cell-xs-6 offset-top-22">
+            <form class="rd-mailform form-modern" name="paymentForm" novalidate>
+                <div class="range">
+                    <div class="cell-xs-12">
+                        <div class="form-group">
+                            Name on Card
+                            <input data-worldpay="name" type="text" placeholder="Name" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="cell-xs-12">
+                        <div class="form-group">
+                            Card Number
+                            <input data-worldpay="number" maxlength="20" type="text" placeholder="Valid Card Number" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="cell-xs-4">
+                        <div class="form-group">
+                            Expiry
+                            <input data-worldpay="exp-month" maxlength="2" type="text" placeholder="MM" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-4">
+                        <div class="form-group">
+                            &nbsp;
+                            <input data-worldpay="exp-year" maxlength="4" type="text" placeholder="YYYY" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-4">
+                        <div class="form-group">
+                            CVC
+                            <input data-worldpay="cvc" maxlength="4" type="text" placeholder="ex. 368" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-12 text-right offset-top-22">
+                        <button class="btn btn-sm btn-primary-contrast">Confirm</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
     </div>
 </div>
