@@ -52,9 +52,19 @@ angular.module('checkout')
         };
         
         self.proceed = function() {
+
+            var dlForm = $('form[name=deliveryForm]');
+            var blForm = $('form[name=billingForm]');
             
-            if (!self.billingDifferent) {
-                self.order.billingaddress = new models.address(self.order.deliveryaddress);
+            dlForm.addClass('my-submitted');
+            blForm.addClass('my-submitted');
+            
+            var dlInv = dlForm.hasClass('ng-invalid-required') || dlForm.hasClass('ng-invalid-email');
+            var blInv = blForm.hasClass('ng-invalid-required') || blForm.hasClass('ng-invalid-email');
+            
+            if (dlInv || (self.billingDifferent && blInv)) {
+                toastrError('Please review form', 'Invalid Details');
+                return false;
             }
             
             orderService.addAnonymousOrder(self.order, function (data) {

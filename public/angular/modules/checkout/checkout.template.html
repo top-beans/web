@@ -8,7 +8,7 @@
     
     <div class="range range-md-justify" ng-if="$ctrl.cartBreakDown.totalItems > 0">
         <div class="cell-md-6 cell-lg-6 offset-top-22 offset-md-top-0">
-            <form class="rd-mailform form-modern" name="deliveryForm" novalidate>
+            <form class="rd-mailform form-modern" name="deliveryForm" autocomplete="on" novalidate>
                 <div class="range">
                     <div class="cell-xs-12">
                         <h4 class="my-underline">Delivery Address</h4>
@@ -70,7 +70,7 @@
                     </div>
                 </div>
             </form>
-            <form class="rd-mailform form-modern offset-top-22" name="billingForm" ng-show="$ctrl.billingDifferent" novalidate>
+            <form class="rd-mailform form-modern offset-top-22" name="billingForm" ng-show="$ctrl.billingDifferent" autocomplete="on" novalidate>
                 <div class="range">
                     <div class="cell-xs-12">
                         <h4 class="my-underline">Billing Address</h4>
@@ -184,14 +184,8 @@
                     
                     <div class=" text-right offset-top-30">
                         <div class="cell-xs-12">
-                            <strong ng-if="(deliveryForm.$invalid || ($ctrl.billingDifferent && billingForm.$invalid))"
-                                class="text-danger">
-                                Please complete the address details to proceed
-                            </strong>
-                            &nbsp;
-                            <button ng-disabled="(deliveryForm.$invalid || ($ctrl.billingDifferent && billingForm.$invalid))"
-                                    ng-click="$ctrl.proceed()"
-                                    class="btn btn-sm btn-red-orange">Proceed</button>
+                            <button ng-click="$ctrl.proceed()"
+                                    class="btn btn-sm btn-primary-contrast">Proceed</button>
                         </div>
                     </div>
                 </div>

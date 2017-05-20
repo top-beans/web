@@ -9,6 +9,7 @@ angular.module('payment')
 
         self.$onInit = function () {
             self.cartBreakDown = null;
+            self.card = new models.card();
             self.getCartBreakDown();
         };
         
@@ -21,6 +22,15 @@ angular.module('payment')
                     self.cartBreakDown = data.item;
                 }
             });
+        };
+        
+        self.confirm = function() {
+            var form = $('form[name=paymentForm]');
+            
+            if (form.hasClass('ng-invalid-required') || form.hasClass('ng-invalid-pattern')) {
+                toastrError('Please review form', 'Invalid Details');
+                return false;
+            }
         };
     }]
 });

@@ -165,8 +165,18 @@ i.cart-icon {
   margin-top: 10px;
 }
 
-form input.ng-touched.ng-invalid-required,
-form input.ng-touched.ng-valid-required.ng-invalid-email {
+form input.ng-touched.ng-invalid-required:not(:focus),
+form input.ng-touched.ng-valid-required.ng-invalid-email:not(:focus),
+form input.ng-touched.ng-invalid-pattern:not(:focus),
+
+form.ng-submitted input.ng-invalid-required:not(:focus),
+form.ng-submitted input.ng-valid-required.ng-invalid-email:not(:focus),
+form.ng-submitted input.ng-invalid-pattern:not(:focus),
+
+form.my-submitted input.ng-invalid-required:not(:focus),
+form.my-submitted input.ng-valid-required.ng-invalid-email:not(:focus),
+form.my-submitted input.ng-invalid-pattern:not(:focus) {
     border-color: red!important;
+    box-shadow: 0px 0px 5px 4px pink;
 }
 
