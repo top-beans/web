@@ -4,16 +4,13 @@ angular.module('buyOrSample')
 
 .component('buyOrSample', {
     templateUrl: '/angular/modules/buyOrSample/buyOrSample.template.html',
-    bindings: {
-        coffeeShopUrl: '@'
-    },
     controller: ['$http', '$uibModal', 'cookieService', function ($http, $uibModal, cookieService) {
         var self = this;
 
         self.coffees = [];
         
         self.getCoffees = function() {
-            $http.get(self.coffeeShopUrl).then(function (response) {
+            $http.get('/api/CoffeeApi/getallactive').then(function (response) {
                 self.coffees = _(response.data.items).sortBy(['cuppingscore']).reverse().value();
             });
         };

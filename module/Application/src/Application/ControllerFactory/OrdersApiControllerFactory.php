@@ -19,8 +19,9 @@ namespace Application\ControllerFactory {
             $usersRepo = $serviceLocator->get('UsersRepo');
             $config = $serviceLocator->get('Config');
             $maxLoginTries = $config["MaxLoginTries"];
+            $worldPayServiceKey = $config["WorldPayServiceKey"];
             
-            return new OrdersApiController($navRepo, $authService, $serializer, $ordersRepo, $emailSvc, $usersRepo, $maxLoginTries);
+            return new OrdersApiController($navRepo, $authService, $serializer, $ordersRepo, $emailSvc, $usersRepo, $maxLoginTries, $worldPayServiceKey);
         }
     }
 }

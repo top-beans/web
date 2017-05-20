@@ -33,12 +33,18 @@ namespace Application\Controller {
          */
         private $maxLoginTries;
         
-        public function __construct(AbstractContainer $navService, AuthenticationServiceInterface $authService, SerializerInterface $serializer, IOrdersRepository $ordersRepo, IEMailService $emailSvc, IUsersRepository $usersRepository, $maxLoginTries) {
+        /**
+         * @var string
+         */
+        private $worldPayServiceKey;
+        
+        public function __construct(AbstractContainer $navService, AuthenticationServiceInterface $authService, SerializerInterface $serializer, IOrdersRepository $ordersRepo, IEMailService $emailSvc, IUsersRepository $usersRepository, $maxLoginTries, $worldPayServiceKey) {
             parent::__construct($navService, $authService, $serializer);
             $this->ordersRepo = $ordersRepo;
             $this->emailSvc = $emailSvc;
             $this->usersRepository = $usersRepository;
             $this->maxLoginTries = $maxLoginTries;
+            $this->worldPayServiceKey = $worldPayServiceKey;
         }
 
         public function getcustomeraddressesAction() {

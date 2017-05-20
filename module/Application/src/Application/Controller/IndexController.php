@@ -20,12 +20,12 @@ namespace Application\Controller {
         /**
          * @var string
          */
-        private $coffeeShopUrl;
+        private $worldPayClientKey;
         
-        public function __construct(AbstractContainer $navService, AuthenticationServiceInterface $authService, SerializerInterface $serializer, IWordPressRepository $wpRepo, $coffeeShopUrl) {
+        public function __construct(AbstractContainer $navService, AuthenticationServiceInterface $authService, SerializerInterface $serializer, IWordPressRepository $wpRepo, $worldPayClientKey) {
             parent::__construct($navService, $authService, $serializer);
             $this->wpRepo = $wpRepo;
-            $this->coffeeShopUrl = $coffeeShopUrl;
+            $this->worldPayClientKey = $worldPayClientKey;
         }        
         
         public function indexAction() {
@@ -50,9 +50,7 @@ namespace Application\Controller {
         }
         
         public function buyorsampleAction() {
-            return [
-                'coffeeShopUrl' => $this->coffeeShopUrl,
-            ];
+            return [];
         }
         
         public function shoppingcartAction() {
@@ -89,7 +87,9 @@ namespace Application\Controller {
         }
         
         public function paymentAction() {
-            return [];
+            return [
+                'worldPayClientKey' => $this->worldPayClientKey
+            ];
         }
     }
 }
