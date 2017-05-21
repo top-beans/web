@@ -8,33 +8,44 @@ angular.module('checkout')
         var self = this;
 
         self.$onInit = function () {
+            self.cartItems = [];
+            self.cartTotal = 0;
             self.countries = [];
-            self.cartBreakDown = null;
             self.order = new models.checkout({ cookie: cookieService.get() });
             self.billingDifferent = false;
             
             self.getCountries();
-            self.getCartBreakDown();
             self.getCustomerAddresses();
+            self.getCart();
+            cartService.getCartTotal(cookieService.get(), self.updateCartTotal, true);
         };
-        
+
+        self.updateCartTotal = function (data) {
+            if (!data.success) {
+                toastrErrorFromList(data.errors);
+            } else {
+                if (data.warnings.length) toastrWarningFromList(data.warnings);
+                self.cartTotal = data.item;
+            }
+        };
+
+        self.getCart = function() {
+            cartService.getCart(cookieService.get(), function (data) {
+                if (!data.success) {
+                    toastrErrorFromList(data.errors);
+                } else {
+                    if (data.warnings.length) toastrWarningFromList(data.warnings);
+                    self.cartItems = _(data.items).sortBy(['createddate']).reverse().value();
+                }
+            });
+        };
+            
         self.getCountries = function() {
             $http.get('/api/CountryApi/getcountries').then(function (response) {
                 if (!response.data.success) {
                     toastrErrorFromList(response.data.errors);
                 } else {
                     self.countries = response.data.items;
-                }
-            });
-        };
-        
-        self.getCartBreakDown = function() {
-            cartService.getCartBreakDown(cookieService.get(), function (data) {
-                if (!data.success) {
-                    toastrErrorFromList(data.errors);
-                } else {
-                    if (data.warnings.length) toastrWarningFromList(data.warnings);
-                    self.cartBreakDown = data.item;
                 }
             });
         };
@@ -67,12 +78,16 @@ angular.module('checkout')
                 return false;
             }
             
+            if (!self.billingDifferent) {
+                self.order.billingaddress = new models.address(self.order.deliveryaddress);
+            }
+            
             orderService.addAnonymousOrder(self.order, function (data) {
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
                 } else if (!data.item.requirespayment) {
                     cookieService.remove();
-                    location.href = "/Index/shoppingcart";
+                    location.href = "/Index/index";
                 } else {
                     location.href = "/Index/payment";
                 }

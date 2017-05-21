@@ -11,21 +11,29 @@ angular.module('payment')
         var self = this;
 
         self.$onInit = function () {
-            self.cartBreakDown = null;
+            self.cartTotal = 0;
             self.card = new models.card();
-            self.getCartBreakDown();
+            cartService.getCartTotal(cookieService.get(), self.updateCartTotal, true);
+        };
+
+        self.updateCartTotal = function (data) {
+            if (!data.success) {
+                toastrErrorFromList(data.errors);
+            } else {
+                if (data.warnings.length) toastrWarningFromList(data.warnings);
+                self.cartTotal = data.item;
+            }
         };
         
-        self.getCartBreakDown = function() {
-            cartService.getCartBreakDown(cookieService.get(), function (data) {
+        self.takePayment = function (details) {
+            orderService.takePayment(details, function (data) {
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
                 } else {
-                    if (data.warnings.length) toastrWarningFromList(data.warnings);
-                    self.cartBreakDown = data.item;
+                    location.url = '/Index/index';
                 }
             });
-        };
+        }
         
         self.confirm = function() {
             var form = document.getElementById('paymentForm');
@@ -40,10 +48,13 @@ angular.module('payment')
                 'form': form,
                 'reusable': false,
                 'callback': function(status, response) {
-                    if (response.error) {
+                    if (!response.token) {
                         toastrError('Please contact us immediately', 'Payment Errors');
                     } else {
-                        var token = response.token;
+                        self.takePayment({
+                            cookiekey: cookieService.get(),
+                            token: response.token
+                        });
                     }
                 }
             });            

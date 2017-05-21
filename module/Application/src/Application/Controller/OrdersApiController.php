@@ -107,5 +107,17 @@ namespace Application\Controller {
                 return $this->jsonResponse($response);
             }
         }
+        
+        public function takepaymentAction() {
+            try {
+                
+                $response = ResponseUtils::responseItem($orderResult);
+                return $this->jsonResponse($response);
+                
+            } catch (\Exception $ex) {
+                $response = ResponseUtils::createExceptionResponse($ex);
+                return $this->jsonResponse($response);
+            }
+        }
     }
 }

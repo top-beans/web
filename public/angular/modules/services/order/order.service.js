@@ -16,4 +16,10 @@ service('orderService', ['$http', function ($http) {
             if (callback) callback(response.data);
         });
     };
+    
+    self.takePayment = function (details, callback) {
+        $http.post("/api/OrdersApi/takepayment", details).then(function (response) {
+            if (callback) callback(response.data);
+        });
+    };
 }]);

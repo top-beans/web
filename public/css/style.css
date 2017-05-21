@@ -145,13 +145,12 @@ i.cart-icon {
 
 .cart-actions {
     font-size: 20px;
-    color: #666;
 }
 .cart-actions > span {
     cursor: pointer;
 }
 .cart-actions > span:hover {
-    color: #58c4a7;
+    color: #666;
 }
 
 .my-underline {

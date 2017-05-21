@@ -29504,7 +29504,7 @@ h6 + *,
 
 * + p,
 * + .p {
-  margin-top: 14px;
+  margin-top: 5px;
 }
 
 hr + * {
@@ -32265,11 +32265,11 @@ blockquote cite {
 }
 
 .product-item-fullwidth * + .product-description {
-  margin-top: 17px;
+  margin-top: 8px;
 }
 
 .product-item-fullwidth * + .product-details {
-  margin-top: 23px;
+  margin-top: 10px;
 }
 
 .product-item-fullwidth * + .product-control {

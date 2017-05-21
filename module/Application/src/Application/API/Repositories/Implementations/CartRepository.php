@@ -175,7 +175,7 @@ namespace Application\API\Repositories\Implementations {
                     'total' => number_format($paidSampleTotal, 2, '.', ''),
                 ],
                 'freeSamples' => $freeSampleItems,
-                'totalItems' => (count($coffees) + count($paidSampleItems)),
+                'totalItems' => (count($coffees) + count($paidSampleItems) + count($freeSampleItems)),
                 'total' => number_format($coffeeTotal + $paidSampleTotal, 2, '.', '')
             ];
         }

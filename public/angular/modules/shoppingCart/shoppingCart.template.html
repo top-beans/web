@@ -43,12 +43,22 @@
                             <span ng-if="item.isfreesample">&pound;0.00</span>
                         </td>
                         <td class="cart-actions">
-                            <span class="glyphicon glyphicon-plus-sign"  ng-click="$ctrl.incrementItem(item)"></span>&nbsp;
-                            <span class="glyphicon glyphicon-minus-sign"  ng-click="$ctrl.decrementItem(item)"></span>&nbsp;&nbsp;
-                            <span class="glyphicon glyphicon-remove-circle" ng-click="$ctrl.deleteFromCart(item)"></span>
+                            <span class="glyphicon glyphicon-plus-sign text-info"  ng-click="$ctrl.incrementItem(item)"></span>
+                            <span class="glyphicon glyphicon-minus-sign text-info"  ng-click="$ctrl.decrementItem(item)"></span>
+                            <span class="glyphicon glyphicon-remove-circle text-danger" ng-click="$ctrl.deleteFromCart(item)"></span>
                         </td>
                     </tr>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <td class="hidden-xs"></td>
+                        <td></td>
+                        <td>Shipping</td>
+                        <td>Free</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
         <div class="cell-sm-11 offset-top-22 text-right">
