@@ -10,6 +10,7 @@ namespace Application\Controller {
     use Application\API\Repositories\Interfaces\IOrdersRepository;
     use Application\API\Repositories\Interfaces\IEMailService;
     use Application\API\Repositories\Interfaces\IUsersRepository;
+    use Application\API\Canonicals\Constants\FlashMessages;
     
     class OrdersApiController extends BaseController {
         
@@ -49,7 +50,7 @@ namespace Application\Controller {
 
         public function getcustomeraddressesAction() {
             try {
-                $cookieKey = $this->p1;
+                $cookieKey = $this->getRequest()->getContent();
                 $groupKey = $this->ordersRepo->getGroupByCookie($cookieKey);
                 
                 if ($groupKey == null) {
@@ -96,7 +97,7 @@ namespace Application\Controller {
                 if (!$orderResult->requirespayment) {
                     $emailRequest = $this->ordersRepo->createReceivedEmail($orderResult->groupkey);
                     $this->emailSvc->sendMail($emailRequest);
-                    $this->addFlashSuccessMsgs(["Your Order has been placed Successfully"]);
+                    $this->addFlashSuccessMsgs([FlashMessages::OrderComplete]);
                 }
                 
                 $response = ResponseUtils::responseItem($orderResult);
@@ -110,8 +111,13 @@ namespace Application\Controller {
         
         public function takepaymentAction() {
             try {
+                $jsonData = $this->getRequest()->getContent();
+                $data = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Dto\PaymentDetails", "json");
                 
-                $response = ResponseUtils::responseItem($orderResult);
+                
+                
+                
+                $response = ResponseUtils::response();
                 return $this->jsonResponse($response);
                 
             } catch (\Exception $ex) {

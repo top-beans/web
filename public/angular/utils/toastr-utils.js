@@ -5,35 +5,35 @@
 function toastrClasses(typeOfToastr) {
     switch (typeOfToastr) {
         case 'error': {
-            return { "positionClass": "toast-top-right", "timeOut": "30000", "closeButton": true };
+            return { "positionClass": "toast-bottom-full-width", "timeOut": "30000", "closeButton": true };
         }
         case 'warning': {
-            return { "positionClass": "toast-top-right", "timeOut": "30000", "closeButton": true };
+            return { "positionClass": "toast-bottom-full-width", "timeOut": "30000", "closeButton": true };
         }
         default: {
-            return { "positionClass": "toast-top-right", "timeOut": "10000", "closeButton": true };
+            return { "positionClass": "toast-bottom-full-width", "timeOut": "10000", "closeButton": true };
         }
     }
 }
 
 function toastrError(msg, title) {
     toastr.clear();
-    toastr.error(msg, title, toastrClasses('error'));
+    toastr.error(msg, title || 'Error Message', toastrClasses('error'));
 }
 
 function toastrSuccess(msg, title) {
     toastr.clear();
-    toastr.success(msg, title, toastrClasses('success'));
+    toastr.success(msg, title || 'Success Message', toastrClasses('success'));
 }
 
 function toastrWarning(msg, title) {
     toastr.clear();
-    toastr.warning(msg, title, toastrClasses('warning'));
+    toastr.warning(msg, title || 'Warning Message', toastrClasses('warning'));
 }
 
 function toastrInfo(msg, title) {
     toastr.clear();
-    toastr.info(msg, title, toastrClasses('info'));
+    toastr.info(msg, title || 'Information Message', toastrClasses('info'));
 }
 
 function list2str(list) {
@@ -57,20 +57,20 @@ function list2str(list) {
 
 function toastrErrorFromList(list, title) {
     toastr.clear();
-    toastr.error(list2str(list), title, toastrClasses('error'));
+    toastr.error(list2str(list), title || 'Error Message', toastrClasses('error'));
 }
 
 function toastrSuccessFromList(list, title) {
     toastr.clear();
-    toastr.success(list2str(list), title, toastrClasses('success'));
+    toastr.success(list2str(list), title || 'Success Message', toastrClasses('success'));
 }
 
 function toastrWarningFromList(list, title) {
     toastr.clear();
-    toastr.warning(list2str(list), title, toastrClasses('warning'));
+    toastr.warning(list2str(list), title || 'Warning Message', toastrClasses('warning'));
 }
 
 function toastrInfoFromList(list, title) {
     toastr.clear();
-    toastr.info(list2str(list), title, toastrClasses('info'));
+    toastr.info(list2str(list), title || 'Information Message', toastrClasses('info'));
 }

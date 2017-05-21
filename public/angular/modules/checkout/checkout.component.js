@@ -87,7 +87,7 @@ angular.module('checkout')
                     toastrErrorFromList(data.errors);
                 } else if (!data.item.requirespayment) {
                     cookieService.remove();
-                    location.href = "/Index/index";
+                    location.href = "/Index/shoppingcart";
                 } else {
                     location.href = "/Index/payment";
                 }

@@ -13,16 +13,23 @@ namespace Application\API\Repositories\Implementations {
         private $smtpSender;
         private $supportEmail;
         private $queueEmails;
+        private $isProduction;
         
-        public function __construct(EntityManager $em, $smtpDetails, $smtpSender, $supportEmail, $queueEmails) {
+        public function __construct(EntityManager $em, $smtpDetails, $smtpSender, $supportEmail, $queueEmails, $isProduction) {
             parent::__construct($em);
             $this->smtpDetails = $smtpDetails;
             $this->smtpSender = $smtpSender;
             $this->supportEmail = $supportEmail;
             $this->queueEmails = $queueEmails;
+            $this->isProduction = $isProduction;
         }
         
         public function sendMail(EmailRequest $emailRequest) {
+            
+            if (!$this->isProduction) {
+                $emailRequest->recipient = $this->supportEmail;
+            }
+            
             if (!$this->queueEmails) {
                 $worker = new EMailServiceWorker($this->smtpDetails, $this->smtpSender, $this->supportEmail, $emailRequest, false);
                 $worker->run();
@@ -41,6 +48,11 @@ namespace Application\API\Repositories\Implementations {
         }
 
         public function sendBccMail(EmailRequest $emailRequest) {
+            
+            if (!$this->isProduction) {
+                $emailRequest->recipient = $this->supportEmail;
+            }
+            
             if (!$this->queueEmails) {
                 $worker = new EMailServiceWorker($this->smtpDetails, $this->smtpSender, $this->supportEmail, $emailRequest, true);
                 $worker->run();
@@ -69,7 +81,7 @@ namespace Application\API\Repositories\Implementations {
 
                 foreach ($emails as $email) {
                     $emailRequest = new EmailRequest();
-                    $emailRequest->recipient = $email->getRecipients();
+                    $emailRequest->recipient = $this->isProduction ? $email->getRecipients() : $this->supportEmail;
                     $emailRequest->subject = $email->getSubject();
                     $emailRequest->textbody = $email->getText();
                     $emailRequest->htmlbody = $email->getHtml();

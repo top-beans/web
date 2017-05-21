@@ -4,6 +4,9 @@ angular.module('shoppingCart')
 
 .component('shoppingCart', {
     templateUrl: '/angular/modules/shoppingCart/shoppingCart.template.html',
+    bindings: {
+        orderComplete: '@'
+    },
     controller: ['cookieService', 'cartService', function (cookieService, cartService) {
         var self = this;
 

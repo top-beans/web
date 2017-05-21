@@ -9,6 +9,7 @@ namespace Application\Controller {
     use Application\API\Canonicals\Constants\Navigation;
     use Application\API\Canonicals\WordPress\CategorySlugs;
     use Application\API\Canonicals\WordPress\PostSlugs;
+    use Application\API\Canonicals\Constants\FlashMessages;
     
     class IndexController extends BaseController {
         
@@ -54,7 +55,9 @@ namespace Application\Controller {
         }
         
         public function shoppingcartAction() {
-            return [];
+            return [
+                'orderComplete' => in_array(FlashMessages::OrderComplete, $this->flashMessenger()->getSuccessMessages())
+            ];
         }
         
         public function contactsAction() {

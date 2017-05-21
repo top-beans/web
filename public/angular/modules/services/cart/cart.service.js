@@ -17,7 +17,7 @@ service('cartService', ['$http', function ($http) {
     };
     
     self.getCartSize = function (cookieKey, callback, subscribe) {
-        $http.get("/api/CartApi/getcartsize/" + cookieKey).then(function (response) {
+        $http.post("/api/CartApi/getcartsize", cookieKey).then(function (response) {
             if (callback) callback(response.data);
             if (subscribe) self.sizeSubscriptions.push(callback);
         }, function (error) {
@@ -26,7 +26,7 @@ service('cartService', ['$http', function ($http) {
     };
 
     self.getCartTotal = function (cookieKey, callback, subscribe) {
-        $http.get("/api/CartApi/getcarttotal/" + cookieKey).then(function (response) {
+        $http.post("/api/CartApi/getcarttotal", cookieKey).then(function (response) {
             if (callback) callback(response.data);
             if (subscribe) self.totalSubscriptions.push(callback);
         }, function (error) {
@@ -35,7 +35,7 @@ service('cartService', ['$http', function ($http) {
     };
 
     self.getCart = function (cookieKey, callback) {
-        $http.get("/api/CartApi/getcart/" + cookieKey).then(function (response) {
+        $http.post("/api/CartApi/getcart", cookieKey).then(function (response) {
             if (callback) callback(response.data);
         }, function (error) {
             
@@ -43,7 +43,7 @@ service('cartService', ['$http', function ($http) {
     };
 
     self.getCartBreakDown = function (cookieKey, callback) {
-        $http.get("/api/CartApi/getcartbreakdown/" + cookieKey).then(function (response) {
+        $http.post("/api/CartApi/getcartbreakdown", cookieKey).then(function (response) {
             if (callback) callback(response.data);
         }, function (error) {
             
@@ -57,11 +57,18 @@ service('cartService', ['$http', function ($http) {
                self.getCartSize(cart.cookiekey, self.notifySizeSubscriptions);
                self.getCartTotal(cart.cookiekey, self.notifyTotalSubscriptions);
             }
+        }, function (error) {
+            
         });
     };
     
     self.deleteFromCart = function (cookieKey, coffeeKey, callback) {
-        $http.delete("/api/CartApi/delete/" + cookieKey + "/" + coffeeKey).then(function (response) {
+        var cartItem = {
+            cookiekey: cookieKey,
+            coffeekey: coffeeKey
+        };
+        
+        $http.post("/api/CartApi/delete", cartItem).then(function (response) {
             if (callback) callback(response.data);
             if (response.data.success) {
                 self.getCartSize(cookieKey, self.notifySizeSubscriptions);
@@ -73,7 +80,12 @@ service('cartService', ['$http', function ($http) {
     };
     
     self.incrementCartItem = function (cookieKey, coffeeKey, callback) {
-        $http.delete("/api/CartApi/increment/" + cookieKey + "/" + coffeeKey).then(function (response) {
+        var cartItem = {
+            cookiekey: cookieKey,
+            coffeekey: coffeeKey
+        };
+        
+        $http.put("/api/CartApi/increment", cartItem).then(function (response) {
             if (callback) callback(response.data);
             if (response.data.success) {
                 self.getCartTotal(cookieKey, self.notifyTotalSubscriptions);
@@ -84,7 +96,12 @@ service('cartService', ['$http', function ($http) {
     };
     
     self.decrementCartItem = function (cookieKey, coffeeKey, callback) {
-        $http.delete("/api/CartApi/decrement/" + cookieKey + "/" + coffeeKey).then(function (response) {
+        var cartItem = {
+            cookiekey: cookieKey,
+            coffeekey: coffeeKey
+        };
+        
+        $http.put("/api/CartApi/decrement", cartItem).then(function (response) {
             if (callback) callback(response.data);
             if (response.data.success) {
                 self.getCartTotal(cookieKey, self.notifyTotalSubscriptions);

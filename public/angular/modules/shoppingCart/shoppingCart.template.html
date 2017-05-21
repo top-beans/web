@@ -1,7 +1,10 @@
 <div class="shell">
     <div class="range" ng-if="$ctrl.cartItems.length === 0">
         <div class="cell-xs-12">
-            <h3 class="my-underline">Your have no items in your cart</h3>
+            <h3 class="my-underline">
+                <span ng-if="!$ctrl.orderComplete">Your have no items in your cart</span>
+                <span ng-if="$ctrl.orderComplete">Your Order is now Complete. Thank you</span>
+            </h3>
             <a href="/Index/buyorsample" class="btn btn-xl btn-red-orange">Buy or sample</a>
         </div>
     </div>

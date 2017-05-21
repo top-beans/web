@@ -138,7 +138,7 @@ namespace Application\API\Repositories\Implementations {
                     $order = new Order();
                     $order->setGroupkey($orderResult->groupkey);
 
-                    if (!$cartItem->getIspaidsample()) { 
+                    if ($cartItem->getIsfreesample()) { 
                         $order->setStatuskey(OrderStatuses::Received);
                     } else {
                         $orderResult->requirespayment = true; 
@@ -160,11 +160,7 @@ namespace Application\API\Repositories\Implementations {
                 }
 
                 if(!$orderResult->requirespayment) {
-                    foreach ($orders as $order) {
-                        $order->setShoppingcartkey(null);
-                        $this->ordersRepo->update($order);
-                    }
-
+                    $this->em->createQuery("UPDATE Application\API\Canonicals\Entity\Order o SET o.shoppingcartkey=null WHERE o.groupkey='$orderResult->groupkey'")->execute();
                     $this->cartRepo->deleteList($this->cartRepo->findBy(['cookiekey' => $cookieKey]));
                 }
 

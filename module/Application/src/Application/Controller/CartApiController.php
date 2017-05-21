@@ -22,7 +22,7 @@ namespace Application\Controller {
 
         public function getcartsizeAction() {
             try {
-                $cookieKey = $this->p1;
+                $cookieKey = $this->getRequest()->getContent();
                 $cartSize = $this->cartRepo->getCartSize($cookieKey);
                 $response = ResponseUtils::responseItem($cartSize);
                 return $this->jsonResponse($response);
@@ -35,7 +35,7 @@ namespace Application\Controller {
 
         public function getcarttotalAction() {
             try {
-                $cookieKey = $this->p1;
+                $cookieKey = $this->getRequest()->getContent();
                 $total = $this->cartRepo->getCartTotal($cookieKey);
                 $response = ResponseUtils::responseItem($total);
                 return $this->jsonResponse($response);
@@ -48,7 +48,7 @@ namespace Application\Controller {
 
         public function getcartAction() {
             try {
-                $cookieKey = $this->p1;
+                $cookieKey = $this->getRequest()->getContent();
                 $items = $this->cartRepo->getCart($cookieKey);
                 $response = ResponseUtils::responseList($items);
                 return $this->jsonResponse($response);
@@ -60,7 +60,7 @@ namespace Application\Controller {
 
         public function getcartbreakdownAction() {
             try {
-                $cookieKey = $this->p1;
+                $cookieKey = $this->getRequest()->getContent();
                 $item = $this->cartRepo->getCartBreakdown($cookieKey);
                 $response = ResponseUtils::responseItem($item);
                 return $this->jsonResponse($response);
@@ -109,8 +109,12 @@ namespace Application\Controller {
         
         public function deleteAction() {
             try {
-                $cookieKey = $this->p1;
-                $coffeeKey = $this->p2;
+                $jsonData = $this->getRequest()->getContent();
+                $data = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Dto\CartItem", "json");
+                
+                $cookieKey = $data->cookiekey;
+                $coffeeKey = $data->coffeekey;
+                
                 $this->cartRepo->deleteFromCart($cookieKey, $coffeeKey);
                 $response = ResponseUtils::response();
                 return $this->jsonResponse($response);
@@ -122,8 +126,12 @@ namespace Application\Controller {
         
         public function incrementAction() {
             try {
-                $cookieKey = $this->p1;
-                $coffeeKey = $this->p2;
+                $jsonData = $this->getRequest()->getContent();
+                $data = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Dto\CartItem", "json");
+                
+                $cookieKey = $data->cookiekey;
+                $coffeeKey = $data->coffeekey;
+                
                 $updatedItem = $this->cartRepo->incrementCartItem($cookieKey, $coffeeKey);
                 $response = ResponseUtils::responseItem($updatedItem);
                 return $this->jsonResponse($response);
@@ -135,8 +143,12 @@ namespace Application\Controller {
         
         public function decrementAction() {
             try {
-                $cookieKey = $this->p1;
-                $coffeeKey = $this->p2;
+                $jsonData = $this->getRequest()->getContent();
+                $data = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Dto\CartItem", "json");
+                
+                $cookieKey = $data->cookiekey;
+                $coffeeKey = $data->coffeekey;
+                
                 $updatedItem = $this->cartRepo->decrementCartItem($cookieKey, $coffeeKey);
                 $response = ResponseUtils::responseItem($updatedItem);
                 return $this->jsonResponse($response);

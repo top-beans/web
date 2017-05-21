@@ -25,16 +25,6 @@ angular.module('payment')
             }
         };
         
-        self.takePayment = function (details) {
-            orderService.takePayment(details, function (data) {
-                if (!data.success) {
-                    toastrErrorFromList(data.errors);
-                } else {
-                    location.url = '/Index/index';
-                }
-            });
-        }
-        
         self.confirm = function() {
             var form = document.getElementById('paymentForm');
             
@@ -50,12 +40,16 @@ angular.module('payment')
                 'callback': function(status, response) {
                     if (!response.token) {
                         toastrError('Please contact us immediately', 'Payment Errors');
-                    } else {
-                        self.takePayment({
-                            cookiekey: cookieService.get(),
-                            token: response.token
-                        });
+                        return;
                     }
+                    
+                    orderService.takePayment(cookieService.get(), response.token, function (data) {
+                        if (!data.success) {
+                            toastrErrorFromList(data.errors);
+                        } else {
+                            location.url = '/Index/index';
+                        }
+                    });
                 }
             });            
         };

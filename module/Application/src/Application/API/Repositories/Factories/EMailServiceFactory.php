@@ -11,8 +11,9 @@ namespace Application\API\Repositories\Factories {
         public function createService(ServiceLocatorInterface $serviceLocator) {
             $config      = $serviceLocator->get('Config');
             $em          = $serviceLocator->get('doctrine.entitymanager.orm_default');
+            $isProduction = $config['ENV'] == 'production';
             
-            return new EMailService($em, $config['SMTPDetails'], $config['SMTPSender'], $config['SupportEmail'], $config['QueueEmails']);
+            return new EMailService($em, $config['SMTPDetails'], $config['SMTPSender'], $config['SupportEmail'], $config['QueueEmails'], $isProduction);
         }
     }
 }
