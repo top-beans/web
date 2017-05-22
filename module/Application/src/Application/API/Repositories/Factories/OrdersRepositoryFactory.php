@@ -9,7 +9,9 @@ namespace Application\API\Repositories\Factories {
     class OrdersRepositoryFactory implements FactoryInterface {
         
         public function createService(ServiceLocatorInterface $serviceLocator) {
-            return new OrdersRepository($serviceLocator->get('doctrine.entitymanager.orm_default'));
+            $config = $serviceLocator->get('Config');
+            $em = $serviceLocator->get('doctrine.entitymanager.orm_default');
+            return new OrdersRepository($em, $config['SupportEmail']);
         }
     }
 }

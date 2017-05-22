@@ -9,10 +9,11 @@ namespace Application\API\Repositories\Interfaces {
         public function getCustomerByGroup($groupKey);
         public function getAddress($key);
         public function getOrderTotalByCookie($cookie);
-        public function completeOrderUsingCookie($cookie);
+        public function receiveOrderByCookie($cookie);
 
         public function addAnonymousOrder($cookieKey, Address $deliveryAddress, Address $billingAddress);
         public function createReceivedEmail($orderGroupKey);
+        public function createNewOrderAlertEmail($orderGroupKey);
         public function createDispatchedEmail($orderGroupKey);
     }
 }

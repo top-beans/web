@@ -67,7 +67,12 @@ namespace Application\API\Repositories\Implementations {
          */
         private $orderViewRepo;
         
-        public function __construct(EntityManagerInterface $em) {
+        /**
+         * @var string
+         */
+        private $supportEmail;
+        
+        public function __construct(EntityManagerInterface $em, $supportEmail) {
             $this->em = $em;
             $this->ordersRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Order()))));
             $this->customerRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Customer()))));
@@ -77,6 +82,7 @@ namespace Application\API\Repositories\Implementations {
             $this->cartViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Shoppingcartview()))));
             $this->cartRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Shoppingcart()))));
             $this->orderViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Orderview()))));
+            $this->supportEmail = $supportEmail;
         }
 
         public function getGroupByCookie($cookieKey) {
@@ -182,12 +188,19 @@ namespace Application\API\Repositories\Implementations {
             }
         }
         
-        public function completeOrderUsingCookie($cookie) {
+        public function receiveOrderByCookie($cookie) {
             try {
                 $this->em->getConnection()->beginTransaction();
                 
                 $groupkey = $this->getGroupByCookie($cookie);
-                $this->em->createQuery("UPDATE Application\API\Canonicals\Entity\Order o SET o.shoppingcartkey=null WHERE o.groupkey='$groupkey'")->execute();
+                $orders = $this->ordersRepo->findBy(['groupkey' => $groupkey]);
+                
+                foreach ($orders as $order) {
+                    $order->setShoppingcartkey(null);
+                    $order->setStatuskey(OrderStatuses::Received);
+                    $this->ordersRepo->add($order);
+                }
+                
                 $this->cartRepo->deleteList($this->cartRepo->findBy(['cookiekey' => $cookie]));
 
                 $this->em->flush();
@@ -218,12 +231,31 @@ namespace Application\API\Repositories\Implementations {
                 throw new \Exception("Could not find the order required to prepare an Order Received Confirmation Email");
             }
             
-            $customer = $this->customerRepo->fetch($orders[0]->getCustomerkey());
+            $customer = $this->getCustomerByGroup($orderGroupKey);
             $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
             
             $request = new EmailRequest();
             $request->recipient = $deliveryAddress->getEmail();
             $request->subject = "Your Order has been Dispatched";
+            $request->htmlbody = "";
+            $request->textbody = "";
+            
+            return $request;
+        }
+
+        public function createNewOrderAlertEmail($orderGroupKey) {
+            $orders = $this->orderViewRepo->findBy(['groupkey' => $orderGroupKey, 'statuskey' => OrderStatuses::Received]);
+            
+            if (count($orders) == 0) {
+                throw new \Exception("Could not find the order required to prepare an Order Received Confirmation Email");
+            }
+            
+            $customer = $this->getCustomerByGroup($orderGroupKey);
+            $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
+            
+            $request = new EmailRequest();
+            $request->recipient = $this->supportEmail;
+            $request->subject = "A new Order has come in";
             $request->htmlbody = "";
             $request->textbody = "";
             
@@ -237,7 +269,7 @@ namespace Application\API\Repositories\Implementations {
                 throw new \Exception("Could not find the order required to prepare an Order Received Confirmation Email");
             }
             
-            $customer = $this->customerRepo->fetch($orders[0]->getCustomerkey());
+            $customer = $this->getCustomerByGroup($orderGroupKey);
             $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
             
             $request = new EmailRequest();

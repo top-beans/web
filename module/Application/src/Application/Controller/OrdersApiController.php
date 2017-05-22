@@ -47,7 +47,7 @@ namespace Application\Controller {
          */
         private $worldPayServiceKey;
         
-        public function __construct(AbstractContainer $navService, AuthenticationServiceInterface $authService, SerializerInterface $serializer, IOrdersRepository $ordersRepo, IEMailService $emailSvc, IUsersRepository $usersRepository, ManagerInterface $sessionManager, $maxLoginTries, $worldPayServiceKey) {
+        public function __construct(AbstractContainer $navService, AuthenticationServiceInterface $authService, SerializerInterface $serializer, IOrdersRepository $ordersRepo, IEMailService $emailSvc, IUsersRepository $usersRepository, ManagerInterface $sessionManager, $maxLoginTries, $worldPayServiceKey, $settlementCurrency) {
             parent::__construct($navService, $authService, $serializer);
             $this->ordersRepo = $ordersRepo;
             $this->emailSvc = $emailSvc;
@@ -55,6 +55,7 @@ namespace Application\Controller {
             $this->sessionManager = $sessionManager;
             $this->maxLoginTries = $maxLoginTries;
             $this->worldPayServiceKey = $worldPayServiceKey;
+            $this->settlementCurrency = $settlementCurrency;
         }
 
         public function getcustomeraddressesAction() {
@@ -107,8 +108,10 @@ namespace Application\Controller {
                 $orderResult = $this->ordersRepo->addAnonymousOrder($data->cookie, $data->deliveryaddress, $data->billingaddress);
                 
                 if (!$orderResult->requirespayment) {
-                    $emailRequest = $this->ordersRepo->createReceivedEmail($orderResult->groupkey);
-                    $this->emailSvc->sendMail($emailRequest);
+                    $shoppersCopy = $this->ordersRepo->createReceivedEmail($orderResult->groupkey);
+                    $topbeansCopy = $this->ordersRepo->createNewOrderAlertEmail($orderResult->groupkey);
+                    $this->emailSvc->sendMail($shoppersCopy);
+                    $this->emailSvc->sendMail($topbeansCopy);
                     $this->addFlashSuccessMsgs([FlashMessages::OrderComplete]);
                 }
                 
@@ -139,7 +142,7 @@ namespace Application\Controller {
 
                 $currencyCode = "GBP";
                 $customer = $this->ordersRepo->getCustomerByGroup($groupKey);
-                $co = $this->ordersRepo->getAddress($customer->getDeliveryaddresskey());
+                $dl = $this->ordersRepo->getAddress($customer->getDeliveryaddresskey());
                 $bl = $this->ordersRepo->getAddress($customer->getBillingaddresskey());
                 
                 $billingAddress = [
@@ -153,21 +156,44 @@ namespace Application\Controller {
                 ];
                 
                 $deliveryAddress = [
-                    "firstName" => $co->getFirstname(),
-                    "lastName" => $co->getLastname(),
-                    "address1" => $co->getAddress1(),
-                    "address2" => $co->getAddress2(),
-                    "address3" => $co->getAddress3(),
-                    "postalCode" => $co->getPostcode(),
-                    "city" => $co->getCity(),
-                    "state" => $co->getState(),
-                    "countryCode" => $co->getCountrycode(),
-                    "telephoneNumber" => $co->getPhone(),
+                    "firstName" => $dl->getFirstname(),
+                    "lastName" => $dl->getLastname(),
+                    "address1" => $dl->getAddress1(),
+                    "address2" => $dl->getAddress2(),
+                    "address3" => $dl->getAddress3(),
+                    "postalCode" => $dl->getPostcode(),
+                    "city" => $dl->getCity(),
+                    "state" => $dl->getState(),
+                    "countryCode" => $dl->getCountrycode(),
+                    "telephoneNumber" => $dl->getPhone(),
                 ];
                 
+                $worldpay = new Worldpay($this->worldPayServiceKey);
+                $wpResponse = $worldpay->createOrder([
+                    'token' => $data->token,
+                    'amount' => round($amount, 2) * 100, // Amount is only transacted in cents/pennies
+                    'currencyCode' => $currencyCode,
+                    'settlementCurrency' => $this->settlementCurrency,
+                    'name' => $dl->getLastname() . " " . $dl->getFirstname(),
+                    'billingAddress' => $billingAddress,
+                    'deliveryAddress' => $deliveryAddress,
+                    'shopperEmailAddress' => $dl->getEmail(),
+                    'shopperIpAddress' => $shopperIpAddress,
+                    'shopperSessionId' => $shopperSessionId,
+                    'orderDescription' => 'Top Beans Coffee',
+                    'customerOrderCode' => $groupKey
+                ]);
+
+                if ($wpResponse["paymentStatus"] == "SUCCESS") {
+                    $this->ordersRepo->receiveOrderByCookie($data->cookiekey);
+                    $shoppersCopy = $this->ordersRepo->createReceivedEmail($groupKey);
+                    $topbeansCopy = $this->ordersRepo->createNewOrderAlertEmail($groupKey);
+                    $this->emailSvc->sendMail($shoppersCopy);
+                    $this->emailSvc->sendMail($topbeansCopy);
+                    $this->addFlashSuccessMsgs([FlashMessages::OrderComplete]);
+                }
                 
-                
-                $response = ResponseUtils::response();
+                $response = ResponseUtils::responseItem($wpResponse);
                 return $this->jsonResponse($response);
                 
             } catch (\Exception $ex) {

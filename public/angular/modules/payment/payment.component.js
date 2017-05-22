@@ -38,18 +38,22 @@ angular.module('payment')
                 'form': form,
                 'reusable': false,
                 'callback': function(status, response) {
-                    if (!response.token) {
+                    if (status !== 200 || !response || response && response.error && response.error.message) {
                         toastrError('Please contact us immediately', 'Payment Errors');
                         return;
+                    } else if (response.token) {
+                        orderService.takePayment(cookieService.get(), response.token, function (data) {
+                            if (!data.success) {
+                                toastrErrorFromList(data.errors, 'Payment Errors');
+                            } else if (data.item.paymentStatus === "FAILED") {
+                                toastrError(data.item.paymentStatusReason);
+                            } else if (data.item.paymentStatus === "ERROR") {
+                                toastrError('Please contact us immediately', 'Payment Errors');
+                            } else {
+                                location.href = "/Index/shoppingcart";
+                            }
+                        });
                     }
-                    
-                    orderService.takePayment(cookieService.get(), response.token, function (data) {
-                        if (!data.success) {
-                            toastrErrorFromList(data.errors);
-                        } else {
-                            location.url = '/Index/index';
-                        }
-                    });
                 }
             });            
         };
