@@ -9,6 +9,7 @@ namespace Application\API\Repositories\Implementations {
     use Application\API\Canonicals\Entity\Order;
     use Application\API\Canonicals\Entity\Customer;
     use Application\API\Canonicals\Entity\User;
+    use Application\API\Canonicals\Entity\Addressview;
     use Application\API\Canonicals\Entity\Address;
     use Application\API\Canonicals\Entity\Shoppingcartview;
     use Application\API\Canonicals\Entity\Shoppingcart;
@@ -49,6 +50,11 @@ namespace Application\API\Repositories\Implementations {
         /**
          * @var IRepository
          */
+        private $addressViewRepo;
+        
+        /**
+         * @var IRepository
+         */
         private $cartViewRepo;
         
         /**
@@ -67,6 +73,7 @@ namespace Application\API\Repositories\Implementations {
             $this->customerRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Customer()))));
             $this->userRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new User()))));
             $this->addressRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Address()))));
+            $this->addressViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Addressview()))));
             $this->cartViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Shoppingcartview()))));
             $this->cartRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Shoppingcart()))));
             $this->orderViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Orderview()))));
@@ -101,7 +108,7 @@ namespace Application\API\Repositories\Implementations {
         }
 
         public function getAddress($key) {
-            return $this->addressRepo->fetch($key);
+            return $this->addressViewRepo->fetch($key);
         }
 
         public function addAnonymousOrder($cookieKey, Address $deliveryAddress, Address $billingAddress) {
@@ -152,7 +159,7 @@ namespace Application\API\Repositories\Implementations {
                     $order->setPrice($cartItem->getPrice());
                     $order->setPricebaseunit($cartItem->getPricebaseunit());
                     $order->setPackagingunit($cartItem->getPackagingunit());
-                    $order->setItemprice($cartItem->getItemPrice());
+                    $order->setItemprice($cartItem->getItemprice());
                     $order->setShoppingcartkey($cartItem->getShoppingcartkey());
                     $order->setCreateddate($createdDate);
                     $this->ordersRepo->add($order);
@@ -174,6 +181,35 @@ namespace Application\API\Repositories\Implementations {
                 throw $ex;
             }
         }
+        
+        public function completeOrderUsingCookie($cookie) {
+            try {
+                $this->em->getConnection()->beginTransaction();
+                
+                $groupkey = $this->getGroupByCookie($cookie);
+                $this->em->createQuery("UPDATE Application\API\Canonicals\Entity\Order o SET o.shoppingcartkey=null WHERE o.groupkey='$groupkey'")->execute();
+                $this->cartRepo->deleteList($this->cartRepo->findBy(['cookiekey' => $cookie]));
+
+                $this->em->flush();
+                $this->em->getConnection()->commit();
+                
+            } catch (\Exception $ex) {
+                $this->em->getConnection()->rollBack();
+                throw $ex;
+            }
+        }
+
+        public function getOrderTotalByCookie($cookie) {
+            $groupkey = $this->getGroupByCookie($cookie);
+            $orders = $this->orderViewRepo->findBy(['groupkey' => $groupkey, 'statuskey' => OrderStatuses::Creating]);
+            $total = 0;
+            
+            foreach($orders as $order) {
+                $total += $order->getItemPrice();
+            }
+            
+            return $total;
+        }
 
         public function createDispatchedEmail($orderGroupKey) {
             $orders = $this->orderViewRepo->findBy(['groupkey' => $orderGroupKey, 'statuskey' => OrderStatuses::Dispatched]);
@@ -183,7 +219,7 @@ namespace Application\API\Repositories\Implementations {
             }
             
             $customer = $this->customerRepo->fetch($orders[0]->getCustomerkey());
-            $deliveryAddress = $this->addressRepo->fetch($customer->getDeliveryaddresskey());
+            $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
             
             $request = new EmailRequest();
             $request->recipient = $deliveryAddress->getEmail();
@@ -202,7 +238,7 @@ namespace Application\API\Repositories\Implementations {
             }
             
             $customer = $this->customerRepo->fetch($orders[0]->getCustomerkey());
-            $deliveryAddress = $this->addressRepo->fetch($customer->getDeliveryaddresskey());
+            $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
             
             $request = new EmailRequest();
             $request->recipient = $deliveryAddress->getEmail();

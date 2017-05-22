@@ -347,9 +347,17 @@ class Orderview
      * @Type("string")
      * @var string
      *
-     * @ORM\Column(name="deliveryFullName", type="string", length=200, nullable=true)
+     * @ORM\Column(name="deliveryFirstName", type="string", length=100, nullable=true)
      */
-    private $deliveryfullname;
+    private $deliveryfirstname;
+
+    /**
+     * @Type("string")
+     * @var string
+     *
+     * @ORM\Column(name="deliveryLastName", type="string", length=100, nullable=true)
+     */
+    private $deliverylastname;
 
     /**
      * @Type("string")
@@ -371,6 +379,14 @@ class Orderview
      * @Type("string")
      * @var string
      *
+     * @ORM\Column(name="deliveryAddress3", type="string", length=200, nullable=true)
+     */
+    private $deliveryaddress3;
+
+    /**
+     * @Type("string")
+     * @var string
+     *
      * @ORM\Column(name="deliveryPostCode", type="string", length=45, nullable=true)
      */
     private $deliverypostcode;
@@ -382,6 +398,14 @@ class Orderview
      * @ORM\Column(name="deliveryCity", type="string", length=100, nullable=false)
      */
     private $deliverycity;
+
+    /**
+     * @Type("string")
+     * @var string
+     *
+     * @ORM\Column(name="deliveryState", type="string", length=100, nullable=false)
+     */
+    private $deliverystate;
 
     /**
      * @Type("string")
@@ -427,9 +451,17 @@ class Orderview
      * @Type("string")
      * @var string
      *
-     * @ORM\Column(name="billingFullName", type="string", length=200, nullable=true)
+     * @ORM\Column(name="billingFirstName", type="string", length=100, nullable=true)
      */
-    private $billingfullname;
+    private $billingfirstname;
+
+    /**
+     * @Type("string")
+     * @var string
+     *
+     * @ORM\Column(name="billingLastName", type="string", length=100, nullable=true)
+     */
+    private $billinglastname;
 
     /**
      * @Type("string")
@@ -451,6 +483,14 @@ class Orderview
      * @Type("string")
      * @var string
      *
+     * @ORM\Column(name="billingAddress3", type="string", length=200, nullable=true)
+     */
+    private $billingaddress3;
+
+    /**
+     * @Type("string")
+     * @var string
+     *
      * @ORM\Column(name="billingPostCode", type="string", length=45, nullable=true)
      */
     private $billingpostcode;
@@ -462,6 +502,14 @@ class Orderview
      * @ORM\Column(name="billingCity", type="string", length=100, nullable=false)
      */
     private $billingcity;
+
+    /**
+     * @Type("string")
+     * @var string
+     *
+     * @ORM\Column(name="billingState", type="string", length=100, nullable=false)
+     */
+    private $billingstate;
 
     /**
      * @Type("string")
@@ -544,21 +592,27 @@ class Orderview
     function getIsfreesample() { return $this->isfreesample; }
     function getDeliveryaddresskey() { return $this->deliveryaddresskey; }
     function getBillingaddresskey() { return $this->billingaddresskey; }
-    function getDeliveryfullname() { return $this->deliveryfullname; }
+    function getDeliveryfirstname() { return $this->deliveryfirstname; }
+    function getDeliverylastname() { return $this->deliverylastname; }
     function getDeliveryaddress1() { return $this->deliveryaddress1; }
     function getDeliveryaddress2() { return $this->deliveryaddress2; }
+    function getDeliveryaddress3() { return $this->deliveryaddress3; }
     function getDeliverypostcode() { return $this->deliverypostcode; }
     function getDeliverycity() { return $this->deliverycity; }
+    function getDeliverystate() { return $this->deliverystate; }
     function getDeliveryemail() { return $this->deliveryemail; }
     function getDeliveryphone() { return $this->deliveryphone; }
     function getDeliverycountrykey() { return $this->deliverycountrykey; }
     function getDeliverycountry() { return $this->deliverycountry; }
     function getDeliverycountrycode() { return $this->deliverycountrycode; }
-    function getBillingfullname() { return $this->billingfullname; }
+    function getBillingfirstname() { return $this->billingfirstname; }
+    function getBillinglastname() { return $this->billinglastname; }
     function getBillingaddress1() { return $this->billingaddress1; }
     function getBillingaddress2() { return $this->billingaddress2; }
+    function getBillingaddress3() { return $this->billingaddress3; }
     function getBillingpostcode() { return $this->billingpostcode; }
     function getBillingcity() { return $this->billingcity; }
+    function getBillingstate() { return $this->billingstate; }
     function getBillingemail() { return $this->billingemail; }
     function getBillingphone() { return $this->billingphone; }
     function getBillingcountrykey() { return $this->billingcountrykey; }
@@ -606,21 +660,27 @@ class Orderview
     function setIsfreesample($val) { $this->isfreesample = $val; }
     function setDeliveryaddresskey($val) { $this->deliveryaddresskey = $val; }
     function setBillingaddresskey($val) { $this->billingaddresskey = $val; }
-    function setDeliveryfullname($val) { $this->deliveryfullname = $val; }
+    function setDeliveryfirstname($val) { $this->deliveryfirstname = $val; }
+    function setDeliverylastname($val) { $this->deliverylastname = $val; }
     function setDeliveryaddress1($val) { $this->deliveryaddress1 = $val; }
     function setDeliveryaddress2($val) { $this->deliveryaddress2 = $val; }
+    function setDeliveryaddress3($val) { $this->deliveryaddress3 = $val; }
     function setDeliverypostcode($val) { $this->deliverypostcode = $val; }
     function setDeliverycity($val) { $this->deliverycity = $val; }
+    function setDeliverystate($val) { $this->deliverystate = $val; }
     function setDeliveryemail($val) { $this->deliveryemail = $val; }
     function setDeliveryphone($val) { $this->deliveryphone = $val; }
     function setDeliverycountrykey($val) { $this->deliverycountrykey = $val; }
     function setDeliverycountry($val) { $this->deliverycountry = $val; }
     function setDeliverycountrycode($val) { $this->deliverycountrycode = $val; }
-    function setBillingfullname($val) { $this->billingfullname = $val; }
+    function setBillingfirstname($val) { $this->billingfirstname = $val; }
+    function setBillinglastname($val) { $this->billinglastname = $val; }
     function setBillingaddress1($val) { $this->billingaddress1 = $val; }
     function setBillingaddress2($val) { $this->billingaddress2 = $val; }
+    function setBillingaddress3($val) { $this->billingaddress3 = $val; }
     function setBillingpostcode($val) { $this->billingpostcode = $val; }
     function setBillingcity($val) { $this->billingcity = $val; }
+    function setBillingstate($val) { $this->billingstate = $val; }
     function setBillingemail($val) { $this->billingemail = $val; }
     function setBillingphone($val) { $this->billingphone = $val; }
     function setBillingcountrykey($val) { $this->billingcountrykey = $val; }

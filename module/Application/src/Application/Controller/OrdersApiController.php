@@ -11,6 +11,9 @@ namespace Application\Controller {
     use Application\API\Repositories\Interfaces\IEMailService;
     use Application\API\Repositories\Interfaces\IUsersRepository;
     use Application\API\Canonicals\Constants\FlashMessages;
+    use Worldpay\Worldpay;
+    use Zend\Http\PhpEnvironment\RemoteAddress;
+    use Zend\Session\ManagerInterface;
     
     class OrdersApiController extends BaseController {
         
@@ -35,15 +38,21 @@ namespace Application\Controller {
         private $maxLoginTries;
         
         /**
+         * @var ManagerInterface
+         */
+        private $sessionManager;
+        
+        /**
          * @var string
          */
         private $worldPayServiceKey;
         
-        public function __construct(AbstractContainer $navService, AuthenticationServiceInterface $authService, SerializerInterface $serializer, IOrdersRepository $ordersRepo, IEMailService $emailSvc, IUsersRepository $usersRepository, $maxLoginTries, $worldPayServiceKey) {
+        public function __construct(AbstractContainer $navService, AuthenticationServiceInterface $authService, SerializerInterface $serializer, IOrdersRepository $ordersRepo, IEMailService $emailSvc, IUsersRepository $usersRepository, ManagerInterface $sessionManager, $maxLoginTries, $worldPayServiceKey) {
             parent::__construct($navService, $authService, $serializer);
             $this->ordersRepo = $ordersRepo;
             $this->emailSvc = $emailSvc;
             $this->usersRepository = $usersRepository;
+            $this->sessionManager = $sessionManager;
             $this->maxLoginTries = $maxLoginTries;
             $this->worldPayServiceKey = $worldPayServiceKey;
         }
@@ -62,11 +71,14 @@ namespace Application\Controller {
                     $deliveryAddress = $this->ordersRepo->getAddress($customer->getDeliveryaddresskey());
                     $billingAddress = $this->ordersRepo->getAddress($customer->getBillingaddresskey());
                     $billingDifferent = (
-                        $deliveryAddress->getFullname() != $billingAddress->getFullname() ||
+                        $deliveryAddress->getFirstname() != $billingAddress->getFirstname() ||
+                        $deliveryAddress->getLastname() != $billingAddress->getLastname() ||
                         $deliveryAddress->getAddress1() != $billingAddress->getAddress1() ||
                         $deliveryAddress->getAddress2() != $billingAddress->getAddress2() ||
+                        $deliveryAddress->getAddress3() != $billingAddress->getAddress3() ||
                         $deliveryAddress->getPostcode() != $billingAddress->getPostcode() ||
                         $deliveryAddress->getCity() != $billingAddress->getCity() ||
+                        $deliveryAddress->getState() != $billingAddress->getState() ||
                         $deliveryAddress->getEmail() != $billingAddress->getEmail() ||
                         $deliveryAddress->getPhone() != $billingAddress->getPhone() ||
                         $deliveryAddress->getCountrykey() != $billingAddress->getCountrykey()
@@ -114,6 +126,44 @@ namespace Application\Controller {
                 $jsonData = $this->getRequest()->getContent();
                 $data = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Dto\PaymentDetails", "json");
                 
+                $groupKey = $this->ordersRepo->getGroupByCookie($data->cookiekey);
+                $amount = $this->ordersRepo->getOrderTotalByCookie($data->cookiekey);
+                
+                if ($amount == 0 || $groupKey == null) {
+                    throw new \Exception("Could find Order");
+                }
+                
+                $remote = new RemoteAddress();
+                $shopperIpAddress = $remote->setUseProxy()->getIpAddress();
+                $shopperSessionId = $this->sessionManager->getId();
+
+                $currencyCode = "GBP";
+                $customer = $this->ordersRepo->getCustomerByGroup($groupKey);
+                $co = $this->ordersRepo->getAddress($customer->getDeliveryaddresskey());
+                $bl = $this->ordersRepo->getAddress($customer->getBillingaddresskey());
+                
+                $billingAddress = [
+                    "address1" => $bl->getAddress1(),
+                    "address2" => $bl->getAddress2(),
+                    "address3" => $bl->getAddress3(),
+                    "postalCode" => $bl->getPostcode(),
+                    "city" => $bl->getCity(),
+                    "state" => $bl->getState(),
+                    "countryCode" => $bl->getCountrycode(),
+                ];
+                
+                $deliveryAddress = [
+                    "firstName" => $co->getFirstname(),
+                    "lastName" => $co->getLastname(),
+                    "address1" => $co->getAddress1(),
+                    "address2" => $co->getAddress2(),
+                    "address3" => $co->getAddress3(),
+                    "postalCode" => $co->getPostcode(),
+                    "city" => $co->getCity(),
+                    "state" => $co->getState(),
+                    "countryCode" => $co->getCountrycode(),
+                    "telephoneNumber" => $co->getPhone(),
+                ];
                 
                 
                 

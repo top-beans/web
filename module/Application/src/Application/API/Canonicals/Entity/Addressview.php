@@ -8,10 +8,10 @@ use JMS\Serializer\Annotation\Type;
 
 /**
  * @AccessType("public_method")
- * @ORM\Table(name="Addresses")
+ * @ORM\Table(name="AddressView")
  * @ORM\Entity
  */
-class Address
+class Addressview
 {
     /**
      * @Type("integer")
@@ -111,6 +111,22 @@ class Address
      */
     private $countrykey;
 
+    /**
+     * @Type("string")
+     * @var string
+     *
+     * @ORM\Column(name="countryName", type="string", length=200, nullable=false)
+     */
+    private $countryname;
+
+    /**
+     * @Type("string")
+     * @var string
+     *
+     * @ORM\Column(name="countryCode", type="string", length=45, nullable=false)
+     */
+    private $countrycode;
+
     function getAddresskey() { return $this->addresskey; } 
     function getFirstname() { return $this->firstname; } 
     function getLastname() { return $this->lastname; } 
@@ -123,6 +139,8 @@ class Address
     function getEmail() { return $this->email; } 
     function getPhone() { return $this->phone; } 
     function getCountrykey() { return $this->countrykey; } 
+    function getCountryname() { return $this->countryname; } 
+    function getCountrycode() { return $this->countrycode; } 
 
     function setAddresskey($val) { $this->addresskey = $val; } 
     function setFirstname($val) { $this->firstname = $val; } 
@@ -136,5 +154,7 @@ class Address
     function setEmail($val) { $this->email = $val; } 
     function setPhone($val) { $this->phone = $val; } 
     function setCountrykey($val) { $this->countrykey = $val; } 
+    function setCountryname($val) { $this->countryname = $val; } 
+    function setCountrycode($val) { $this->countrycode = $val; } 
 }
 

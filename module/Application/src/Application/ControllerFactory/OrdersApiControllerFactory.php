@@ -17,11 +17,12 @@ namespace Application\ControllerFactory {
             $ordersRepo = $serviceLocator->get('OrdersRepo');
             $emailSvc = $serviceLocator->get('EMailSvc');
             $usersRepo = $serviceLocator->get('UsersRepo');
+            $sessionManager = $serviceLocator->get('SessionManager');
             $config = $serviceLocator->get('Config');
             $maxLoginTries = $config["MaxLoginTries"];
             $worldPayServiceKey = $config["WorldPayServiceKey"];
             
-            return new OrdersApiController($navRepo, $authService, $serializer, $ordersRepo, $emailSvc, $usersRepo, $maxLoginTries, $worldPayServiceKey);
+            return new OrdersApiController($navRepo, $authService, $serializer, $ordersRepo, $emailSvc, $usersRepo, $sessionManager, $maxLoginTries, $worldPayServiceKey);
         }
     }
 }

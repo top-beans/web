@@ -13,10 +13,16 @@
                     <div class="cell-xs-12">
                         <h4 class="my-underline">Delivery Address</h4>
                     </div>
-                    <div class="cell-xs-12">
+                    <div class="cell-xs-6">
                         <div class="form-group">
-                            Fullname
-                            <input ng-model="$ctrl.order.deliveryaddress.fullname" type="text" name="fullname" placeholder="Fullname" class="form-control" required>
+                            Firstname
+                            <input ng-model="$ctrl.order.deliveryaddress.firstname" type="text" name="firstname" placeholder="Firstname" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Lastname
+                            <input ng-model="$ctrl.order.deliveryaddress.lastname" type="text" name="lastname" placeholder="Lastname" class="form-control" required>
                         </div>
                     </div>
                     <div class="cell-xs-12">
@@ -75,10 +81,16 @@
                     <div class="cell-xs-12">
                         <h4 class="my-underline">Billing Address</h4>
                     </div>
-                    <div class="cell-xs-12">
+                    <div class="cell-xs-6">
                         <div class="form-group">
-                            Fullname
-                            <input ng-model="$ctrl.order.billingaddress.fullname" type="text" placeholder="Fullname" class="form-control" required>
+                            Firstname
+                            <input ng-model="$ctrl.order.billingaddress.firstname" type="text" placeholder="Firstname" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Lastname
+                            <input ng-model="$ctrl.order.billingaddress.lastname" type="text" placeholder="Lastname" class="form-control" required>
                         </div>
                     </div>
                     <div class="cell-xs-12">
