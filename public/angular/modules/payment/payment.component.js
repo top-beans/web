@@ -13,7 +13,6 @@ angular.module('payment')
         self.$onInit = function () {
             self.cartTotal = 0;
             self.card = new models.card();
-            self.confirming = false;
             cartService.getCartTotal(cookieService.get(), self.updateCartTotal, true);
         };
 
@@ -34,7 +33,7 @@ angular.module('payment')
                 return false;
             }
             
-            self.confirming = true;
+            showOverlay('Processing payment ...');
             
             Worldpay.useOwnForm({
                 'clientKey': self.worldPayClientKey,
@@ -43,10 +42,10 @@ angular.module('payment')
                 'callback': function(status, response) {
                     if (status !== 200 || !response || response && response.error && response.error.message) {
                         toastrError(response && response.error && response.error.message || 'Please contact us immediately', 'Payment Errors');
-                        self.confirming = false;
+                        hideOverlay();
                     } else if (response.token) {
                         orderService.takePayment(cookieService.get(), response.token, function (data) {
-                            self.confirming = false;
+                            hideOverlay();
                             if (!data.success) {
                                 toastrErrorFromList(data.errors, 'Payment Errors');
                             } else if (data.item.paymentStatus === "FAILED") {

@@ -82,11 +82,10 @@ angular.module('checkout')
                 self.order.billingaddress = new models.address(self.order.deliveryaddress);
             }
             
-            var l = Ladda.create( document.getElementById('checkoutBtn') );
-            l.start();
-
+            showOverlay('Processing order ...');
+            
             orderService.addAnonymousOrder(self.order, function (data) {
-                l.stop();
+                hideOverlay();
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
                 } else if (!data.item.requirespayment) {

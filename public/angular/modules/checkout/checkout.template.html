@@ -189,10 +189,9 @@
                     
                     <div class=" text-right offset-top-30">
                         <div class="cell-xs-12">
-                            <button ng-click="$ctrl.proceed()"
-                                    id="checkoutBtn" data-style="zoom-in" class="btn btn-sm btn-primary-contrast ladda-button">
-                                <span class="ladda-label" ng-if="$ctrl.cartTotal > 0">Go to Payment</span>
-                                <span class="ladda-label" ng-if="$ctrl.cartTotal == 0">Complete Order</span>
+                            <button ng-click="$ctrl.proceed()" class="btn btn-sm btn-primary-contrast">
+                                <span ng-if="$ctrl.cartTotal > 0">Go to Payment</span>
+                                <span ng-if="$ctrl.cartTotal == 0">Complete Order</span>
                             </button>
                         </div>
                     </div>

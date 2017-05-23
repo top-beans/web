@@ -35,11 +35,10 @@ namespace('modals').addToCartCtrl = function ($uibModalInstance, cartService, co
             return;
         }
         
-        var l = Ladda.create( document.getElementById('addToCartBtn') );
-        l.start();
+        showOverlay('Adding to cart ...');
         
         cartService.addToCart(self.shoppingCart, function (data) {
-            l.stop();
+            hideOverlay();
             if (!data.success) {
                 toastrErrorFromList(data.errors);
             } else {

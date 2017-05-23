@@ -13,9 +13,9 @@
             "public/vendor/angular-cookies/angular-cookies.min.js",
             "public/vendor/lodash/dist/lodash.min.js",
             "public/vendor/toastr/toastr.min.js",
-            "public/vendor/ladda/dist/spin.min.js",
-            "public/vendor/ladda/dist/ladda.min.js",
             "public/vendor/bootbox.js/bootbox.js",
+            "public/vendor/gasparesganga-jquery-loading-overlay/src/loadingoverlay.min.js",
+            "public/vendor/gasparesganga-jquery-loading-overlay/extras/loadingoverlay_progress/loadingoverlay_progress.min.js",
             "public/js/**/*.js",
             "public/angular/utils/**/*.js",
             "public/angular/models/**/*.js",
@@ -31,8 +31,7 @@
         "src": [
             "public/corecss/**/*.css",
             "public/css/**/*.css",
-            "public/vendor/toastr/toastr.min.css",
-            "public/vendor/ladda/dist/ladda-themeless.min.css"
+            "public/vendor/toastr/toastr.min.css"
         ],
         "dest": "public/dist/topbeans.css"
     }
