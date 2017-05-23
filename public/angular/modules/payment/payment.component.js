@@ -13,6 +13,7 @@ angular.module('payment')
         self.$onInit = function () {
             self.cartTotal = 0;
             self.card = new models.card();
+            self.confirming = false;
             cartService.getCartTotal(cookieService.get(), self.updateCartTotal, true);
         };
 
@@ -33,21 +34,19 @@ angular.module('payment')
                 return false;
             }
             
-            var l = Ladda.create( document.getElementById('confirmPaymentBtn') );
-            l.start();
-
+            self.confirming = true;
+            
             Worldpay.useOwnForm({
                 'clientKey': self.worldPayClientKey,
                 'form': form,
                 'reusable': false,
                 'callback': function(status, response) {
                     if (status !== 200 || !response || response && response.error && response.error.message) {
-                        toastrError('Please contact us immediately', 'Payment Errors');
-                        l.stop();
-                        return;
+                        toastrError(response && response.error && response.error.message || 'Please contact us immediately', 'Payment Errors');
+                        self.confirming = false;
                     } else if (response.token) {
                         orderService.takePayment(cookieService.get(), response.token, function (data) {
-                            l.stop();
+                            self.confirming = false;
                             if (!data.success) {
                                 toastrErrorFromList(data.errors, 'Payment Errors');
                             } else if (data.item.paymentStatus === "FAILED") {

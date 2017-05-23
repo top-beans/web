@@ -12,7 +12,7 @@ service('cookieService', ['$cookies', 'uuid2', function ($cookies, uuid2) {
         if (!$cookies.get(self.cookiekeyId)) {
             var now = new Date();
             var exp = new Date(now.getTime() + 1 * 24 * 60 * 60 * 1000); // Days * Hrs * Mins * Secs * Millis
-            $cookies.put(self.cookiekeyId, uuid2.newuuid(), { expires: exp });
+            $cookies.put(self.cookiekeyId, uuid2.newuuid(), { expires: exp, path: '/' });
         }
         
         return $cookies.get(self.cookiekeyId);
