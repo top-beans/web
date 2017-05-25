@@ -41,8 +41,12 @@ namespace Application\Controller {
             return [];
         }
         
-        public function filesAction() {
-            
+        public function coffeesAction() {
+            return [];
+        }
+        
+        public function ordersAction() {
+            return [];
         }
     }
 }

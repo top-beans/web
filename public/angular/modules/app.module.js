@@ -12,5 +12,7 @@ angular.module('topbeans', [
     'cartCount',
     'shoppingCart',
     'checkout',
-    'payment'
+    'payment',
+    'coffees',
+    'orders'
 ]);
