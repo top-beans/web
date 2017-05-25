@@ -38,7 +38,10 @@ angular.module('client')
                 self.client.incorporationdate = moment(self.client.incorporationdate).format("YYYY-MM-DD");
             }
             
+            showOverlay();
             $http.post("/api/ClientsApi/addorupdateclient", self.client).then(function (response) {
+                hideOverlay();
+                
                 if (!response.data.success) {
                     toastrErrorFromList(response.data.errors, "Error Saving Client");
                 } else {

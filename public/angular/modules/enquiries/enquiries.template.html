@@ -1,41 +1,32 @@
-<section class="section-15 section-sm-top-15 section-sm-bottom-100">
-    <div class="shell">
-        <div class="row">
-            <div class="col-md-12">
-                <h5>Enquiries</h5>
+<div class="shell">
+    <div class="range">
+        <div class="cell-xs-12">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th class="col-md-3">Name</th>
+                        <th class="col-md-4">Description</th>
+                        <th class="col-md-3">Contacts</th>
+                        <th class="col-md-2 hidden-xs">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="enquiry in $ctrl.enquiries">
+                        <td class="word-break">{{enquiry.name}}</td>
+                        <td class="word-break">{{enquiry.description}}</td>
+                        <td class="word-break">
+                            <div>{{enquiry.email}}</div>
+                            <div>{{enquiry.number}}</div>
+                        </td>
+                        <td class="hidden-xs">{{enquiry.createddate | amDateFormat: 'DD/MMM/YYYY'}}</td>
+                    </tr>
+                </tbody>
+            </table>
 
-                <table class="table table-condensed table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <th class="col-md-2">Fullname</th>
-                            <th class="col-md-5">Description</th>
-                            <th class="col-md-3">Contact</th>
-                            <th class="col-md-2">Date</th>
-                        </tr>
-                    </thead>
-                    <tbody ng-if="(!$ctrl.loading && $ctrl.enquiries.length == 0)">
-                        <tr>
-                            <td colspan="4"><i>No Enquiries</i></td>
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr ng-repeat="enquiry in $ctrl.enquiries">
-                            <td>{{enquiry.name}}</td>
-                            <td>{{enquiry.description}}</td>
-                            <td>
-                                {{enquiry.email}}<br/>
-                                {{enquiry.number}}
-                            </td>
-                            <td>{{enquiry.createddate | amDateFormat: 'DD MMM YYYY,  HH:mma'}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <div class="text-center section-sm-top-15 text-secondary">
-                    <span ng-if="$ctrl.loading" class="fa fa-spin fa-spinner fa-2x"></span>
-                    <span ng-if="(!$ctrl.loading && $ctrl.hasMore)" class="fa fa-arrow-circle-o-down fa-2x pointer-cursor" ng-click="$ctrl.fetch()"></span>
-                </div>
+            <div class="text-center section-sm-top-15 text-secondary">
+                <span ng-if="$ctrl.loading" class="fa fa-spin fa-spinner fa-2x"></span>
+                <span ng-if="(!$ctrl.loading && $ctrl.hasMore)" class="fa fa-arrow-circle-o-down fa-2x pointer-cursor" ng-click="$ctrl.fetch()"></span>
             </div>
         </div>
     </div>
-</section>
+</div>

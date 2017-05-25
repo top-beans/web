@@ -1,97 +1,97 @@
-<section class="section-15 section-sm-top-15 section-sm-bottom-100">
-    <div class="shell">
-        <div class="row">
-            <div id="scrollPanel" class="col-md-12 form-modern text-secondary">
-                <h5>Clients</h5>
-
-                <div class="row">
-                    <div class="col-sm-2">
+<div class="shell">
+    <div class="range">
+        <div class="cell-xs-12">
+            <form class="rd-mailform form-modern">
+                <div class="range">
+                    <div class="cell-xs-2">
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="Code Search"
                                    ng-model-options="{ debounce: 500 }"
                                    ng-model="$ctrl.searchParams.criteria[1].clientcode">
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="cell-xs-4">
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="Name, Address, or Postcode Search"
                                    ng-model-options="{ debounce: 500 }"
                                    ng-model="$ctrl.searchParams.criteria[0].searchtext">
                         </div>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="pull-left">
-                            <button class="btn btn-sm btn-primary" ng-click="$ctrl.addClient()">
-                                <span class="fa fa-plus"></span> Add
-                            </button>
-                        </div>
-                        <div class="pull-left">
-                            &nbsp;
-                            <button class="btn btn-sm btn-primary" ng-click="$ctrl.exportSearchClients()">
-                                <span class="fa fa-download"></span> Export
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
+                    <div class="cell-xs-12">
                         <div class="form-group">
                             <label><input type="checkbox"
                                           ng-model-options="{ debounce: 1000 }"
                                           ng-model="$ctrl.searchParams.criteria[2].approvedforbusiness"> Approved Only</label>
-                    </div>
-                </div>
-                </div>
-                
-                <div class="list-row header-row">
-                    <div class="col1" sortcolumn="clientcode" ng-click="$ctrl.toggleSort($event)">
-                        <span class="pointer-cursor">Code <span class="caret"></span></span>
-                    </div>
-                    <div class="col4">Name</div>
-                    <div class="col4">Address</div>
-                    <div class="col2" sortcolumn="postcode" ng-click="$ctrl.toggleSort($event)">
-                        <span class="pointer-cursor">Postcode <span class="caret"></span></span>
-                    </div>
-                    <div class="col1 text-center">Actions</div>
-                </div>
-
-                <div ng-if="(!$ctrl.clients.length && $ctrl.searchParams.notFetching)">
-                    <div class="list-row">
-                        <div class="col12">
-                            <i>No Results</i>
                         </div>
                     </div>
                 </div>
+            </form>
+        </div>
+        
+        <div class="cell-xs-12">
+            <div class="my-underline"></div>
+        </div>
+        
+        <div class="cell-xs-12">
+            <button class="btn btn-xs btn-primary-contrast" ng-click="$ctrl.addClient()">
+                <span class="fa fa-plus"></span> Add
+            </button>
 
-                <div ng-repeat="client in $ctrl.clients">
-                    <div class="list-row summary odd-row">
-                        <div class="col1 break-word">{{client.clientcode}}</div>
-                        <div class="col4 break-word">{{client.name}}</div>
-                        <div class="col4 break-word">{{client.address}}</div>
-                        <div class="col2">{{client.postcode}}</div>
-                        <div class="col1 text-center">
-                            <span class="fa fa-expand pointer-cursor"
-                                  ng-click="$ctrl.editClient(client, $event)">
-                            </span>
-                        </div>
-                    </div>
-                    <div class="list-row" style="display: none;">
-                        <div class="col12">
-                            <client client="client" callback="client.callback(newClient)"></client>
-                        </div>
-                    </div>
-                </div>        
-
-                <div ng-show="!$ctrl.searchParams.notFetching" class="list-row">
-                    <div class="col12 text-center">
-                        <i class="fa fa-spinner fa-spin fa-2x"></i>
-                    </div>
+            <button class="btn btn-xs btn-primary-contrast" ng-click="$ctrl.exportSearchClients()">
+                <span class="fa fa-download"></span> Export
+            </button>
+        </div>
+        
+        <div class="cell-xs-12 offset-top-22">
+            <div class="list-row header-row">
+                <div class="col1" sortcolumn="clientcode" ng-click="$ctrl.toggleSort($event)">
+                    <span class="pointer-cursor">Code <span class="caret"></span></span>
                 </div>
-
-                <div ng-show="$ctrl.searchParams.notFetching && $ctrl.searchParams.hasMoreRecords" class="text-center">
-                    <i class="fa fa-arrow-circle-o-down fa-2x top10" ng-click="$ctrl.appendNextPage()"></i>
+                <div class="col4">Name</div>
+                <div class="col4">Address</div>
+                <div class="col2" sortcolumn="postcode" ng-click="$ctrl.toggleSort($event)">
+                    <span class="pointer-cursor">Postcode <span class="caret"></span></span>
                 </div>
-
+                <div class="col1 text-center">Actions</div>
             </div>
+
+            <div ng-if="(!$ctrl.clients.length && $ctrl.searchParams.notFetching)">
+                <div class="list-row">
+                    <div class="col12">
+                        <i>No Results</i>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-repeat="client in $ctrl.clients">
+                <div class="list-row summary odd-row">
+                    <div class="col1 break-word">{{client.clientcode}}</div>
+                    <div class="col4 break-word">{{client.name}}</div>
+                    <div class="col4 break-word">{{client.address}}</div>
+                    <div class="col2">{{client.postcode}}</div>
+                    <div class="col1 text-center">
+                        <span class="fa fa-expand pointer-cursor"
+                              ng-click="$ctrl.editClient(client, $event)">
+                        </span>
+                    </div>
+                </div>
+                <div class="list-row" style="display: none;">
+                    <div class="col12">
+                        <client client="client" callback="client.callback(newClient)"></client>
+                    </div>
+                </div>
+            </div>        
+
+            <div ng-show="!$ctrl.searchParams.notFetching" class="list-row">
+                <div class="col12 text-center">
+                    <i class="fa fa-spinner fa-spin fa-2x"></i>
+                </div>
+            </div>
+
+            <div ng-show="$ctrl.searchParams.notFetching && $ctrl.searchParams.hasMoreRecords" class="text-center">
+                <i class="fa fa-arrow-circle-o-down fa-2x top10" ng-click="$ctrl.appendNextPage()"></i>
+            </div>
+
         </div>
     </div>
-</section>
-        
+</div>
