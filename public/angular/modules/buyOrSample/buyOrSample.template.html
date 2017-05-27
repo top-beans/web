@@ -1,5 +1,9 @@
 
-<div class="product product-item-fullwidth" ng-repeat="coffee in $ctrl.coffees">
+<div ng-show="$ctrl.loading" class="text-center">
+    <h4><span class='fa fa-spinner fa-spin'></span>  Loading coffees ...</h4>
+</div>
+
+<div ng-hide="$ctrl.loading" class="product product-item-fullwidth" ng-repeat="coffee in $ctrl.coffees">
     <div class="product-main">
         <div class="product-main-inner">
             <div class="product-body">

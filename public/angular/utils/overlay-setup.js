@@ -1,7 +1,7 @@
 "use strict";
 
 $.LoadingOverlaySetup({
-    color: "rgba(255, 255, 255, 0.6)",
+    color: "rgba(0, 0, 0, 0.6)",
     image: ""
 });
 
@@ -10,7 +10,7 @@ function showOverlay(inputMsg) {
     var msg = inputMsg || 'Please Wait ...';
     
     $.LoadingOverlay("show", {
-        custom: "<h4><span class='fa fa-spinner fa-spin'></span> " + msg + "</h4>"
+        custom: "<h5 class='loading-circle'><span class='fa fa-spinner fa-spin'></span> " + msg + "</h5>"
     });
 }
 

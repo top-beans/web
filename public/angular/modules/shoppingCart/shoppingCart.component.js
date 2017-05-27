@@ -13,6 +13,7 @@ angular.module('shoppingCart')
         self.$onInit = function () {
             self.cartItems = [];
             self.cartTotal = 0;
+            self.loadingCart = false;
             self.getCart();
             cartService.getCartTotal(self.updateCartTotal, true);
         };
@@ -27,7 +28,9 @@ angular.module('shoppingCart')
         };
 
         self.getCart = function() {
+            self.loadingCart = true;
             cartService.getCart(function (data) {
+            self.loadingCart = false;
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
                 } else {

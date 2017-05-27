@@ -13,6 +13,9 @@ angular.module('checkout')
             self.countries = [];
             self.order = new models.checkout();
             self.billingDifferent = false;
+            self.ldCountries = false;
+            self.ldAddresses = false;
+            self.ldCart = false;
             
             self.getCountries();
             self.getCustomerAddresses();
@@ -22,6 +25,10 @@ angular.module('checkout')
             cookieService.get(function (cookieKey) { self.order.cookie = cookieKey; });
         };
 
+        self.loading = function () {
+            return self.ldCountries || self.ldAddresses || self.ldCart;
+        };
+        
         self.updateCartTotal = function (data) {
             if (!data.success) {
                 toastrErrorFromList(data.errors);
@@ -32,7 +39,9 @@ angular.module('checkout')
         };
 
         self.getCart = function() {
+            self.ldCart = true;
             cartService.getCart(function (data) {
+                self.ldCart = false;
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
                 } else {
@@ -43,7 +52,9 @@ angular.module('checkout')
         };
             
         self.getCountries = function() {
+            self.ldCountries = true;
             $http.get('/api/CountryApi/getcountries').then(function (response) {
+                self.ldCountries = false;
                 if (!response.data.success) {
                     toastrErrorFromList(response.data.errors);
                 } else {
@@ -53,7 +64,9 @@ angular.module('checkout')
         };
         
         self.getCustomerAddresses = function () {
+            self.ldAddresses = true;
             orderService.getCustomerAddresses(function (data) {
+                self.ldAddresses = false;
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
                 } else {

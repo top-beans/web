@@ -7,10 +7,10 @@ angular.module('buyOrSample')
     controller: ['$http', '$uibModal', function ($http, $uibModal) {
         var self = this;
 
-        self.coffees = [];
-        
         self.getCoffees = function() {
+            self.loading = true;
             $http.get('/api/CoffeeApi/getallactive').then(function (response) {
+                self.loading = false;
                 self.coffees = _(response.data.items).sortBy(['cuppingscore']).reverse().value();
             });
         };
@@ -31,6 +31,8 @@ angular.module('buyOrSample')
         };
         
         self.$onInit = function () {
+            self.coffees = [];
+            self.loading = false;
             self.getCoffees();
         };
         
