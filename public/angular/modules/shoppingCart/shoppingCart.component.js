@@ -7,14 +7,14 @@ angular.module('shoppingCart')
     bindings: {
         orderComplete: '@'
     },
-    controller: ['cookieService', 'cartService', function (cookieService, cartService) {
+    controller: ['cartService', function (cartService) {
         var self = this;
 
         self.$onInit = function () {
             self.cartItems = [];
             self.cartTotal = 0;
             self.getCart();
-            cartService.getCartTotal(cookieService.get(), self.updateCartTotal, true);
+            cartService.getCartTotal(self.updateCartTotal, true);
         };
 
         self.updateCartTotal = function (data) {
@@ -27,7 +27,7 @@ angular.module('shoppingCart')
         };
 
         self.getCart = function() {
-            cartService.getCart(cookieService.get(), function (data) {
+            cartService.getCart(function (data) {
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
                 } else {
@@ -71,7 +71,7 @@ angular.module('shoppingCart')
                 },
                 callback: function (result) {
                     if (result) {
-                        cartService.deleteFromCart(cookieService.get(), cartItem.coffeekey, function (data) {
+                        cartService.deleteFromCart(cartItem.coffeekey, function (data) {
                             if (!data.success) {
                                 toastrErrorFromList(data.errors);
                             } else {
@@ -87,7 +87,7 @@ angular.module('shoppingCart')
         };
 
         self.incrementItem = function (cartItem) {
-            cartService.incrementCartItem(cookieService.get(), cartItem.coffeekey, function (data) {
+            cartService.incrementCartItem(cartItem.coffeekey, function (data) {
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
                 } else {
@@ -99,7 +99,7 @@ angular.module('shoppingCart')
         };
 
         self.decrementItem = function (cartItem) {
-            cartService.decrementCartItem(cookieService.get(), cartItem.coffeekey, function (data) {
+            cartService.decrementCartItem(cartItem.coffeekey, function (data) {
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
                 } else {

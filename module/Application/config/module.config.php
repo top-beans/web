@@ -19,6 +19,7 @@ namespace Application {
                 'CountryApi'    => 'Application\ControllerFactory\CountryApiControllerFactory',
                 'OrdersApi'     => 'Application\ControllerFactory\OrdersApiControllerFactory',
                 'CartApi'       => 'Application\ControllerFactory\CartApiControllerFactory',
+                'GuidApi'       => 'Application\ControllerFactory\GuidApiControllerFactory',
                 'WordPressApi'  => 'Application\ControllerFactory\WordPressApiControllerFactory',
                 'BatchMail'     => 'Application\ControllerFactory\BatchMailControllerFactory',
             ],

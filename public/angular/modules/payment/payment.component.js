@@ -7,13 +7,13 @@ angular.module('payment')
     bindings: {
         worldPayClientKey: '@'
     },
-    controller: ['cartService', 'cookieService', 'orderService', function (cartService, cookieService, orderService) {
+    controller: ['cartService', 'orderService', function (cartService, orderService) {
         var self = this;
 
         self.$onInit = function () {
             self.cartTotal = 0;
             self.card = new models.card();
-            cartService.getCartTotal(cookieService.get(), self.updateCartTotal, true);
+            cartService.getCartTotal(self.updateCartTotal, true);
         };
 
         self.updateCartTotal = function (data) {
@@ -44,7 +44,7 @@ angular.module('payment')
                         toastrError(response && response.error && response.error.message || 'Please contact us immediately', 'Payment Errors');
                         hideOverlay();
                     } else if (response.token) {
-                        orderService.takePayment(cookieService.get(), response.token, function (data) {
+                        orderService.takePayment(response.token, function (data) {
                             hideOverlay();
                             if (!data.success) {
                                 toastrErrorFromList(data.errors, 'Payment Errors');

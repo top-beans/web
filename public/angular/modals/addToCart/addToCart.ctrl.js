@@ -1,15 +1,17 @@
 'use strict';
 
-namespace('modals').addToCartCtrl = function ($uibModalInstance, cartService, coffee, cookiekey) {
+namespace('modals').addToCartCtrl = function ($uibModalInstance, cartService, cookieService, coffee) {
     var self = this;
 
     self.$onInit = function () {
         self.coffee = coffee;
-        self.shoppingCart = new models.cart({
-            coffeekey: self.coffee.coffeekey,
-            cookiekey: cookiekey,
-            requesttypekey: models.requestTypes.sample,
-            quantity: 1
+        cookieService.get(function (cookieKey) {
+            self.shoppingCart = new models.cart({
+                coffeekey: self.coffee.coffeekey,
+                cookiekey: cookieKey,
+                requesttypekey: models.requestTypes.sample,
+                quantity: 1
+            });
         });
     };
 

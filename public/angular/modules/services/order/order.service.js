@@ -2,7 +2,7 @@
 
 angular.module('orderService').
 
-service('orderService', ['$http', function ($http) {
+service('orderService', ['$http', 'cookieService', function ($http, cookieService) {
     var self = this;
     
     self.addAnonymousOrder = function (order, callback) {
@@ -13,24 +13,28 @@ service('orderService', ['$http', function ($http) {
         });
     };
     
-    self.getCustomerAddresses = function (cookieKey, callback) {
-        $http.post("/api/OrdersApi/getcustomeraddresses", cookieKey).then(function (response) {
-            if (callback) callback(response.data);
-        }, function (error) {
-            
+    self.getCustomerAddresses = function (callback) {
+        cookieService.get(function (cookieKey) {
+            $http.post("/api/OrdersApi/getcustomeraddresses", cookieKey).then(function (response) {
+                if (callback) callback(response.data);
+            }, function (error) {
+
+            });
         });
     };
     
-    self.takePayment = function (cookieKey, token, callback) {
-        var paymentDetails = {
-            cookiekey: cookieKey,
-            token: token
-        };
-        
-        $http.post("/api/OrdersApi/takepayment", paymentDetails).then(function (response) {
-            if (callback) callback(response.data);
-        }, function (error) {
-            
+    self.takePayment = function (token, callback) {
+        cookieService.get(function (cookieKey) {
+            var paymentDetails = {
+                cookiekey: cookieKey,
+                token: token
+            };
+
+            $http.post("/api/OrdersApi/takepayment", paymentDetails).then(function (response) {
+                if (callback) callback(response.data);
+            }, function (error) {
+
+            });
         });
     };
 }]);

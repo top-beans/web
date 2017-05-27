@@ -1,3 +1,5 @@
 'use strict';
 
-angular.module('orderService', []);
+angular.module('orderService', [
+    'cookieService'
+]);

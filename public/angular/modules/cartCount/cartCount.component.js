@@ -4,9 +4,8 @@ angular.module('cartCount')
 
 .component('cartCount', {
     templateUrl: '/angular/modules/cartCount/cartCount.template.html',
-    controller: ['cookieService', 'cartService', function (cookieService, cartService) {
+    controller: ['cartService', function (cartService) {
         var self = this;
-        self.cartSize = 0;
 
         self.updateCartSize = function (data) {
             if (!data.success) {
@@ -16,9 +15,10 @@ angular.module('cartCount')
                 self.cartSize = data.item;
             }
         };
-
+        
         self.$onInit = function () {
-            cartService.getCartSize(cookieService.get(), self.updateCartSize, true);
+            self.cartSize = 0;
+            cartService.getCartSize(self.updateCartSize, true);
         };
     }]
 });

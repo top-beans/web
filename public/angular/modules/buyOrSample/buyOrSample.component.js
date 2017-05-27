@@ -4,7 +4,7 @@ angular.module('buyOrSample')
 
 .component('buyOrSample', {
     templateUrl: '/angular/modules/buyOrSample/buyOrSample.template.html',
-    controller: ['$http', '$uibModal', 'cookieService', function ($http, $uibModal, cookieService) {
+    controller: ['$http', '$uibModal', function ($http, $uibModal) {
         var self = this;
 
         self.coffees = [];
@@ -39,12 +39,11 @@ angular.module('buyOrSample')
             $uibModal.open({
                 backdrop: 'static',
                 templateUrl: '/angular/modals/addToCart/addToCart.template.html',
-                controller: ['$uibModalInstance', 'cartService', 'coffee', 'cookiekey', modals.addToCartCtrl],
+                controller: ['$uibModalInstance', 'cartService', 'cookieService', 'coffee', modals.addToCartCtrl],
                 controllerAs: "$mctrl",
                 openedClass: 'page modal-open',
                 resolve: {
-                    coffee: coffee,
-                    cookiekey: function () { return cookieService.get(); }
+                    coffee: coffee
                 }
             }).result.then(function (data) {
                 if (data.warnings.length) { 
