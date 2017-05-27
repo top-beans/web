@@ -71,7 +71,9 @@ angular.module('shoppingCart')
                 },
                 callback: function (result) {
                     if (result) {
+                        cartItem.deleting = true;
                         cartService.deleteFromCart(cartItem.coffeekey, function (data) {
+                            cartItem.deleting = false;
                             if (!data.success) {
                                 toastrErrorFromList(data.errors);
                             } else {
@@ -87,7 +89,9 @@ angular.module('shoppingCart')
         };
 
         self.incrementItem = function (cartItem) {
+            cartItem.incrementing = true;
             cartService.incrementCartItem(cartItem.coffeekey, function (data) {
+                cartItem.incrementing = false;
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
                 } else {
@@ -99,7 +103,9 @@ angular.module('shoppingCart')
         };
 
         self.decrementItem = function (cartItem) {
+            cartItem.decrementing = true;
             cartService.decrementCartItem(cartItem.coffeekey, function (data) {
+                cartItem.decrementing = false;
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
                 } else {

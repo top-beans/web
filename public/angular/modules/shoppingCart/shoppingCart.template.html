@@ -46,9 +46,12 @@
                             <span ng-if="item.isfreesample">&pound;0.00</span>
                         </td>
                         <td class="cart-actions">
-                            <span class="glyphicon glyphicon-plus-sign text-info"  ng-click="$ctrl.incrementItem(item)"></span>
-                            <span class="glyphicon glyphicon-minus-sign text-info"  ng-click="$ctrl.decrementItem(item)"></span>
-                            <span class="glyphicon glyphicon-remove-circle text-danger" ng-click="$ctrl.deleteFromCart(item)"></span>
+                            <span ng-show="!item.incrementing" class="glyphicon glyphicon-plus-sign text-info"  ng-click="$ctrl.incrementItem(item)"></span>
+                            <span ng-show="item.incrementing" class="fa fa-spin fa-spinner"></span>
+                            <span ng-show="!item.decrementing" class="glyphicon glyphicon-minus-sign text-info"  ng-click="$ctrl.decrementItem(item)"></span>
+                            <span ng-show="item.decrementing" class="fa fa-spin fa-spinner"></span>
+                            <span ng-show="!item.deleting" class="glyphicon glyphicon-remove-circle text-danger" ng-click="$ctrl.deleteFromCart(item)"></span>
+                            <span ng-show="item.deleting" class="fa fa-spin fa-spinner"></span>
                         </td>
                     </tr>
                 </tbody>
@@ -56,21 +59,26 @@
                 <tfoot>
                     <tr>
                         <td class="hidden-xs"></td>
+                        <td>Shipping (Free)</td>
                         <td></td>
-                        <td>Shipping</td>
-                        <td>Free</td>
+                        <td>&pound;0.00</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="hidden-xs"></td>
+                        <td>Total</td>
+                        <td></td>
+                        <td>
+                            <dl class="dl-inline">
+                                <dd>
+                                    <div class="pricing-object pricing-object-sm"><span class="small small-top">&pound;</span><span>{{$ctrl.cartTotal.substring(0, $ctrl.cartTotal.indexOf('.'))}}</span><span class="small small-bottom">{{$ctrl.cartTotal.substring($ctrl.cartTotal.indexOf('.'))}}</span></div>
+                                </dd>
+                            </dl>
+                        </td>
                         <td></td>
                     </tr>
                 </tfoot>
             </table>
-        </div>
-        <div class="cell-sm-11 offset-top-22 text-right">
-            <dl class="dl-inline">
-                <dt>Total</dt>
-                <dd>
-                    <div class="pricing-object pricing-object-sm"><span class="small small-top">&pound;</span><span>{{$ctrl.cartTotal.substring(0, $ctrl.cartTotal.indexOf('.'))}}</span><span class="small small-bottom">{{$ctrl.cartTotal.substring($ctrl.cartTotal.indexOf('.'))}}</span></div>
-                </dd>
-            </dl>
         </div>
         <div class="cell-xs-12 offset-top-22 text-right"><a href="/Index/checkout" class="btn btn-xl btn-primary-contrast">Place order</a></div>
     </div>
