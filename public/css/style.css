@@ -190,10 +190,11 @@ form.my-submitted input.ng-invalid-pattern:not(:focus) {
 }
 
 .loading-circle {
+    border: 6px solid brown;
     background-color: white;
     border-radius: 50%;
     width: 300px;
     height: 300px;
-    padding-top: 135px;
+    padding-top: 130px;
     text-align: center;    
 }
