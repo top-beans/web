@@ -9,7 +9,9 @@ namespace('modals').coffeeEnquiryCtrl = function ($uibModalInstance, $http, coff
     };
 
     self.save = function () {
-        var form = document.getElementById('contactForm');
+        var form = $('form[name=contactForm]');
+
+        form.addClass('my-submitted');
 
         if ($(form).hasClass('ng-invalid-required') || $(form).hasClass('ng-invalid-pattern')) {
             toastrError('Please review form', 'Invalid Details');
