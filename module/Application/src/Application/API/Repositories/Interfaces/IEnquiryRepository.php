@@ -7,6 +7,7 @@ namespace Application\API\Repositories\Interfaces {
     interface IEnquiryRepository {
         public function search($page = 0, $pageSize = 10, array $orderBy = null);
         public function add(Enquiry $enquiry);
+        public function addCoffeeEnquiry(Enquiry $enquiry, $coffeeKey);
         public function update(Enquiry $enquiry);
         public function addOrUpdate(Enquiry $enquiry);
         public function createEmail(Enquiry $enquiry);

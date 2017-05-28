@@ -12,13 +12,13 @@
                 <div class="product-rating">
                     <ul class="list-rating">
 
-                        <li ng-repeat="n in $ctrl.fullStars(coffee)">
+                        <li ng-repeat="n in coffee.fullStars()">
                             <span class="icon icon-xxs material-icons-star"></span>
                         </li>
-                        <li ng-if="$ctrl.halfStar(coffee)">
+                        <li ng-if="coffee.halfStar()">
                             <span class="icon icon-xxs material-icons-star_half"></span>
                         </li>
-                        <li ng-repeat="n in $ctrl.borderStars(coffee)">
+                        <li ng-repeat="n in coffee.borderStars()">
                             <span class="icon icon-xxs material-icons-star_border"></span>
                         </li>
                     </ul><span class="text-light">{{coffee.cuppingscore}} Cupping Score</span>
@@ -27,7 +27,7 @@
                     <h6>{{coffee.producer}}</h6>
                     <p>{{coffee.producerstory}}</p>
                 </div>
-                <a ng-click="$ctrl.addToCart(coffee)" class="btn btn-silver-outline product-details">Make Enquiry</a>
+                <a ng-click="$ctrl.makeEnquiry(coffee)" class="btn btn-silver-outline product-details">Make Enquiry</a>
             </div>
             <div class="product-aside">
                 <div class="product-aside-top">

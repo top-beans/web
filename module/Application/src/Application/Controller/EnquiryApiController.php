@@ -63,5 +63,24 @@ namespace Application\Controller {
                 return $this->jsonResponse($response);
             }
         }
+        
+        public function addcoffeeenquiryAction() {
+            try {
+                $jsonData = $this->getRequest()->getContent();
+                $data = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Dto\CoffeeEnquiry", "json");
+                
+                $data->enquiry->setCreateddate(new \DateTime());
+                $enquiry = $this->enquiryRepo->addCoffeeEnquiry($data->enquiry, $data->coffeekey);
+                $email = $this->enquiryRepo->createEmail($enquiry);
+                $this->emailSvc->sendMail($email);
+                
+                $response = ResponseUtils::responseItem($enquiry);
+                return $this->jsonResponse($response);
+                
+            } catch (\Exception $ex) {
+                $response = ResponseUtils::createExceptionResponse($ex);
+                return $this->jsonResponse($response);
+            }
+        }
     }
 }

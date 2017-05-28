@@ -7,42 +7,22 @@ component('contactForm', {
     controller: ['$http', function ($http) {
         var self = this;
 
-        self.form = {
-            name: null,
-            description: null,
-            email: null,
-            number: null
-        };
-
-        self.validate = function () {
-            var errors = [];
-            
-            if (!self.form.name) {
-                errors.push("Name is required");
-            }
-            
-            if (!self.form.description) {
-                errors.push("Description is required");
-            }
-            
-            if (!isValidEmail(self.form.email) && !self.form.number) {
-                errors.push("Valid email or contact number is required");
-            }
-
-            if (errors.length > 0) {
-                toastrErrorFromList(errors, "Validation Errors");
-            }
-            
-            return errors.length === 0;
+        self.$onInit = function () {
+            self.form = new models.enquiry();
         };
 
         self.save = function () {
-
-            if (!self.validate()) {
-                return;
+            var form = document.getElementById('contactForm');
+            
+            if ($(form).hasClass('ng-invalid-required') || $(form).hasClass('ng-invalid-pattern')) {
+                toastrError('Please review form', 'Invalid Details');
+                return false;
             }
             
+            showOverlay('Sending request ...');
+
             $http.post("/api/EnquiryApi/add", self.form).then(function (response) {
+                hideOverlay();
                 if (!response.data.success) {
                     toastrErrorFromList(response.data.errors, "Error Sending Enquiry");
                 } else {

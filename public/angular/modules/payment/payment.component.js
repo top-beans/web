@@ -13,16 +13,22 @@ angular.module('payment')
         self.$onInit = function () {
             self.cartTotal = 0;
             self.card = new models.card();
-            cartService.getCartTotal(self.updateCartTotal, true);
+            self.loading = false;
+            self.getCartTotal();
         };
 
-        self.updateCartTotal = function (data) {
-            if (!data.success) {
-                toastrErrorFromList(data.errors);
-            } else {
-                if (data.warnings.length) toastrWarningFromList(data.warnings);
-                self.cartTotal = data.item;
-            }
+        self.getCartTotal = function () {
+            self.loading = true;
+            
+            cartService.getCartTotal(function (data) {
+                self.loading = false;
+                if (!data.success) {
+                    toastrErrorFromList(data.errors);
+                } else {
+                    if (data.warnings.length) toastrWarningFromList(data.warnings);
+                    self.cartTotal = data.item;
+                }
+            }, false);
         };
         
         self.confirm = function() {

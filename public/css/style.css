@@ -164,14 +164,23 @@ i.cart-icon {
 form input.ng-touched.ng-invalid-required:not(:focus),
 form input.ng-touched.ng-valid-required.ng-invalid-email:not(:focus),
 form input.ng-touched.ng-invalid-pattern:not(:focus),
+form textarea.ng-touched.ng-invalid-required:not(:focus),
+form textarea.ng-touched.ng-valid-required.ng-invalid-email:not(:focus),
+form textarea.ng-touched.ng-invalid-pattern:not(:focus),
 
 form.ng-submitted input.ng-invalid-required:not(:focus),
 form.ng-submitted input.ng-valid-required.ng-invalid-email:not(:focus),
 form.ng-submitted input.ng-invalid-pattern:not(:focus),
+form.ng-submitted textarea.ng-invalid-required:not(:focus),
+form.ng-submitted textarea.ng-valid-required.ng-invalid-email:not(:focus),
+form.ng-submitted textarea.ng-invalid-pattern:not(:focus),
 
 form.my-submitted input.ng-invalid-required:not(:focus),
 form.my-submitted input.ng-valid-required.ng-invalid-email:not(:focus),
-form.my-submitted input.ng-invalid-pattern:not(:focus) {
+form.my-submitted input.ng-invalid-pattern:not(:focus),
+form.my-submitted textarea.ng-invalid-required:not(:focus),
+form.my-submitted textarea.ng-valid-required.ng-invalid-email:not(:focus),
+form.my-submitted textarea.ng-invalid-pattern:not(:focus) {
     border-color: red!important;
     box-shadow: 0px 0px 5px 4px pink;
 }
@@ -194,4 +203,10 @@ form.my-submitted input.ng-invalid-pattern:not(:focus) {
     border-radius: 5px;
     padding: 30px;
     text-align: center;    
+}
+
+.product-in-modal {
+    margin-top: 5px;
+    border: 1px solid #999;
+    border-radius: 0px;    
 }

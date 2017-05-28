@@ -10,7 +10,7 @@ namespace Application\API\Repositories\Factories {
         
         public function createService(ServiceLocatorInterface $serviceLocator) {
             $config = $serviceLocator->get('Config');
-            return new EnquiryRepository($serviceLocator->get('doctrine.entitymanager.orm_default'), $config['SupportEmail']);
+            return new EnquiryRepository($serviceLocator->get('doctrine.entitymanager.orm_default'), $config['SupportEmail'], $config['DomainName']);
         }
     }
 }

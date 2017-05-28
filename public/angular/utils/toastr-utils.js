@@ -5,13 +5,13 @@
 function toastrClasses(typeOfToastr) {
     switch (typeOfToastr) {
         case 'error': {
-            return { "positionClass": "toast-bottom-full-width", "timeOut": "30000", "closeButton": true };
+            return { "positionClass": "toast-top-right", "timeOut": "30000", "closeButton": true };
         }
         case 'warning': {
-            return { "positionClass": "toast-bottom-full-width", "timeOut": "30000", "closeButton": true };
+            return { "positionClass": "toast-top-right", "timeOut": "30000", "closeButton": true };
         }
         default: {
-            return { "positionClass": "toast-bottom-full-width", "timeOut": "10000", "closeButton": true };
+            return { "positionClass": "toast-top-right", "timeOut": "10000", "closeButton": true };
         }
     }
 }

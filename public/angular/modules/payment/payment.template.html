@@ -1,4 +1,12 @@
-<div class="shell">
+<div ng-show="$ctrl.loading" class="shell">
+    <div class="range">
+        <div class="cell-xs-12 text-center">
+            <h4><span class='fa fa-spinner fa-spin'></span>  Loading ...</h4>
+        </div>
+    </div>
+</div>
+
+<div ng-hide="$ctrl.loading" class="shell">
     <div class="range" ng-if="$ctrl.cartTotal == 0">
         <div class="cell-xs-12">
             <h3 class="my-underline">You have no items that require payment</h3>

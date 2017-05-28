@@ -2,22 +2,67 @@
 
 namespace Application\API\Repositories\Implementations {
 
-    use Doctrine\ORM\EntityManager,
+    use Doctrine\ORM\EntityManagerInterface,
+        Doctrine\ORM\EntityRepository,
+        Doctrine\ORM\Mapping\ClassMetadata,
         Application\API\Canonicals\Entity\Enquiry,
+        Application\API\Canonicals\Entity\Coffee,
+        Application\API\Repositories\Base\IRepository,
+        Application\API\Repositories\Base\Repository,
         Application\API\Repositories\Interfaces\IEnquiryRepository,
         Application\API\Canonicals\Dto\EmailRequest;
 
-    class EnquiryRepository extends BaseRepository implements IEnquiryRepository {
+    class EnquiryRepository implements IEnquiryRepository {
         
+        /**
+         * @var string
+         */
         private $supportEmail;
         
-        public function __construct(EntityManager $em, $supportEmail) {
-            parent::__construct($em);
+        /**
+         * @var string
+         */
+        private $domainName;
+        
+        /**
+         * @var IRepository
+         */
+        private $enquiryRepo;
+        
+        /**
+         * @var IRepository
+         */
+        private $coffeeRepo;
+        
+        /**
+         * @var EntityManagerInterface
+         */
+        private $em;
+        
+        public function __construct(EntityManagerInterface $em, $supportEmail, $domainName) {
+            $this->em = $em;
             $this->supportEmail = $supportEmail;
+            $this->domainName = $domainName;
+            $this->enquiryRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Enquiry()))));
+            $this->coffeeRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Coffee()))));
         }
 
         public function add(Enquiry $enquiry) {
             $this->enquiryRepo->add($enquiry);            
+        }
+
+        public function addCoffeeEnquiry(Enquiry $enquiry, $coffeeKey) {
+            $coffee = $this->coffeeRepo->fetch($coffeeKey);
+
+            if ($coffee == null) {
+                throw new \Exception("Could not find coffee");
+            }
+
+            $prepend = "PREPENDED: Enquiry about http://$this->domainName/Admin/coffees/$coffeeKey";
+            $enquiry->setDescription("$prepend\n\n" . $enquiry->getDescription());
+            $this->enquiryRepo->add($enquiry);
+
+            return $enquiry;
         }
 
         public function addOrUpdate(Enquiry $enquiry) {
@@ -36,19 +81,30 @@ namespace Application\API\Repositories\Implementations {
             $request = new EmailRequest();
             $request->recipient = $this->supportEmail;
             $request->subject = "New Enquiry from TopBeans.co.uk";
+            
+            $name = $enquiry->getName();
+            $number = $enquiry->getNumber();
+            $email = $enquiry->getEmail();
+            $date = $enquiry->getCreateddate()->format("d/M/y h:i a");
+            $description = nl2br($enquiry->getDescription());
+            
             $request->htmlbody = "
                 <html>
                 <head></head>
                 <body>
                 <p>Salam Aleikum,</p>
-                <p>The following request has been submitted:</p>
-                <ul>
-                <li><strong>Person:</strong> " . $enquiry->getName() . "</li>
-                <li><strong>Phone:</strong> " . $enquiry->getNumber() . "</li>
-                <li><strong>Email:</strong> " . $enquiry->getEmail() . "</li>
-                <li><strong>Date:</strong> " . $enquiry->getCreateddate()->format("d/M/y h:i a") . "</li>
-                <li><strong>Description:</strong> <br/>" . $enquiry->getDescription() . "</li>
-                </ul>
+                <p>The following request has been submitted on $date:</p>
+                
+                <h3>Person:</h3>
+                <p>$name</p>
+                    
+                <h3>Contacts:</h3>
+                <p>Number: $number</p>
+                <p>Email: $email</p>
+                    
+                <h3>Description:</h3>
+                <p>$description</p>
+
                 <p>Jazakallah Kheir</p>
                 <p>Top Beans Support Team</p>
                 </body>
