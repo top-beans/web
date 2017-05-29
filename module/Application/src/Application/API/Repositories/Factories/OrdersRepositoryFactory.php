@@ -11,7 +11,7 @@ namespace Application\API\Repositories\Factories {
         public function createService(ServiceLocatorInterface $serviceLocator) {
             $config = $serviceLocator->get('Config');
             $em = $serviceLocator->get('doctrine.entitymanager.orm_default');
-            return new OrdersRepository($em, $config['SupportEmail']);
+            return new OrdersRepository($em, $config['SupportEmail'], $config['DomainName'], $config['ENV'] === 'development');
         }
     }
 }

@@ -72,7 +72,17 @@ namespace Application\API\Repositories\Implementations {
          */
         private $supportEmail;
         
-        public function __construct(EntityManagerInterface $em, $supportEmail) {
+        /**
+         * @var string
+         */
+        private $domainName;
+        
+        /**
+         * @var string
+         */
+        private $isDevelopment;
+        
+        public function __construct(EntityManagerInterface $em, $supportEmail, $domainName, $isDevelopment) {
             $this->em = $em;
             $this->ordersRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Order()))));
             $this->customerRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Customer()))));
@@ -83,6 +93,8 @@ namespace Application\API\Repositories\Implementations {
             $this->cartRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Shoppingcart()))));
             $this->orderViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Orderview()))));
             $this->supportEmail = $supportEmail;
+            $this->domainName = $domainName;
+            $this->isDevelopment = $isDevelopment;
         }
 
         public function getGroupByCookie($cookieKey) {
@@ -212,18 +224,41 @@ namespace Application\API\Repositories\Implementations {
             }
         }
 
-        public function getOrderTotalByCookie($cookie) {
+        public function getOrderTotalByCookie($cookie, $status = null) {
             $groupkey = $this->getGroupByCookie($cookie);
-            $orders = $this->orderViewRepo->findBy(['groupkey' => $groupkey, 'statuskey' => OrderStatuses::Creating]);
+            
+            if ($status == null) {
+                $orders = $this->orderViewRepo->findBy(['groupkey' => $groupkey]);
+            } else {
+                $orders = $this->orderViewRepo->findBy(['groupkey' => $groupkey, 'statuskey' => $status]);
+            }
+            
             $total = 0;
             
             foreach($orders as $order) {
                 $total += $order->getItemPrice();
             }
             
-            return $total;
+            return number_format($total, 2, '.', '');
         }
 
+        public function getOrderTotalByGroup($groupkey, $status = null) {
+
+            if ($status == null) {
+                $orders = $this->orderViewRepo->findBy(['groupkey' => $groupkey]);
+            } else {
+                $orders = $this->orderViewRepo->findBy(['groupkey' => $groupkey, 'statuskey' => $status]);
+            }
+            
+            $total = 0;
+            
+            foreach($orders as $order) {
+                $total += $order->getItemPrice();
+            }
+            
+            return number_format($total, 2, '.', '');
+        }
+        
         public function createDispatchedEmail($orderGroupKey) {
             $orders = $this->orderViewRepo->findBy(['groupkey' => $orderGroupKey, 'statuskey' => OrderStatuses::Dispatched]);
             
@@ -271,16 +306,24 @@ namespace Application\API\Repositories\Implementations {
             
             $customer = $this->getCustomerByGroup($orderGroupKey);
             $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
+            $billingAddress = $this->addressViewRepo->fetch($customer->getBillingaddresskey());
+            $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
+            $orderTotal = $this->getOrderTotalByGroup($orderGroupKey, OrderStatuses::Received);
+            
+            $template = new TemplateEngine("data/templates/order-confirmation.phtml", [
+                'domainPath' => $domainPath,
+                'orderGroupKey' => $orderGroupKey,
+                'orders' => $orders,
+                'orderTotal' => $orderTotal,
+                'deliveryAddress' => $deliveryAddress,
+                'billingAddress' => $billingAddress
+            ]);
             
             $request = new EmailRequest();
             $request->recipient = $deliveryAddress->getEmail();
-            $request->subject = "Your Order has been Received";
-            $request->htmlbody = "
-                
-            ";
-            $request->textbody = "
-                
-            ";
+            $request->subject = "Your TopBeans.co.uk Order has been Received";
+            $request->htmlbody = $template->render();
+            $request->textbody = null;
             
             return $request;
         }

@@ -6,6 +6,7 @@ namespace Application\Controller {
     use Zend\Authentication\AuthenticationServiceInterface;
     use JMS\Serializer\SerializerInterface;
     use Application\API\Canonicals\Entity\Address;
+    use Application\API\Canonicals\Entity\OrderStatuses;
     use Application\API\Canonicals\Response\ResponseUtils;
     use Application\API\Repositories\Interfaces\IOrdersRepository;
     use Application\API\Repositories\Interfaces\IEMailService;
@@ -130,7 +131,7 @@ namespace Application\Controller {
                 $data = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Dto\PaymentDetails", "json");
                 
                 $groupKey = $this->ordersRepo->getGroupByCookie($data->cookiekey);
-                $amount = $this->ordersRepo->getOrderTotalByCookie($data->cookiekey);
+                $amount = $this->ordersRepo->getOrderTotalByCookie($data->cookiekey, OrderStatuses::Creating);
                 
                 if ($amount == 0 || $groupKey == null) {
                     throw new \Exception("Could find Order");

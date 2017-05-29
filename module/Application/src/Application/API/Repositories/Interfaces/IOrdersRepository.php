@@ -8,7 +8,8 @@ namespace Application\API\Repositories\Interfaces {
         public function getGroupByCookie($cookie);
         public function getCustomerByGroup($groupKey);
         public function getAddress($key);
-        public function getOrderTotalByCookie($cookie);
+        public function getOrderTotalByCookie($cookie, $status);
+        public function getOrderTotalByGroup($groupkey, $status = null);
         public function receiveOrderByCookie($cookie);
 
         public function addAnonymousOrder($cookieKey, Address $deliveryAddress, Address $billingAddress);
