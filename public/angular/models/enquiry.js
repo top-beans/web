@@ -4,6 +4,6 @@ namespace('models').enquiry = function () {
     var self = this;
     self.name = null;
     self.description = null;
-    self.emqil = null;
+    self.email = null;
     self.number = null;
 };

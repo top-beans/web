@@ -263,17 +263,27 @@ namespace Application\API\Repositories\Implementations {
             $orders = $this->orderViewRepo->findBy(['groupkey' => $orderGroupKey, 'statuskey' => OrderStatuses::Dispatched]);
             
             if (count($orders) == 0) {
-                throw new \Exception("Could not find the order required to prepare an Order Received Confirmation Email");
+                throw new \Exception("Could not find the order required to prepare an Order Dispatch Email");
             }
             
             $customer = $this->getCustomerByGroup($orderGroupKey);
             $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
+            $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
+            $orderTotal = $this->getOrderTotalByGroup($orderGroupKey, OrderStatuses::Received);
+            
+            $template = new TemplateEngine("data/templates/order-dispatch.phtml", [
+                'domainPath' => $domainPath,
+                'orderGroupKey' => $orderGroupKey,
+                'orders' => $orders,
+                'orderTotal' => $orderTotal,
+                'deliveryAddress' => $deliveryAddress
+            ]);
             
             $request = new EmailRequest();
             $request->recipient = $deliveryAddress->getEmail();
-            $request->subject = "Your Order has been Dispatched";
-            $request->htmlbody = "";
-            $request->textbody = "";
+            $request->subject = "Your TopBeans.co.uk Order has been Dispatched";
+            $request->htmlbody = $template->render();
+            $request->textbody = null;
             
             return $request;
         }
@@ -282,17 +292,29 @@ namespace Application\API\Repositories\Implementations {
             $orders = $this->orderViewRepo->findBy(['groupkey' => $orderGroupKey, 'statuskey' => OrderStatuses::Received]);
             
             if (count($orders) == 0) {
-                throw new \Exception("Could not find the order required to prepare an Order Received Confirmation Email");
+                throw new \Exception("Could not find the order required to prepare an Order Alert Email");
             }
             
             $customer = $this->getCustomerByGroup($orderGroupKey);
             $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
+            $billingAddress = $this->addressViewRepo->fetch($customer->getBillingaddresskey());
+            $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
+            $orderTotal = $this->getOrderTotalByGroup($orderGroupKey, OrderStatuses::Received);
+            
+            $template = new TemplateEngine("data/templates/order-alert.phtml", [
+                'domainPath' => $domainPath,
+                'orderGroupKey' => $orderGroupKey,
+                'orders' => $orders,
+                'orderTotal' => $orderTotal,
+                'deliveryAddress' => $deliveryAddress,
+                'billingAddress' => $billingAddress
+            ]);
             
             $request = new EmailRequest();
-            $request->recipient = $this->supportEmail;
-            $request->subject = "A new Order has come in";
-            $request->htmlbody = "";
-            $request->textbody = "";
+            $request->recipient = $deliveryAddress->getEmail();
+            $request->subject = "New Order Alert";
+            $request->htmlbody = $template->render();
+            $request->textbody = null;
             
             return $request;
         }

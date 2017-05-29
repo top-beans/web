@@ -35,7 +35,7 @@ class Enquiry
      * @Type("string")
      * @var string
      *
-     * @ORM\Column(name="description", type="string", length=5000, nullable=false)
+     * @ORM\Column(name="description", type="string", length=4294967295 , nullable=false)
      */
     private $description;
     

@@ -4,7 +4,7 @@
 <head>
 <meta name="viewport" content="width=device-width" /><!-- IMPORTANT -->
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Order Confirmed</title>
+<title>Order Dispatched</title>
     
 <style>
     /* ------------------------------------- 
@@ -237,7 +237,7 @@
                                 </a>
                             </td>
                             <td align="right">
-                                <h3 class="collapse">Order Confirmation</h3>
+                                <h3 class="collapse">Order Dispatch</h3>
                                 Order #<?=strtoupper($orderGroupKey)?>
                             </td>
                         </tr>
@@ -262,11 +262,39 @@
                     <td>
                         <h4>Hello</h4>
                         <p>
-                            Thank you for placing your order with Top Beans. This email is to confirm your order has been placed successfully. 
-                            We will let you know once your item(s) have dispatched.
+                            We thought you would like to know that we have dispatched the following items to you. 
                         </p>
                             
-                        <h4 class="section-header">Order Details</h4>
+
+                        <h4 class="section-header">Delivery Address</h4>
+                        
+                        <!-- address detals -->
+                        <table class="columns" width="100%">
+                            <tr>
+                                <td>
+                                    <table align="left" class="column">
+                                        <tr>
+                                            <td>                
+                                                <p class="">
+                                                    <?=$deliveryAddress->getFirstname()?> <?=$deliveryAddress->getLastname()?><br/>
+                                                    <?=$deliveryAddress->getAddress1()?> <?=$deliveryAddress->getAddress2()?><br/>
+                                                    <?=$deliveryAddress->getCity()?> <?=$deliveryAddress->getState()?>
+                                                    <?=$deliveryAddress->getPostcode()?><br/>
+                                                    <?=$deliveryAddress->getCountryname()?>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <span class="clear"></span>    
+                                    
+                                </td>
+                            </tr>
+                        </table>
+                        <!-- /address details -->
+                        
+                        <br/>
+                        
+                        <h4 class="section-header">Dispatch Details</h4>
                         
                         <table class="order-table">
                             <thead>
@@ -325,51 +353,6 @@
                                 </tr>
                             </tfoot>
                         </table>
-
-                        <h4 class="section-header">Delivery and Billing Addresses</h4>
-                        
-                        <!-- address detals -->
-                        <table class="columns" width="100%">
-                            <tr>
-                                <td>
-                                    <table align="left" class="column">
-                                        <tr>
-                                            <td>                
-                                                <h5 class="">Delivery address</h5>
-                                                <p class="">
-                                                    <?=$deliveryAddress->getFirstname()?> <?=$deliveryAddress->getLastname()?><br/>
-                                                    <?=$deliveryAddress->getAddress1()?> <?=$deliveryAddress->getAddress2()?><br/>
-                                                    <?=$deliveryAddress->getCity()?> <?=$deliveryAddress->getState()?>
-                                                    <?=$deliveryAddress->getPostcode()?><br/>
-                                                    <?=$deliveryAddress->getCountryname()?>
-                                                </p>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    
-                                    <table align="left" class="column">
-                                        <tr>
-                                            <td>                                            
-                                                <h5 class="">Billing address</h5>                                
-                                                <p class="">
-                                                    <?=$billingAddress->getFirstname()?> <?=$billingAddress->getLastname()?><br/>
-                                                    <?=$billingAddress->getAddress1()?> <?=$billingAddress->getAddress2()?><br/>
-                                                    <?=$billingAddress->getCity()?> <?=$billingAddress->getState()?>
-                                                    <?=$billingAddress->getPostcode()?><br/>
-                                                    <?=$billingAddress->getCountryname()?>
-                                                </p>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    
-                                    <span class="clear"></span>    
-                                    
-                                </td>
-                            </tr>
-                        </table>
-                        <!-- /address details -->
-                        
-                        <br/>
                         
                         
                     </td>

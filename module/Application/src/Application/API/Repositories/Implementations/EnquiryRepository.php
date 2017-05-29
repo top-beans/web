@@ -25,6 +25,11 @@ namespace Application\API\Repositories\Implementations {
         private $domainName;
         
         /**
+         * @var string
+         */
+        private $isDevelopment;
+        
+        /**
          * @var IRepository
          */
         private $enquiryRepo;
@@ -39,10 +44,11 @@ namespace Application\API\Repositories\Implementations {
          */
         private $em;
         
-        public function __construct(EntityManagerInterface $em, $supportEmail, $domainName) {
+        public function __construct(EntityManagerInterface $em, $supportEmail, $domainName, $isDevelopment) {
             $this->em = $em;
             $this->supportEmail = $supportEmail;
             $this->domainName = $domainName;
+            $this->isDevelopment = $isDevelopment;
             $this->enquiryRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Enquiry()))));
             $this->coffeeRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Coffee()))));
         }
@@ -78,38 +84,28 @@ namespace Application\API\Repositories\Implementations {
         }
 
         public function createEmail(Enquiry $enquiry) {
-            $request = new EmailRequest();
-            $request->recipient = $this->supportEmail;
-            $request->subject = "New Enquiry from TopBeans.co.uk";
-            
+            $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
             $name = $enquiry->getName();
             $number = $enquiry->getNumber();
             $email = $enquiry->getEmail();
             $date = $enquiry->getCreateddate()->format("d/M/y h:i a");
             $description = nl2br($enquiry->getDescription());
             
-            $request->htmlbody = "
-                <html>
-                <head></head>
-                <body>
-                <p>Salam Aleikum,</p>
-                <p>The following request has been submitted on $date:</p>
-                
-                <h3>Person:</h3>
-                <p>$name</p>
-                    
-                <h3>Contacts:</h3>
-                <p>Number: $number</p>
-                <p>Email: $email</p>
-                    
-                <h3>Description:</h3>
-                <p>$description</p>
-
-                <p>Jazakallah Kheir</p>
-                <p>Top Beans Support Team</p>
-                </body>
-                </html>
-            ";
+            $template = new TemplateEngine("data/templates/enquiry-alert.phtml", [
+                'domainPath' => $domainPath,
+                'name' => $name,
+                'number' => $number,
+                'email' => $email,
+                'date' => $date,
+                'description' => $description
+            ]);
+            
+            $request = new EmailRequest();
+            $request->recipient = $this->supportEmail;
+            $request->subject = "New Enquiry from TopBeans.co.uk";
+            $request->htmlbody = $template->render();
+            $request->textbody = null;
+            
             return $request;
         }
     }

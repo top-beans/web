@@ -109,12 +109,36 @@ class Orderview
      * @ORM\Column(name="shoppingCartKey", type="integer", nullable=false)
      */
     private $shoppingcartkey;
+
+    /**
+     * @Type("string")
+     * @var string
+     *
+     * @ORM\Column(name="trackingNumber", type="string", length=100, nullable=true)
+     */
+    private $trackingnumber;
     
     /**
      * @Type("DateTime<'Y-m-d\TH:i:sO'>")
      * @var \DateTime
      *
-     * @ORM\Column(name="updatedDate", type="datetime", nullable=false)
+     * @ORM\Column(name="arrivalDateFrom", type="datetime", nullable=true)
+     */
+    private $arrivaldatefrom;
+    
+    /**
+     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="arrivalDateTo", type="datetime", nullable=true)
+     */
+    private $arrivaldateto;
+    
+    /**
+     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updatedDate", type="datetime", nullable=true)
      */
     private $updateddate;
 
@@ -563,6 +587,9 @@ class Orderview
     function getStatuskey() { return $this->statuskey; }
     function getGroupkey() { return $this->groupkey; }
     function getShoppingcartkey() { return $this->shoppingcartkey; }
+    function getTrackingnumber() { return $this->trackingnumber; }
+    function getArrivaldatefrom() { return $this->arrivaldatefrom; }
+    function getArrivaldateto() { return $this->arrivaldateto; }
     function getUpdateddate() { return $this->updateddate; }
     function getCreateddate() { return $this->createddate; }
     function getRequesttype() { return $this->requesttype; }
@@ -631,6 +658,9 @@ class Orderview
     function setStatuskey($val) { $this->statuskey = $val; }
     function setGroupkey($val) { $this->groupkey = $val; }
     function setShoppingcartkey($val) { $this->shoppingcartkey = $val; } 
+    function setTrackingnumber($val) { $this->trackingnumber = $val; }
+    function setArrivaldatefrom($val) { $this->arrivaldatefrom = $val; }
+    function setArrivaldateto($val) { $this->arrivaldateto = $val; }
     function setUpdateddate($val) { $this->updateddate = $val; } 
     function setCreateddate($val) { $this->createddate = $val; }
     function setRequesttype($val) { $this->requesttype = $val; }
