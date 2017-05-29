@@ -81,6 +81,31 @@
         border-collapse:collapse;
     }
     
+    table.order-table {
+        text-align: left;
+        border-collapse: collapse;
+        font-size:14px; 
+        line-height:1.6;
+    }
+    
+    table.order-table td, table.order-table th {
+        padding: 7px 0;
+    }
+    
+    table.order-table th  {
+        border-bottom:1px solid #ccc;
+    }
+    
+    table.order-table > tfoot td  {
+        border-top:1px solid #ccc;
+        border-bottom:1px solid #ccc;
+    }
+    
+    .section-header {
+        border-bottom: 2px solid #999;
+        margin-top:20px;
+    }
+    
     /* ------------------------------------- 
             HEADER 
     ------------------------------------- */
@@ -241,9 +266,9 @@
                             We will let you know once your item(s) have dispatched.
                         </p>
                             
-                        <h4 style="border-bottom: 1px solid #999;margin-top:20px;">Order Details</h4>
+                        <h4 class="section-header">Order Details</h4>
                         
-                        <table style="text-align: left;">
+                        <table class="order-table">
                             <thead>
                                 <tr style="border-bottom: 1px solid #aaa;">
                                     <th style="width: 16.7%">Type</th>
@@ -255,7 +280,8 @@
                             <tbody>
                                 <?php foreach($orders as $o): ?>
                                 <tr>
-                                    <th>
+                                    <td>
+                                        <strong>
                                         <?php if ($o->getIspurchase()) : ?>
                                             Purchase
                                         <?php elseif ($o->getIspaidsample()) : ?>
@@ -263,7 +289,8 @@
                                         <?php elseif ($o->getIsfreesample()) : ?>
                                             Sample (Free)
                                         <?php endif; ?>
-                                    </th>
+                                        </strong>
+                                    </td>
                                     <td><?=$o->getName()?></td>
                                     <td>
                                         <?php if ($o->getIspurchase()) : ?>
@@ -283,23 +310,23 @@
                                 <?php endforeach;?>
                             </tbody>
                             
-                            <tbody>
+                            <tfoot>
                                 <tr>
+                                    <td><strong>Shipping (Free)</strong></td>
                                     <td></td>
-                                    <th>Shipping (Free)</th>
                                     <td></td>
-                                    <td>£0.00</td>
+                                    <td><strong>&pound;0.00</strong></td>
                                 </tr>
                                 <tr>
+                                    <td><strong>Total</strong></td>
                                     <td></td>
-                                    <th>Total</th>
                                     <td></td>
-                                    <th>&pound; <?=$orderTotal?></th>
+                                    <td><strong>&pound;<?=$orderTotal?></strong></td>
                                 </tr>
-                            </tbody>
+                            </tfoot>
                         </table>
 
-                        <h4 style="border-bottom: 1px solid #999;margin-top: 20px;">Delivery and Billing Details</h4>
+                        <h4 class="section-header">Delivery and Billing Addresses</h4>
                         
                         <!-- address detals -->
                         <table class="columns" width="100%">
