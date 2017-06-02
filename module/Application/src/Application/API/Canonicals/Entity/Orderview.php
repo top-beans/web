@@ -207,6 +207,14 @@ class Orderview
     private $availableamount;
 
     /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="remainingAmount", type="integer", nullable=false)
+     */
+    private $remainingamount;
+
+    /**
      * @Type("string")
      * @var string
      *
@@ -599,6 +607,7 @@ class Orderview
     function getWarehouse() { return $this->warehouse; }
     function getScreensize() { return $this->screensize; }
     function getAvailableamount() { return $this->availableamount; }
+    function getRemainingamount() { return $this->remainingamount; }
     function getCropyear() { return $this->cropyear; }
     function getCuppingscore() { return $this->cuppingscore; }
     function getCurrency() { return $this->currency; }
@@ -670,6 +679,7 @@ class Orderview
     function setWarehouse($val) { $this->warehouse = $val; }
     function setScreensize($val) { $this->screensize = $val; }
     function setAvailableamount($val) { $this->availableamount = $val; }
+    function setRemainingamount($val) { $this->remainingamount = $val; } 
     function setCropyear($val) { $this->cropyear = $val; }
     function setCuppingscore($val) { $this->cuppingscore = $val; }
     function setCurrency($val) { $this->currency = $val; }

@@ -9,7 +9,7 @@ namespace Application\API\Repositories\Implementations {
         Application\API\Repositories\Base\IRepository,
         Application\API\Repositories\Base\Repository,
         Application\API\Canonicals\Entity\Shoppingcart,
-        Application\API\Canonicals\Entity\Coffee,
+        Application\API\Canonicals\Entity\CoffeeView,
         Application\API\Canonicals\Entity\RequestTypes,
         Application\API\Canonicals\Response\ResponseUtils,
         Application\API\Canonicals\Entity\Shoppingcartview,
@@ -30,7 +30,7 @@ namespace Application\API\Repositories\Implementations {
         /**
          * @var IRepository
          */
-        private $coffeeRepo;
+        private $coffeeViewRepo;
         
         /**
          * @var IRepository
@@ -45,7 +45,7 @@ namespace Application\API\Repositories\Implementations {
         public function __construct(EntityManager $em) {
             $this->em = $em;
             $this->cartRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Shoppingcart()))));
-            $this->coffeeRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Coffee()))));
+            $this->coffeeViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new CoffeeView()))));
             $this->cartViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Shoppingcartview()))));
             $this->ordersRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Order()))));
         }
@@ -55,19 +55,10 @@ namespace Application\API\Repositories\Implementations {
                 return ResponseUtils::response(["Your cart is missing either a coffee or cookie key (coffee goes with cookies bruv!)"]);
             } 
             
-            $coffee = $this->coffeeRepo->findOneBy(['coffeekey' => $cart->getCoffeekey(), 'active' => 1]);
+            $coffee = $this->coffeeViewRepo->findOneBy(['coffeekey' => $cart->getCoffeekey(), 'active' => 1]);
             
             if ($coffee == null) {
                 return ResponseUtils::response(["Your coffee could not be found"]);
-            }
-            
-            $matching = $this->cartRepo->findOneBy([
-                'cookiekey' => $cart->getCookiekey(),
-                'coffeekey' => $cart->getCoffeekey()
-            ]);
-
-            if ($matching == null) {
-                return ResponseUtils::response([]);
             }
             
             $errors = [];
@@ -76,8 +67,8 @@ namespace Application\API\Repositories\Implementations {
             
             if ($cart->getQuantity() <= 0) {
                 $errors[] = "A valid quantity greater than zero is required";
-            } else if ($cart->getQuantity() > $coffee->getAvailableamount() * ($isPurchase ? 1 : $coffee->getBaseunitsperpackage())) {
-                $errors[] = "Your quantity exceeds the available amount of " + $coffee->getAvailableamount() + " " + $coffee->getPackagingunit();
+            } else if ($cart->getQuantity() > $coffee->getRemainingamount() * ($isPurchase ? 1 : $coffee->getBaseunitsperpackage())) {
+                $errors[] = "Your quantity exceeds the available amount of " . $coffee->getRemainingamount() . " x " . $coffee->getPackagingunit();
             }
 
             return ResponseUtils::response($errors, $warnings);
@@ -91,17 +82,17 @@ namespace Application\API\Repositories\Implementations {
 
             if ($matching == null) {
                 $cart->setUpdateddate(null);
-                $cart->setCreateddate(new \DateTime());
+                $cart->setCreateddate(new \DateTime("now", new \DateTimeZone("UTC")));
                 $this->cartRepo->add($cart);
             } else {
                 $cart->setShoppingcartkey($matching->getShoppingcartkey());
-                $cart->setUpdateddate(new \DateTime());
+                $cart->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
                 $this->cartRepo->update($cart);
             }
         }
 
         public function addToCart(Shoppingcart $cart) {
-            $cart->setCreateddate(new \DateTime());
+            $cart->setCreateddate(new \DateTime("now", new \DateTimeZone("UTC")));
             $this->cartRepo->add($cart);
         }
 
@@ -181,7 +172,7 @@ namespace Application\API\Repositories\Implementations {
         }
 
         public function updateCart(Shoppingcart $cart) {
-            $cart->setUpdateddate(new \DateTime());
+            $cart->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
             $this->cartRepo->update($cart);
         }
 
@@ -195,7 +186,7 @@ namespace Application\API\Repositories\Implementations {
                     throw new \Exception("Cannot Decrement further");
                 } else {
                     $matching->setQuantity($matching->getQuantity() - 1);
-                    $matching->setUpdateddate(new \DateTime());
+                    $matching->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
                     $this->cartRepo->update($matching);
                     return $this->cartViewRepo->findOneBy(['cookiekey' => $cookiekey, 'coffeekey' => $coffeeKey]);
                 }
@@ -208,14 +199,14 @@ namespace Application\API\Repositories\Implementations {
             if ($matching == null) {
                 throw new \Exception("Could not find matching item");
             } else {
-                $coffee = $this->coffeeRepo->fetch($coffeeKey);
+                $coffee = $this->coffeeViewRepo->fetch($coffeeKey);
                 $isPurchase = $matching->getRequesttypekey() == RequestTypes::Purchase;
 
-                if ($matching->getQuantity() >= $coffee->getAvailableamount() * ($isPurchase ? 1 : $coffee->getBaseunitsperpackage())) {
+                if ($matching->getQuantity() >= $coffee->getRemainingamount() * ($isPurchase ? 1 : $coffee->getBaseunitsperpackage())) {
                     throw new \Exception("Cannot Increment further");
                 } else {
                     $matching->setQuantity($matching->getQuantity() + 1);
-                    $matching->setUpdateddate(new \DateTime());
+                    $matching->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
                     $this->cartRepo->update($matching);
                     return $this->cartViewRepo->findOneBy(['cookiekey' => $cookiekey, 'coffeekey' => $coffeeKey]);
                 }

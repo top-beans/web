@@ -155,7 +155,7 @@ namespace Application\API\Repositories\Implementations {
                 }
 
                 $cartItems = $this->cartViewRepo->findBy(['cookiekey' => $cookieKey]);
-                $createdDate = new \DateTime();
+                $createdDate = new \DateTime("now", new \DateTimeZone("UTC"));
                 $orderResult->requirespayment = false;
                 $orders = [];
 
@@ -209,6 +209,7 @@ namespace Application\API\Repositories\Implementations {
                 
                 foreach ($orders as $order) {
                     $order->setShoppingcartkey(null);
+                    $order->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
                     $order->setStatuskey(OrderStatuses::Received);
                     $this->ordersRepo->add($order);
                 }

@@ -7,6 +7,7 @@ namespace Application\API\Repositories\Implementations {
         Doctrine\ORM\Mapping\ClassMetadata,
         Application\API\Repositories\Interfaces\ICoffeeRepository,
         Application\API\Canonicals\Entity\Coffee,
+        Application\API\Canonicals\Entity\CoffeeView,
         Application\API\Repositories\Base\IRepository,
         Application\API\Repositories\Base\Repository;
 
@@ -22,9 +23,15 @@ namespace Application\API\Repositories\Implementations {
          */
         protected $coffeeRepo;
         
+        /**
+         * @var IRepository
+         */
+        protected $coffeeViewRepo;
+        
         public function __construct(EntityManager $em) {
             $this->em = $em;
             $this->coffeeRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Coffee()))));
+            $this->coffeeViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new CoffeeView()))));
         }
 
         public function addCoffee(Coffee $coffee) {
@@ -90,6 +97,7 @@ namespace Application\API\Repositories\Implementations {
             $sheet->SetCellValue("Q1", 'Sensorial Desc');
             $sheet->SetCellValue("R1", 'Cultivars');
             $sheet->SetCellValue("S1", 'Active');
+            $sheet->SetCellValue("T1", 'Remaining Amt');
             
             $row = 1;
             foreach($coffee as $c) {
@@ -113,20 +121,21 @@ namespace Application\API\Repositories\Implementations {
                 $sheet->SetCellValue("Q$row", $c->getSensorialdescriptors());
                 $sheet->SetCellValue("R$row", $c->getCultivars());
                 $sheet->SetCellValue("S$row", $c->getActive() == 1 ? 'Yes' : 'No');
+                $sheet->SetCellValue("T$row", $c->getRemainingamount());
             }
             
             return $objPHPExcel;
         }
         
         public function find($coffeeKey) {
-            return $this->coffeeRepo->fetch($coffeeKey);
+            return $this->coffeeViewRepo->findOneBy(['coffeekey' => $coffeeKey]);
         }
 
         public function findAll() {
-            return $this->coffeeRepo->fetchAll();
+            return $this->coffeeViewRepo->fetchAll();
         }
         public function findAllActive() {
-            return $this->coffeeRepo->findBy(['active' => 1]);
+            return $this->coffeeViewRepo->findBy(['active' => 1]);
         }
     }
 }

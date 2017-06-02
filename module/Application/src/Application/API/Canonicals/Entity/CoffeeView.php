@@ -8,76 +8,20 @@ use JMS\Serializer\Annotation\Type;
 
 /**
  * @AccessType("public_method")
- * @ORM\Table(name="ShoppingCartView")
+ * @ORM\Table(name="CoffeeView")
  * @ORM\Entity
  */
-class Shoppingcartview
+class CoffeeView
 {
     /**
      * @Type("integer")
      * @var integer
      *
-     * @ORM\Column(name="shoppingCartKey", type="integer", nullable=false)
+     * @ORM\Column(name="coffeeKey", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $shoppingcartkey;
-
-    /**
-     * @Type("string")
-     * @var string
-     *
-     * @ORM\Column(name="cookieKey", type="string", length=45, nullable=false)
-     */
-    private $cookiekey;
-
-    /**
-     * @Type("integer")
-     * @var integer
-     *
-     * @ORM\Column(name="coffeeKey", type="integer", nullable=false)
-     */
     private $coffeekey;
-
-    /**
-     * @Type("integer")
-     * @var integer
-     *
-     * @ORM\Column(name="quantity", type="integer", nullable=false)
-     */
-    private $quantity;
-
-    /**
-     * @Type("integer")
-     * @var integer
-     *
-     * @ORM\Column(name="requestTypeKey", type="integer", nullable=false)
-     */
-    private $requesttypekey;
-    
-    /**
-     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updatedDate", type="datetime", nullable=false)
-     */
-    private $updateddate;
-
-    /**
-     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
-     * @var \DateTime
-     *
-     * @ORM\Column(name="createdDate", type="datetime", nullable=false)
-     */
-    private $createddate;
-
-    /**
-     * @Type("string")
-     * @var string
-     *
-     * @ORM\Column(name="requestType", type="string", length=45, nullable=true)
-     */
-    private $requesttype;
 
     /**
      * @Type("string")
@@ -163,25 +107,9 @@ class Shoppingcartview
      * @Type("string")
      * @var string
      *
-     * @ORM\Column(name="itemPrice", type="decimal", precision=30, scale=2, nullable=false)
-     */
-    private $itemprice;
-
-    /**
-     * @Type("string")
-     * @var string
-     *
      * @ORM\Column(name="name", type="string", length=45, nullable=false)
      */
     private $name;
-
-    /**
-     * @Type("string")
-     * @var string
-     *
-     * @ORM\Column(name="producerStory", type="text", length=65535, nullable=false)
-     */
-    private $producerstory;
 
     /**
      * @Type("string")
@@ -219,6 +147,14 @@ class Shoppingcartview
      * @Type("string")
      * @var string
      *
+     * @ORM\Column(name="producerStory", type="text", length=65535, nullable=false)
+     */
+    private $producerstory;
+
+    /**
+     * @Type("string")
+     * @var string
+     *
      * @ORM\Column(name="priceBaseUnit", type="string", length=45, nullable=true)
      */
     private $pricebaseunit;
@@ -230,7 +166,7 @@ class Shoppingcartview
      * @ORM\Column(name="packagingUnit", type="string", length=45, nullable=true)
      */
     private $packagingunit;
-
+    
     /**
      * @Type("integer")
      * @var integer
@@ -238,38 +174,6 @@ class Shoppingcartview
      * @ORM\Column(name="baseUnitsPerPackage", type="integer", nullable=false)
      */
     private $baseunitsperpackage;
-    
-    /**
-     * @Type("integer")
-     * @var integer
-     *
-     * @ORM\Column(name="isPurchase", type="integer", nullable=false)
-     */
-    private $ispurchase;
-    
-    /**
-     * @Type("integer")
-     * @var integer
-     *
-     * @ORM\Column(name="isSample", type="integer", nullable=false)
-     */
-    private $issample;
-    
-    /**
-     * @Type("integer")
-     * @var integer
-     *
-     * @ORM\Column(name="isPaidSample", type="integer", nullable=false)
-     */
-    private $ispaidsample;
-    
-    /**
-     * @Type("integer")
-     * @var integer
-     *
-     * @ORM\Column(name="isFreeSample", type="integer", nullable=false)
-     */
-    private $isfreesample;
     
     /**
      * @Type("integer")
@@ -303,14 +207,7 @@ class Shoppingcartview
      */
     private $active;
 
-    function getShoppingcartkey() { return $this->shoppingcartkey; }
-    function getCookiekey() { return $this->cookiekey; }
     function getCoffeekey() { return $this->coffeekey; }
-    function getQuantity() { return $this->quantity; }
-    function getRequesttypekey() { return $this->requesttypekey; }
-    function getUpdateddate() { return $this->updateddate; }
-    function getCreateddate() { return $this->createddate; }
-    function getRequesttype() { return $this->requesttype; }
     function getPackaging() { return $this->packaging; }
     function getAvailability() { return $this->availability; }
     function getWarehouse() { return $this->warehouse; }
@@ -321,33 +218,21 @@ class Shoppingcartview
     function getCuppingscore() { return $this->cuppingscore; }
     function getCurrency() { return $this->currency; }
     function getPrice() { return $this->price; }
-    function getItemprice() { return $this->itemprice; }
     function getName() { return $this->name; }
-    function getProducerstory() { return $this->producerstory; }
     function getProcessingmethod() { return $this->processingmethod; }
     function getCountry() { return $this->country; }
     function getRegion() { return $this->region; }
     function getProducer() { return $this->producer; }
+    function getProducerstory() { return $this->producerstory; }
     function getPricebaseunit() { return $this->pricebaseunit; }
     function getPackagingunit() { return $this->packagingunit; }
     function getBaseunitsperpackage() { return $this->baseunitsperpackage; }
-    function getIspurchase() { return $this->ispurchase; }
-    function getIssample() { return $this->issample; }
-    function getIspaidsample() { return $this->ispaidsample; }
-    function getIsfreesample() { return $this->isfreesample; }
     function getMaxfreesamplequantity() { return $this->maxfreesamplequantity; }
     function getSensorialdescriptors() { return $this->sensorialdescriptors; }
     function getCultivars() { return $this->cultivars; }
     function getActive() { return $this->active; }
 
-    function setShoppingcartkey($val) { $this->shoppingcartkey = $val; } 
-    function setCookiekey($val) { $this->cookiekey = $val; } 
     function setCoffeekey($val) { $this->coffeekey = $val; } 
-    function setQuantity($val) { $this->quantity = $val; } 
-    function setRequesttypekey($val) { $this->requesttypekey = $val; }
-    function setUpdateddate($val) { $this->updateddate = $val; } 
-    function setCreateddate($val) { $this->createddate = $val; } 
-    function setRequesttype($val) { $this->requesttype = $val; } 
     function setPackaging($val) { $this->packaging = $val; } 
     function setAvailability($val) { $this->availability = $val; } 
     function setWarehouse($val) { $this->warehouse = $val; } 
@@ -358,20 +243,15 @@ class Shoppingcartview
     function setCuppingscore($val) { $this->cuppingscore = $val; } 
     function setCurrency($val) { $this->currency = $val; } 
     function setPrice($val) { $this->price = $val; } 
-    function setItemprice($val) { $this->itemprice = $val; } 
     function setName($val) { $this->name = $val; } 
-    function setProducerstory($val) { $this->producerstory = $val; } 
     function setProcessingmethod($val) { $this->processingmethod = $val; } 
     function setCountry($val) { $this->country = $val; } 
     function setRegion($val) { $this->region = $val; } 
     function setProducer($val) { $this->producer = $val; } 
+    function setProducerstory($val) { $this->producerstory = $val; } 
     function setPricebaseunit($val) { $this->pricebaseunit = $val; } 
     function setPackagingunit($val) { $this->packagingunit = $val; }
     function setBaseunitsperpackage($val) { $this->baseunitsperpackage = $val; }
-    function setIspurchase($val) { $this->ispurchase = $val; }
-    function setIssample($val) { $this->issample = $val; }
-    function setIspaidsample($val) { $this->ispaidsample = $val; }
-    function setIsfreesample($val) { $this->isfreesample = $val; }
     function setMaxfreesamplequantity($val) { $this->maxfreesamplequantity = $val; }
     function setSensorialdescriptors($val) { $this->sensorialdescriptors = $val; } 
     function setCultivars($val) { $this->cultivars = $val; } 
