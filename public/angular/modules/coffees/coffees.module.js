@@ -1,3 +1,5 @@
 'use strict';
 
-angular.module('coffees', []);
+angular.module('coffees', [
+    'ui.bootstrap'
+]);

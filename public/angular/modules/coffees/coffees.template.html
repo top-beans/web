@@ -1,1 +1,69 @@
+<div class="shell">
+    <div class="range">
+        <div class="cell-xs-12">
 
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th class="col-md-4">Details</th>
+                        <th class="col-md-2">Qty</th>
+                        <th class="col-md-2">Price</th>
+                        <th class="col-md-2 hidden-xs">Status</th>
+                        <th class="col-md-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="coffee in $ctrl.coffees">
+                        <td>
+                            <div class="product">
+                                <p class="product-brand">
+                                    <strong>{{coffee.name}}:</strong> {{coffee.region}}{{coffee.region == null ? '' : ','}} {{coffee.country}}
+                                </p>
+                                <div class="product-rating">
+                                    <ul class="list-rating">
+                                        <li ng-repeat="n in coffee.fullStars()">
+                                            <span class="icon icon-xxs material-icons-star"></span>
+                                        </li>
+                                        <li ng-if="coffee.halfStar()">
+                                            <span class="icon icon-xxs material-icons-star_half"></span>
+                                        </li>
+                                        <li ng-repeat="n in coffee.borderStars()">
+                                            <span class="icon icon-xxs material-icons-star_border"></span>
+                                        </li>
+                                    </ul><span class="text-light">{{coffee.cuppingscore}} Cupping Score</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{coffee.remainingamount}} x {{coffee.packagingunit}}</td>
+                        <td>{{coffee.currency}}{{coffee.price}}/{{coffee.pricebaseunit}}</td>
+                        <td class="hidden-xs">{{(coffee.active ? 'Active' : 'Inactive')}}</td>
+                        <td class="cart-actions">
+                            <span ng-hide="coffee.incrementing" class="glyphicon glyphicon-plus-sign text-info"  ng-click="$ctrl.incrementCoffee(coffee)"></span>
+                            <span ng-show="coffee.incrementing" class="fa fa-spin fa-spinner"></span>
+                            
+                            <span ng-hide="coffee.decrementing" class="glyphicon glyphicon-minus-sign text-info"  ng-click="$ctrl.decrementCoffee(coffee)"></span>
+                            <span ng-show="coffee.decrementing" class="fa fa-spin fa-spinner"></span>
+                            
+                            <span ng-hide="coffee.toggling" class="glyphicon" 
+                                  ng-class="{ 'glyphicon-remove-circle text-danger': !coffee.active, 'glyphicon-ok-circle text-success': coffee.active }"
+                                  ng-click="$ctrl.toggleActive(coffee)"></span>
+                            <span ng-show="coffee.toggling" class="fa fa-spin fa-spinner"></span>
+                            
+                            <span class="glyphicon glyphicon-pencil"
+                                  ng-click="$ctrl.addOrEditCoffee(coffee)">
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="cell-xs-12">
+            <div class="text-right section-top-15">
+                <button type="button" class="btn btn-xs btn-primary" ng-click="$ctrl.addOrEditCoffee(null)">
+                    <span class="glyphicon glyphicon-plus"></span> Add
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,162 @@
+<div class="modal-header">
+    <button type="button" class="close" aria-label="Close" ng-click="$mctrl.closeModal()"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">Coffee: {{$mctrl.coffee.name}}</h4>
+    <div class="product" style='margin-top:0px;'>
+        <div class="product-rating">
+            <span>{{coffee.cuppingscore}} Cupping Score</span>
+            <ul class="list-rating">
+                <li ng-repeat="n in $mctrl.coffee.fullStars()">
+                    <span class="icon icon-xxs material-icons-star"></span>
+                </li>
+                <li ng-if="$mctrl.coffee.halfStar()">
+                    <span class="icon icon-xxs material-icons-star_half"></span>
+                </li>
+                <li ng-repeat="n in $mctrl.coffee.borderStars()">
+                    <span class="icon icon-xxs material-icons-star_border"></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="modal-body">
+    <form class="rd-mailform form-modern" name="coffeeForm" id="coffeeForm" autocomplete="on" novalidate>
+        <div class="range">
+            <div class="cell-xs-4">
+                <div class="form-group">
+                    Name
+                    <input ng-model="$mctrl.coffee.name" type="text" placeholder="Name" class="form-control" ng-required="true">
+                </div>
+            </div>
+            <div class="cell-xs-4">
+                <div class="form-group">
+                    Region
+                    <input ng-model="$mctrl.coffee.region" type="text" placeholder="Region" class="form-control" ng-required="true">
+                </div>
+            </div>
+            <div class="cell-xs-4">
+                <div class="form-group">
+                    Country
+                    <input ng-model="$mctrl.coffee.country" type="text" placeholder="Country" class="form-control" ng-required="true">
+                </div>
+            </div>
+            
+            <div class="cell-xs-4">
+                <div class="form-group">
+                    Producer
+                    <input ng-model="$mctrl.coffee.producer" type="text" placeholder="Producer" class="form-control" ng-required="true">
+                </div>
+            </div>
+            <div class="cell-xs-4">
+                <div class="form-group">
+                    Availability
+                    <input ng-model="$mctrl.coffee.availability" type="text" placeholder="availability" class="form-control" ng-required="true">
+                </div>
+            </div>
+            <div class="cell-xs-4">
+                <div class="form-group">
+                    Warehouse
+                    <input ng-model="$mctrl.coffee.warehouse" type="text" placeholder="Warehouse" class="form-control">
+                </div>
+            </div>
+            
+            <div class="cell-xs-12">
+                <div class="form-group">
+                    Producer story
+                    <textarea ng-model="$mctrl.coffee.producerstory" placeholder="Producers story" class="form-control" ng-required="true"></textarea>
+                </div>
+            </div>
+            
+            <div class="cell-xs-4">
+                <div class="form-group">
+                    Price/base unit ({{$mctrl.coffee.currency}})
+                    <input ng-model="$mctrl.coffee.price" ng-pattern='$mctrl.priceRegex' type="text" placeholder="Price/base unit" class="form-control" ng-required="true">
+                </div>
+            </div>
+            <div class="cell-xs-4">
+                <div class="form-group">
+                    Base unit
+                    <input ng-model="$mctrl.coffee.pricebaseunit" type="text" placeholder="Base unit" class="form-control" ng-required="true">
+                </div>
+            </div>
+            <div class="cell-xs-4">
+                <div class="form-group">
+                    Base units/package
+                    <input ng-model="$mctrl.coffee.baseunitsperpackage" type="text" placeholder="Base units/package" class="form-control" ng-required="true">
+                </div>
+            </div>
+            
+            <div class="cell-xs-4">
+                <div class="form-group">
+                    Amount
+                    <input ng-model="$mctrl.coffee.availableamount" ng-pattern='$mctrl.posnmRegex' type="text" placeholder="Available Amount" class="form-control" ng-required="true">
+                </div>
+            </div>
+            <div class="cell-xs-4">
+                <div class="form-group">
+                    Packaging unit
+                    <input ng-model="$mctrl.coffee.packagingunit" type="text" placeholder="Packaging unit" class="form-control" ng-required="true">
+                </div>
+            </div>
+            <div class="cell-xs-4">
+                <div class="form-group">
+                    Packaging
+                    <input ng-model="$mctrl.coffee.packaging" type="text" placeholder="Packaging" class="form-control" ng-required="true">
+                </div>
+            </div>
+            
+            <div class="cell-xs-4">
+                <div class="form-group">
+                    Max free sample qty
+                    <input ng-model="$mctrl.coffee.maxfreesamplequantity" type="text" placeholder="Max free sample qty" class="form-control" ng-required="true">
+                </div>
+            </div>
+            <div class="cell-xs-4">
+                <div class="form-group">
+                    Processing method
+                    <input ng-model="$mctrl.coffee.processingmethod" type="text" placeholder="Processing method" class="form-control">
+                </div>
+            </div>
+            
+            <div class="cell-xs-4">
+                <div class="form-group">
+                    Cupping score
+                    <input ng-model="$mctrl.coffee.cuppingscore" ng-pattern='$mctrl.scoreRegex' type="text" placeholder="Cupping Score" class="form-control" ng-required="true">
+                </div>
+            </div>
+            <div class="cell-xs-4">
+                <div class="form-group">
+                    Crop year
+                    <input ng-model="$mctrl.coffee.cropyear" type="text" placeholder="Crop year" class="form-control">
+                </div>
+            </div>
+            <div class="cell-xs-4">
+                <div class="form-group">
+                    Screen size
+                    <input ng-model="$mctrl.coffee.screensize" type="text" placeholder="Screen size" class="form-control">
+                </div>
+            </div>
+            
+            <div class="cell-xs-6">
+                <div class="form-group">
+                    Sensorial descriptors
+                    <textarea ng-model="$mctrl.coffee.sensorialdescriptors"  placeholder="Sensorial descriptors" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="cell-xs-6">
+                <div class="form-group">
+                    Cultivars
+                    <textarea ng-model="$mctrl.coffee.cultivars" placeholder="Cultivars" class="form-control"></textarea>
+                </div>
+            </div>
+            
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <div class="group-xl-responsive">
+        <button type="button" class="btn btn-xs btn-default" ng-click="$mctrl.closeModal()">Cancel</button>
+        <button type="button" class="btn btn-xs btn-primary" ng-click="$mctrl.saveCoffee()">Save</button>
+    </div>
+</div>

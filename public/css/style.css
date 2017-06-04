@@ -210,3 +210,9 @@ form.my-submitted textarea.ng-invalid-pattern:not(:focus) {
     border: 1px solid #999;
     border-radius: 0px;    
 }
+
+
+.modal-body{
+    max-height: calc(100vh - 250px);
+    overflow-y: auto;
+}

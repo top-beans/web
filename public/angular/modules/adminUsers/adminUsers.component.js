@@ -28,7 +28,7 @@ angular.module('adminUsers')
                 controllerAs: "$mctrl",
                 openedClass: 'page modal-open',
                 resolve: {
-                    user: oldUser,
+                    user: function () { return !oldUser ? new models.user({usertypekey:1}) : oldUser; },
                     maxLoginTries: self.maxLoginTries,
                     isReadOnly: false
                 }

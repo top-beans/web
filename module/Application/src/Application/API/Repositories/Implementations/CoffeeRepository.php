@@ -46,14 +46,41 @@ namespace Application\API\Repositories\Implementations {
             $this->coffeeRepo->update($coffee);
         }
 
-        public function deactivateCoffee($coffeeKey) {
+        public function incrementCoffee($coffeeKey) {
             $coffee = $this->coffeeRepo->fetch($coffeeKey);
             
             if ($coffee == null) {
-                return;
+                throw new \Exception("Could not find matching item");
             } else {
-                $coffee->setActive(0);
+                $coffee->setAvailableamount($coffee->getAvailableamount() + 1);
+                $this->coffeeRepo->update($coffee);
+                return $this->coffeeViewRepo->findOneBy(['coffeekey' => $coffeeKey]);
+            }
+        }
+        
+        public function decrementCoffee($coffeeKey) {
+            $coffee = $this->coffeeRepo->fetch($coffeeKey);
+            
+            if ($coffee == null) {
+                throw new \Exception("Could not find matching item");
+            } else if ($coffee->getAvailableamount() <= 1) {
+                throw new \Exception("Cannot Decrement further");
+            } else {
+                $coffee->setAvailableamount($coffee->getAvailableamount() - 1);
+                $this->coffeeRepo->update($coffee);
+                return $this->coffeeViewRepo->findOneBy(['coffeekey' => $coffeeKey]);
+            }
+        }
+        
+        public function toggleActive($coffeeKey) {
+            $coffee = $this->coffeeRepo->fetch($coffeeKey);
+            
+            if ($coffee == null) {
+                throw new \Exception("Could not find matching item");
+            } else {
+                $coffee->setActive($coffee->getActive() == 0 ? 1 : 0);
                 $this->updateCoffee($coffee);
+                return $this->coffeeViewRepo->findOneBy(['coffeekey' => $coffeeKey]);
             }
         }
 

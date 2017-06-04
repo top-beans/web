@@ -4,7 +4,7 @@ angular.module('buyOrSample')
 
 .component('buyOrSample', {
     templateUrl: '/angular/modules/buyOrSample/buyOrSample.template.html',
-    controller: ['$http', '$uibModal', function ($http, $uibModal) {
+    controller: ['$http', '$uibModal', 'coffeeService', function ($http, $uibModal, coffeeService) {
         var self = this;
 
         self.$onInit = function () {
@@ -15,9 +15,13 @@ angular.module('buyOrSample')
         
         self.getCoffees = function() {
             self.loading = true;
-            $http.get('/api/CoffeeApi/getallactive').then(function (response) {
+            coffeeService.getActiveCoffees(function (data) {
                 self.loading = false;
-                self.coffees = _(response.data.items).map(function (x) { return new models.coffee(x); }).sortBy(['cuppingscore']).reverse().value();
+                if (!data.success) {
+                    toastrErrorFromList(data.errors);
+                } else {
+                    self.coffees = _(data.items).map(function (x) { return new models.coffee(x); }).sortBy(['cuppingscore']).reverse().value();
+                }
             });
         };
 
