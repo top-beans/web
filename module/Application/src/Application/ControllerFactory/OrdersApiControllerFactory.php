@@ -15,7 +15,6 @@ namespace Application\ControllerFactory {
             $authService = $serviceLocator->get('AdminAuthService');
             $serializer = SerializerBuilder::create()->build();
             $ordersRepo = $serviceLocator->get('OrdersRepo');
-            $emailSvc = $serviceLocator->get('EMailSvc');
             $usersRepo = $serviceLocator->get('UsersRepo');
             $sessionManager = $serviceLocator->get('SessionManager');
             $config = $serviceLocator->get('Config');
@@ -23,7 +22,7 @@ namespace Application\ControllerFactory {
             $worldPayServiceKey = $config["WorldPayServiceKey"];
             $settlementCurrency = $config["SettlementCurrency"];
             
-            return new OrdersApiController($navRepo, $authService, $serializer, $ordersRepo, $emailSvc, $usersRepo, $sessionManager, $maxLoginTries, $worldPayServiceKey, $settlementCurrency);
+            return new OrdersApiController($navRepo, $authService, $serializer, $ordersRepo, $usersRepo, $sessionManager, $maxLoginTries, $worldPayServiceKey, $settlementCurrency);
         }
     }
 }

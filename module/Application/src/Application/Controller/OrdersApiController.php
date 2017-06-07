@@ -23,11 +23,6 @@ namespace Application\Controller {
         private $ordersRepo;
         
         /**
-         * @var IEMailService
-         */
-        private $emailSvc;
-        
-        /**
          * @var IUsersRepository
          */
         private $usersRepository;
@@ -47,10 +42,9 @@ namespace Application\Controller {
          */
         private $worldPayServiceKey;
         
-        public function __construct(AbstractContainer $navService, AuthenticationServiceInterface $authService, SerializerInterface $serializer, IOrdersRepository $ordersRepo, IEMailService $emailSvc, IUsersRepository $usersRepository, ManagerInterface $sessionManager, $maxLoginTries, $worldPayServiceKey, $settlementCurrency) {
+        public function __construct(AbstractContainer $navService, AuthenticationServiceInterface $authService, SerializerInterface $serializer, IOrdersRepository $ordersRepo, IUsersRepository $usersRepository, ManagerInterface $sessionManager, $maxLoginTries, $worldPayServiceKey, $settlementCurrency) {
             parent::__construct($navService, $authService, $serializer);
             $this->ordersRepo = $ordersRepo;
-            $this->emailSvc = $emailSvc;
             $this->usersRepository = $usersRepository;
             $this->sessionManager = $sessionManager;
             $this->maxLoginTries = $maxLoginTries;
