@@ -5,7 +5,6 @@ namespace Application\Controller {
     use Zend\Navigation\AbstractContainer;
     use Zend\Authentication\AuthenticationServiceInterface;
     use JMS\Serializer\SerializerInterface;
-    use Application\API\Canonicals\Entity\Address;
     use Application\API\Canonicals\Entity\OrderStatuses;
     use Application\API\Canonicals\Response\ResponseUtils;
     use Application\API\Repositories\Interfaces\IOrdersRepository;
@@ -109,10 +108,6 @@ namespace Application\Controller {
                 $orderResult = $this->ordersRepo->addAnonymousOrder($data->cookie, $data->deliveryaddress, $data->billingaddress);
                 
                 if (!$orderResult->requirespayment) {
-                    $shoppersCopy = $this->ordersRepo->createReceivedEmail($orderResult->groupkey);
-                    $topbeansCopy = $this->ordersRepo->createNewOrderAlertEmail($orderResult->groupkey);
-                    $this->emailSvc->sendMail($shoppersCopy);
-                    $this->emailSvc->sendMail($topbeansCopy);
                     $this->addFlashSuccessMsgs([FlashMessages::OrderComplete]);
                 }
                 
@@ -187,10 +182,6 @@ namespace Application\Controller {
 
                 if ($wpResponse["paymentStatus"] == "SUCCESS") {
                     $this->ordersRepo->receiveOrderByCookie($data->cookiekey);
-                    $shoppersCopy = $this->ordersRepo->createReceivedEmail($groupKey);
-                    $topbeansCopy = $this->ordersRepo->createNewOrderAlertEmail($groupKey);
-                    $this->emailSvc->sendMail($shoppersCopy);
-                    $this->emailSvc->sendMail($topbeansCopy);
                     $this->addFlashSuccessMsgs([FlashMessages::OrderComplete]);
                 }
                 

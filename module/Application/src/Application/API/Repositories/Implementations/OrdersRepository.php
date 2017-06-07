@@ -17,6 +17,7 @@ namespace Application\API\Repositories\Implementations {
     use Application\API\Canonicals\Entity\OrderStatuses;
     use Application\API\Repositories\Base\IRepository;
     use Application\API\Repositories\Base\Repository;
+    use Application\API\Repositories\Interfaces\IEMailService;
     use Application\API\Repositories\Interfaces\IOrdersRepository;
     use Application\API\Canonicals\Dto\EmailRequest;
 
@@ -26,6 +27,11 @@ namespace Application\API\Repositories\Implementations {
          * @var EntityManagerInterface 
          */
         private $em;
+        
+        /**
+         * @var IEMailService
+         */
+        private $emailSvc;
         
         /**
          * @var IRepository
@@ -82,8 +88,9 @@ namespace Application\API\Repositories\Implementations {
          */
         private $isDevelopment;
         
-        public function __construct(EntityManagerInterface $em, $supportEmail, $domainName, $isDevelopment) {
+        public function __construct(EntityManagerInterface $em, IEMailService $emailSvc, $supportEmail, $domainName, $isDevelopment) {
             $this->em = $em;
+            $this->emailSvc = $emailSvc;
             $this->ordersRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Order()))));
             $this->customerRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Customer()))));
             $this->userRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new User()))));
@@ -187,6 +194,11 @@ namespace Application\API\Repositories\Implementations {
                 if(!$orderResult->requirespayment) {
                     $this->em->createQuery("UPDATE Application\API\Canonicals\Entity\Order o SET o.shoppingcartkey=null WHERE o.groupkey='$orderResult->groupkey'")->execute();
                     $this->cartRepo->deleteList($this->cartRepo->findBy(['cookiekey' => $cookieKey]));
+                    
+                    $shoppersCopy = $this->createReceivedEmail($orderResult->groupkey);
+                    $topbeansCopy = $this->createNewOrderAlertEmail($orderResult->groupkey);
+                    $this->emailSvc->sendMail($shoppersCopy);
+                    $this->emailSvc->sendMail($topbeansCopy);
                 }
 
                 $this->em->flush();
@@ -216,6 +228,11 @@ namespace Application\API\Repositories\Implementations {
                 
                 $this->cartRepo->deleteList($this->cartRepo->findBy(['cookiekey' => $cookie]));
 
+                $shoppersCopy = $this->createReceivedEmail($groupkey);
+                $topbeansCopy = $this->createNewOrderAlertEmail($groupkey);
+                $this->emailSvc->sendMail($shoppersCopy);
+                $this->emailSvc->sendMail($topbeansCopy);
+                
                 $this->em->flush();
                 $this->em->getConnection()->commit();
                 

@@ -1,1 +1,70 @@
+<div class="shell">
+    <div class="range">
+        <div class="cell-xs-12">
 
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th class="col-md-5">Delivery Address</th>
+                        <th class="col-md-3">Order</th>
+                        <th class="col-md-2">Date</th>
+                        <th class="col-md-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="group in $ctrl.orderGroups">
+                        <td>
+                            {{group.deliveryfirstname}} {{group.deliverylastname}}<br/>
+                            {{group.deliveryaddress1}} {{group.deliveryaddress2}}<br/>
+                            {{group.deliverycity}} {{group.deliverystate}}<br/>
+                            {{group.deliverypostcode}}<br/>
+                            {{group.deliverycountry}}
+                        </td>
+                        <td>
+                            <div ng-repeat="item in group.items">
+                                <div>{{group.name}}</div>
+                                <div>
+                                    <span ng-if="item.ispurchase">Purchase</span>
+                                    <span ng-if="item.ispaidsample">Sample</span>
+                                    <span ng-if="item.isfreesample">Sample (Free)</span>
+                                </div>
+                                <div>
+                                    <span ng-if="item.ispurchase">{{item.quantity}} &times; {{item.packagingunit}}</span>
+                                    <span ng-if="item.issample">{{item.quantity}} {{item.pricebaseunit}}</span>
+                                </div>
+                                
+                            </div>
+                            
+                        </td>
+                        <td>{{group.currency}}{{group.price}}/{{group.pricebaseunit}}</td>
+                        <td class="hidden-xs">{{(coffee.active ? 'Active' : 'Inactive')}}</td>
+                        <td class="cart-actions">
+                            <span ng-hide="group.incrementing" class="glyphicon glyphicon-plus-sign text-info"  ng-click="$ctrl.incrementCoffee(group)"></span>
+                            <span ng-show="group.incrementing" class="fa fa-spin fa-spinner"></span>
+                            
+                            <span ng-hide="group.decrementing" class="glyphicon glyphicon-minus-sign text-info"  ng-click="$ctrl.decrementCoffee(group)"></span>
+                            <span ng-show="group.decrementing" class="fa fa-spin fa-spinner"></span>
+                            
+                            <span ng-hide="group.toggling" class="glyphicon" 
+                                  ng-class="{ 'glyphicon-remove-circle text-danger': !group.active, 'glyphicon-ok-circle text-success': group.active }"
+                                  ng-click="$ctrl.toggleActive(group)"></span>
+                            <span ng-show="group.toggling" class="fa fa-spin fa-spinner"></span>
+                            
+                            <span class="glyphicon glyphicon-pencil"
+                                  ng-click="$ctrl.addOrEditCoffee(group)">
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="cell-xs-12">
+            <div class="text-right section-top-15">
+                <button type="button" class="btn btn-xs btn-primary" ng-click="$ctrl.addOrEditCoffee(null)">
+                    <span class="glyphicon glyphicon-plus"></span> Add
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
