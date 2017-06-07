@@ -96,6 +96,7 @@ class Orderview
     private $statuskey;
 
     /**
+     * @Type("string")
      * @var string
      *
      * @ORM\Column(name="groupKey", type="string", length=45, nullable=false)

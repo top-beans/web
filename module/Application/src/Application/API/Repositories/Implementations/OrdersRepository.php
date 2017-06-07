@@ -5,7 +5,9 @@ namespace Application\API\Repositories\Implementations {
     use Doctrine\ORM\EntityManagerInterface;
     use Doctrine\ORM\EntityRepository;
     use Doctrine\ORM\Mapping\ClassMetadata;
+    use Doctrine\Common\Collections\Criteria;
     use Application\API\Canonicals\Dto\OrderResult;
+    use Application\API\Canonicals\Dto\OrderSearch;
     use Application\API\Canonicals\Entity\Order;
     use Application\API\Canonicals\Entity\Customer;
     use Application\API\Canonicals\Entity\User;
@@ -14,6 +16,7 @@ namespace Application\API\Repositories\Implementations {
     use Application\API\Canonicals\Entity\Shoppingcartview;
     use Application\API\Canonicals\Entity\Shoppingcart;
     use Application\API\Canonicals\Entity\Orderview;
+    use Application\API\Canonicals\Entity\Orderheaderview;
     use Application\API\Canonicals\Entity\OrderStatuses;
     use Application\API\Repositories\Base\IRepository;
     use Application\API\Repositories\Base\Repository;
@@ -74,6 +77,11 @@ namespace Application\API\Repositories\Implementations {
         private $orderViewRepo;
         
         /**
+         * @var IRepository
+         */
+        private $orderHeaderViewRepo;
+        
+        /**
          * @var string
          */
         private $supportEmail;
@@ -99,6 +107,7 @@ namespace Application\API\Repositories\Implementations {
             $this->cartViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Shoppingcartview()))));
             $this->cartRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Shoppingcart()))));
             $this->orderViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Orderview()))));
+            $this->orderHeaderViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Orderheaderview()))));
             $this->supportEmail = $supportEmail;
             $this->domainName = $domainName;
             $this->isDevelopment = $isDevelopment;
@@ -366,6 +375,65 @@ namespace Application\API\Repositories\Implementations {
             $request->textbody = null;
             
             return $request;
+        }
+
+        public function getOrder($groupKey) {
+            $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
+        }
+
+        public function searchOrderHeaders(array $criteria, $page = 0, $pageSize = 10) {
+            $params = new OrderSearch($criteria);
+            $criteriaObj = new Criteria();
+
+            if ($params->getStatus() == OrderStatuses::Creating) {
+                $criteriaObj->andWhere($criteriaObj->expr()->eq('allcreating', 1));
+            } else if ($params->getStatus() == OrderStatuses::Received) {
+                $criteriaObj->andWhere($criteriaObj->expr()->eq('allreceived', 1));
+            } else if ($params->getStatus() == OrderStatuses::Dispatched) {
+                $criteriaObj->andWhere($criteriaObj->expr()->eq('alldispatched', 1));
+            }
+
+            if ($params->getSearchtext() != null) {
+                $criteriaObj->andWhere($criteriaObj->expr()->orX(
+                    $criteriaObj->expr()->contains('groupkey', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('deliveryfirstname', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('deliverylastname', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('deliveryaddress1', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('deliveryaddress2', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('deliveryaddress3', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('deliverypostcode', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('deliverycity', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('deliverystate', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('deliveryemail', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('deliveryphone', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('deliverycountry', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('billingfirstname', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('billinglastname', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('billingaddress1', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('billingaddress2', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('billingaddress3', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('billingpostcode', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('billingcity', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('billingstate', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('billingemail', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('billingphone', $params->getSearchtext()),
+                    $criteriaObj->expr()->contains('billingcountry', $params->getSearchtext())
+                ));
+            }
+            
+            return $this->orderHeaderViewRepo->searchByCriteria($criteriaObj, $page, $pageSize);
+        }
+
+        public function cancelOrder($groupkey) {
+        }
+
+        public function refundOrder($groupkey) {
+        }
+
+        public function deleteItem($groupkey, $coffeeKey) {
+        }
+
+        public function refundItem($groupkey, $coffeeKey) {
         }
     }
 }
