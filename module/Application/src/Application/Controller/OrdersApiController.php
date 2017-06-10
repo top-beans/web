@@ -5,10 +5,10 @@ namespace Application\Controller {
     use Zend\Navigation\AbstractContainer;
     use Zend\Authentication\AuthenticationServiceInterface;
     use JMS\Serializer\SerializerInterface;
+    use Application\API\Canonicals\Entity\Orderview;
     use Application\API\Canonicals\Entity\OrderStatuses;
     use Application\API\Canonicals\Response\ResponseUtils;
     use Application\API\Repositories\Interfaces\IOrdersRepository;
-    use Application\API\Repositories\Interfaces\IEMailService;
     use Application\API\Repositories\Interfaces\IUsersRepository;
     use Application\API\Canonicals\Constants\FlashMessages;
     use Worldpay\Worldpay;
@@ -61,7 +61,7 @@ namespace Application\Controller {
                 $jsonData = $this->getRequest()->getContent();
                 $params = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Dto\SearchParams", "json");
                 
-                $response = $this->ordersRepo->searchOrderHeaders($params->getCriteria(), $params->getPage(), $params->getPagesize());
+                $response = $this->ordersRepo->searchOrderHeaders($params->getCriteria(), $params->getOrderby(), $params->getPage(), $params->getPagesize());
                 return $this->jsonResponse($response);
                 
             } catch (\Exception $ex) {
@@ -77,7 +77,25 @@ namespace Application\Controller {
                 }
                 
                 $groupKey = $this->getRequest()->getContent();
-                $order = $this->ordersRepo->getOrder($groupKey);
+                $order = $groupKey == null ? new Orderview(): $this->ordersRepo->getOrder($groupKey);
+                
+                $response = ResponseUtils::responseItem($order);
+                return $this->jsonResponse($response);
+                
+            } catch (\Exception $ex) {
+                $response = ResponseUtils::createExceptionResponse($ex);
+                return $this->jsonResponse($response);
+            }
+        }
+        
+        public function getordertotalAction(){
+            try {
+                if (!$this->authService->hasIdentity()) {
+                    throw new \Exception("Unauthorized Access");
+                }
+                
+                $groupKey = $this->getRequest()->getContent();
+                $order = $this->ordersRepo->getOrderTotalByGroup($groupKey);
                 
                 $response = ResponseUtils::responseItem($order);
                 return $this->jsonResponse($response);

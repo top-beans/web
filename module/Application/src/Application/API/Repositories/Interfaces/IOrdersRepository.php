@@ -5,7 +5,7 @@ namespace Application\API\Repositories\Interfaces {
     use Application\API\Canonicals\Entity\Address;
     
     interface IOrdersRepository {
-        public function searchOrderHeaders(array $criteria, $page = 0, $pageSize = 10);
+        public function searchOrderHeaders(array $criteria, array $orderBy = null, $page = 0, $pageSize = 10);
         public function getOrder($groupKey);
         
         public function deleteItem($groupkey, $coffeeKey);
@@ -13,6 +13,7 @@ namespace Application\API\Repositories\Interfaces {
         public function cancelOrder($groupKey);
         public function refundOrder($groupKey);
         
+        public function getNewGroupKey();
         public function getGroupByCookie($cookie);
         public function getCustomerByGroup($groupKey);
         public function getAddress($key);

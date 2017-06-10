@@ -145,6 +145,23 @@ namespace Application\API\Repositories\Implementations {
             return $this->addressViewRepo->fetch($key);
         }
 
+        public function getNewGroupKey() {
+            $uniqid = uniqid();
+            $splits = [];
+            $index = 0;
+            $divisor = 4;
+            
+            for ($index = 0; $index + $divisor < strlen($uniqid); $index += $divisor) {
+                $splits[] = substr($uniqid, $index, $divisor);
+            }
+            
+            if ($index < strlen($uniqid)) {
+                $splits[] = substr($uniqid, $index, strlen($uniqid) - $index);
+            }
+            
+            return strtoupper(join('-', $splits));
+        }
+        
         public function addAnonymousOrder($cookieKey, Address $deliveryAddress, Address $billingAddress) {
             
             try {
@@ -153,7 +170,7 @@ namespace Application\API\Repositories\Implementations {
                 $orderResult->groupkey = $this->getGroupByCookie($cookieKey);
 
                 if ($orderResult->groupkey == null) {
-                    $orderResult->groupkey = uniqid();
+                    $orderResult->groupkey = $this->getNewGroupKey();
                     $customer = new Customer();
 
                     $this->addressRepo->add($deliveryAddress);
@@ -178,12 +195,10 @@ namespace Application\API\Repositories\Implementations {
                 foreach($cartItems as $cartItem) {
                     $order = new Order();
                     $order->setGroupkey($orderResult->groupkey);
+                    $order->setStatuskey(OrderStatuses::Creating);
 
-                    if ($cartItem->getIsfreesample()) { 
-                        $order->setStatuskey(OrderStatuses::Received);
-                    } else {
+                    if (!$cartItem->getIsfreesample()) { 
                         $orderResult->requirespayment = true; 
-                        $order->setStatuskey(OrderStatuses::Creating);
                     }
 
                     $order->setCustomerkey($customer->getCustomerkey());
@@ -200,8 +215,8 @@ namespace Application\API\Repositories\Implementations {
                     $orders[] = $order;
                 }
 
-                if(!$orderResult->requirespayment) {
-                    $this->em->createQuery("UPDATE Application\API\Canonicals\Entity\Order o SET o.shoppingcartkey=null WHERE o.groupkey='$orderResult->groupkey'")->execute();
+                if(!$orderResult->requirespayment) {                    
+                    $this->em->createQuery("UPDATE Application\API\Canonicals\Entity\Order o SET o.shoppingcartkey=null, statuskey=2 WHERE o.groupkey='$orderResult->groupkey'")->execute();
                     $this->cartRepo->deleteList($this->cartRepo->findBy(['cookiekey' => $cookieKey]));
                     
                     $shoppersCopy = $this->createReceivedEmail($orderResult->groupkey);
@@ -381,7 +396,7 @@ namespace Application\API\Repositories\Implementations {
             $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
         }
 
-        public function searchOrderHeaders(array $criteria, $page = 0, $pageSize = 10) {
+        public function searchOrderHeaders(array $criteria, array $orderBy = null, $page = 0, $pageSize = 10) {
             $params = new OrderSearch($criteria);
             $criteriaObj = new Criteria();
 
@@ -419,6 +434,10 @@ namespace Application\API\Repositories\Implementations {
                     $criteriaObj->expr()->contains('billingphone', $params->getSearchtext()),
                     $criteriaObj->expr()->contains('billingcountry', $params->getSearchtext())
                 ));
+            }
+            
+            if ($orderBy != null) {
+                $criteriaObj->orderBy($orderBy);
             }
             
             return $this->orderHeaderViewRepo->searchByCriteria($criteriaObj, $page, $pageSize);

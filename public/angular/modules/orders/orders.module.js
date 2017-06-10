@@ -1,3 +1,7 @@
 'use strict';
 
-angular.module('orders', []);
+angular.module('orders', [
+    'angularMoment',
+    'ui.bootstrap',
+    'orderService'
+]);

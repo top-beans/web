@@ -64,6 +64,38 @@ class Orderheaderview
     private $alldispatched;
 
     /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="allCancelled", type="integer", nullable=false)
+     */
+    private $allcancelled;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="allSentForRefund", type="integer", nullable=false)
+     */
+    private $allsentforrefund;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="allRefunded", type="integer", nullable=false)
+     */
+    private $allrefunded;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="allMixed", type="integer", nullable=false)
+     */
+    private $allmixed;
+
+    /**
      * @Type("string")
      * @var string
      *
@@ -71,6 +103,22 @@ class Orderheaderview
      */
     private $totalprice;
     
+    /**
+     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updatedDate", type="datetime", nullable=true)
+     */
+    private $updateddate;
+
+    /**
+     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="createdDate", type="datetime", nullable=false)
+     */
+    private $createddate;
+
     /**
      * @Type("integer")
      * @var integer
@@ -302,7 +350,13 @@ class Orderheaderview
     function getAllcreating() { return $this->allcreating; }
     function getAllreceived() { return $this->allreceived; }
     function getAlldispatched() { return $this->alldispatched; }
+    function getAllcancelled() { return $this->allcancelled; }
+    function getAllsentforrefund() { return $this->allsentforrefund; }
+    function getAllrefunded() { return $this->allrefunded; }
+    function getAllmixed() { return $this->allmixed; }
     function getTotalprice() { return $this->totalprice; }
+    function getUpdateddate() { return $this->updateddate; }
+    function getCreateddate() { return $this->createddate; }
     function getDeliveryaddresskey() { return $this->deliveryaddresskey; }
     function getBillingaddresskey() { return $this->billingaddresskey; }
     function getDeliveryfirstname() { return $this->deliveryfirstname; }
@@ -338,7 +392,13 @@ class Orderheaderview
     function setAllcreating($val) { $this->allcreating = $val; }
     function setAllreceived($val) { $this->allreceived = $val; }
     function setAlldispatched($val) { $this->alldispatched = $val; }
+    function setAllcancelled($val) { $this->allcancelled = $val; }
+    function setAllsentforrefund($val) { $this->allsentforrefund = $val; }
+    function setAllrefunded($val) { $this->allrefunded = $val; }
+    function setAllmixed($val) { $this->allmixed = $val; }
     function setTotalprice($val) { $this->totalprice = $val; }
+    function setUpdateddate($val) { $this->updateddate = $val; } 
+    function setCreateddate($val) { $this->createddate = $val; }
     function setDeliveryaddresskey($val) { $this->deliveryaddresskey = $val; }
     function setBillingaddresskey($val) { $this->billingaddresskey = $val; }
     function setDeliveryfirstname($val) { $this->deliveryfirstname = $val; }

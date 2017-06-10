@@ -6,6 +6,7 @@ namespace Application\API\Canonicals\Entity {
         const Received = 2;
         const Dispatched = 3;
         const Cancelled = 4;
-        const Refunded = 5;
+        const SentForRefund = 5;
+        const Refunded = 6;
     }
 }

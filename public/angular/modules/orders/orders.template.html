@@ -5,53 +5,46 @@
             <table class="table table-condensed">
                 <thead>
                     <tr>
-                        <th class="col-md-5">Delivery Address</th>
-                        <th class="col-md-3">Order</th>
+                        <th class="col-md-2">Order</th>
+                        <th class="col-md-4">Delivery Address</th>
+                        <th class="col-md-1">Total</th>
                         <th class="col-md-2">Date</th>
                         <th class="col-md-2">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="group in $ctrl.orderGroups">
+                    <tr ng-repeat="orderHeader in $ctrl.orderHeaders">
                         <td>
-                            {{group.deliveryfirstname}} {{group.deliverylastname}}<br/>
-                            {{group.deliveryaddress1}} {{group.deliveryaddress2}}<br/>
-                            {{group.deliverycity}} {{group.deliverystate}}<br/>
-                            {{group.deliverypostcode}}<br/>
-                            {{group.deliverycountry}}
-                        </td>
-                        <td>
-                            <div ng-repeat="item in group.items">
-                                <div>{{group.name}}</div>
-                                <div>
-                                    <span ng-if="item.ispurchase">Purchase</span>
-                                    <span ng-if="item.ispaidsample">Sample</span>
-                                    <span ng-if="item.isfreesample">Sample (Free)</span>
-                                </div>
-                                <div>
-                                    <span ng-if="item.ispurchase">{{item.quantity}} &times; {{item.packagingunit}}</span>
-                                    <span ng-if="item.issample">{{item.quantity}} {{item.pricebaseunit}}</span>
-                                </div>
-                                
+                            <div><strong>{{orderHeader.groupkey}}</strong></div>
+                            <div>
+                                <strong>Status:</strong>
+                                <span ng-if="orderHeader.allcreating">Creating</span>
+                                <span ng-if="orderHeader.allreceived">Received</span>
+                                <span ng-if="orderHeader.alldispatched">Dispatched</span>
+                                <span ng-if="orderHeader.allcancelled">Cancelled</span>
+                                <span ng-if="orderHeader.allsentforrefund">Sent For Refund</span>
+                                <span ng-if="orderHeader.allrefunded">Refunded</span>
+                                <span ng-if="orderHeader.allmixed">Mixed</span>
                             </div>
-                            
                         </td>
-                        <td>{{group.currency}}{{group.price}}/{{group.pricebaseunit}}</td>
-                        <td class="hidden-xs">{{(coffee.active ? 'Active' : 'Inactive')}}</td>
+                        <td>
+                            {{orderHeader.deliveryfirstname}} {{orderHeader.deliverylastname}}<br/>
+                            {{orderHeader.deliveryaddress1}} {{orderHeader.deliveryaddress2}}<br/>
+                            {{orderHeader.deliverycity}} {{orderHeader.deliverystate}}<br/>
+                            {{orderHeader.deliverypostcode}}<br/>
+                            {{orderHeader.deliverycountry}}
+                        </td>
+                        <td>&pound;{{orderHeader.totalprice}}</td>
+                        <td>{{orderHeader.createddate | amDateFormat: 'DD/MMM/YYYY'}}</td>
                         <td class="cart-actions">
-                            <span ng-hide="group.incrementing" class="glyphicon glyphicon-plus-sign text-info"  ng-click="$ctrl.incrementCoffee(group)"></span>
-                            <span ng-show="group.incrementing" class="fa fa-spin fa-spinner"></span>
-                            
-                            <span ng-hide="group.decrementing" class="glyphicon glyphicon-minus-sign text-info"  ng-click="$ctrl.decrementCoffee(group)"></span>
-                            <span ng-show="group.decrementing" class="fa fa-spin fa-spinner"></span>
-                            
-                            <span ng-hide="group.toggling" class="glyphicon" 
-                                  ng-class="{ 'glyphicon-remove-circle text-danger': !group.active, 'glyphicon-ok-circle text-success': group.active }"
-                                  ng-click="$ctrl.toggleActive(group)"></span>
-                            <span ng-show="group.toggling" class="fa fa-spin fa-spinner"></span>
-                            
-                            <span class="glyphicon glyphicon-pencil"
-                                  ng-click="$ctrl.addOrEditCoffee(group)">
+                            <span ng-hide="orderHeader.refunding" class="fa fa-undo text-primary" title="Refund Order" ng-click="$ctrl.refundOrder(orderHeader.groupkey)"></span>
+                            <span ng-show="orderHeader.refunding" class="fa fa-spin fa-spinner"></span>
+                            &nbsp;
+                            <span ng-hide="orderHeader.cancelling" class="glyphicon glyphicon-ban-circle text-danger" title="Cancel Order" ng-click="$ctrl.cancelOrder(orderHeader.groupkey)"></span>
+                            <span ng-show="orderHeader.cancelling" class="fa fa-spin fa-spinner"></span>
+                            &nbsp;
+                            <span class="glyphicon glyphicon-pencil" title="Edit Order" 
+                                  ng-click="$ctrl.addOrEditOrder(orderHeader.groupkey)">
                             </span>
                         </td>
                     </tr>
