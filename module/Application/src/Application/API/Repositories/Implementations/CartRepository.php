@@ -97,20 +97,32 @@ namespace Application\API\Repositories\Implementations {
         }
 
         public function deleteFromCart($cookiekey, $coffeeKey) {
-            $items = $this->cartRepo->findBy(['cookiekey' => $cookiekey, 'coffeekey' => $coffeeKey]);
-            
-            if ($items == null || count($items) == 0) {
-                return;
-            }
+            try {
+                $this->em->getConnection()->beginTransaction();
+                
+                $items = $this->cartRepo->findBy(['cookiekey' => $cookiekey, 'coffeekey' => $coffeeKey]);
 
-            foreach ($items as $item) {
-                $order = $this->ordersRepo->findOneBy(['shoppingcartkey' => $item->getShoppingcartkey()]);
-                if ($order != null) {
-                    $this->ordersRepo->delete($order);
+                if ($items == null || count($items) == 0) {
+                    return;
                 }
+
+                foreach ($items as $item) {
+                    $order = $this->ordersRepo->findOneBy(['shoppingcartkey' => $item->getShoppingcartkey()]);
+                    if ($order != null) {
+                        $this->ordersRepo->delete($order);
+                    }
+                }
+
+                $this->cartRepo->deleteList($items);
+                
+                $this->em->flush();
+                $this->em->getConnection()->commit();
+
+            } catch (\Exception $ex) {
+                $this->em->getConnection()->rollBack();
+                throw $ex;
             }
             
-            $this->cartRepo->deleteList($items);
         }
 
         public function getCart($cookieKey) {
