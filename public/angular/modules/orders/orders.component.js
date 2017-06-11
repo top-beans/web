@@ -50,12 +50,32 @@ angular.module('orders')
             }
         };
         
-        self.refundOrder = function (groupKey) {
-            
+        self.refundOrder = function (orderHeader) {
+            orderHeader.refunding  = true;
+            orderService.refundOrder(orderHeader.groupkey, function (data) {
+                orderHeader.refunding = false;
+                if (!data.success) {
+                    toastrErrorFromList(data.errors);
+                } else {
+                    if (data.warnings.length) toastrWarningFromList(data.warnings);
+                    var index = _.findIndex(self.orderHeaders, function (o) { return o.groupkey === orderHeader.groupkey; });
+                    self.orderHeaders.splice(index, 1, data.item);
+                }
+            });
         };
         
-        self.cancelOrder = function (groupKey) {
-            
+        self.cancelOrder = function (orderHeader) {
+            orderHeader.cancelling  = true;
+            orderService.cancelOrder(orderHeader.groupkey, function (data) {
+                orderHeader.cancelling = false;
+                if (!data.success) {
+                    toastrErrorFromList(data.errors);
+                } else {
+                    if (data.warnings.length) toastrWarningFromList(data.warnings);
+                    var index = _.findIndex(self.orderHeaders, function (o) { return o.groupkey === orderHeader.groupkey; });
+                    self.orderHeaders.splice(index, 1, data.item);
+                }
+            });
         };
         
         self.addOrEditOrder = function (groupKey) {
@@ -66,7 +86,7 @@ angular.module('orders')
                 controllerAs: "$mctrl",
                 openedClass: 'page modal-open',
                 resolve: {
-                    coffee: groupKey
+                    groupKey: groupKey
                 }
             }).result.then(function (newOrder) {
                 if (!newOrder) {

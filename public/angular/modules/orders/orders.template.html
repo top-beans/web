@@ -37,10 +37,10 @@
                         <td>&pound;{{orderHeader.totalprice}}</td>
                         <td>{{orderHeader.createddate | amDateFormat: 'DD/MMM/YYYY'}}</td>
                         <td class="cart-actions">
-                            <span ng-hide="orderHeader.refunding" class="fa fa-undo text-info" title="Refund Order" ng-click="$ctrl.refundOrder(orderHeader.groupkey)"></span>
+                            <span ng-hide="orderHeader.refunding" class="glyphicon glyphicon-repeat text-info" title="Refund Order" ng-click="$ctrl.refundOrder(orderHeader)"></span>
                             <span ng-show="orderHeader.refunding" class="fa fa-spin fa-spinner"></span>
                             
-                            <span ng-hide="orderHeader.cancelling" class="glyphicon glyphicon-ban-circle text-danger" title="Cancel Order" ng-click="$ctrl.cancelOrder(orderHeader.groupkey)"></span>
+                            <span ng-hide="orderHeader.cancelling" class="glyphicon glyphicon-ban-circle text-danger" title="Cancel Order" ng-click="$ctrl.cancelOrder(orderHeader)"></span>
                             <span ng-show="orderHeader.cancelling" class="fa fa-spin fa-spinner"></span>
                             
                             <span class="glyphicon glyphicon-pencil" title="Edit Order" 

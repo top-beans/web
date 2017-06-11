@@ -113,289 +113,6 @@ namespace Application\API\Repositories\Implementations {
             $this->isDevelopment = $isDevelopment;
         }
 
-        public function getGroupByCookie($cookieKey) {
-            $cartItems = $this->cartRepo->findBy(['cookiekey' => $cookieKey]);
-            
-            if (count($cartItems) == 0) {
-                return null;
-            }
-            
-            $shoppingCartKey = $cartItems[0]->getShoppingcartkey();
-            $orderItems = $this->ordersRepo->findBy(['shoppingcartkey' => $shoppingCartKey]);
-            
-            if (count($orderItems) == 0) {
-                return null;
-            }
-            
-            return $orderItems[0]->getGroupkey();
-        }
-        
-        public function getCustomerByGroup($groupKey) {
-            $orders = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
-            
-            if (count($orders) == 0) {
-                return null;
-            } else {
-                $customerKey = $orders[0]->getCustomerkey();
-                return $this->customerRepo->fetch($customerKey);
-            }
-        }
-
-        public function getAddress($key) {
-            return $this->addressViewRepo->fetch($key);
-        }
-
-        public function getNewGroupKey() {
-            $uniqid = uniqid();
-            $splits = [];
-            $index = 0;
-            $divisor = 4;
-            
-            for ($index = 0; $index + $divisor < strlen($uniqid); $index += $divisor) {
-                $splits[] = substr($uniqid, $index, $divisor);
-            }
-            
-            if ($index < strlen($uniqid)) {
-                $splits[] = substr($uniqid, $index, strlen($uniqid) - $index);
-            }
-            
-            return strtoupper(join('-', $splits));
-        }
-        
-        public function addAnonymousOrder($cookieKey, Address $deliveryAddress, Address $billingAddress) {
-            
-            try {
-                $this->em->getConnection()->beginTransaction();
-                $orderResult = new OrderResult();
-                $orderResult->groupkey = $this->getGroupByCookie($cookieKey);
-
-                if ($orderResult->groupkey == null) {
-                    $orderResult->groupkey = $this->getNewGroupKey();
-                    $customer = new Customer();
-
-                    $this->addressRepo->add($deliveryAddress);
-                    $this->addressRepo->add($billingAddress);
-                    $customer->setDeliveryaddresskey($deliveryAddress->getAddresskey());
-                    $customer->setBillingaddresskey($billingAddress->getAddresskey());
-                    $this->customerRepo->add($customer);
-                } else {
-                    $customer = $this->getCustomerByGroup($orderResult->groupkey);
-                    $deliveryAddress->setAddresskey($customer->getDeliveryaddresskey());
-                    $billingAddress->setAddresskey($customer->getBillingaddresskey());
-                    $this->addressRepo->update($deliveryAddress);
-                    $this->addressRepo->update($billingAddress);
-                    $this->ordersRepo->deleteList($this->ordersRepo->findBy(['groupkey' => $orderResult->groupkey]));
-                }
-
-                $cartItems = $this->cartViewRepo->findBy(['cookiekey' => $cookieKey]);
-                $createdDate = new \DateTime("now", new \DateTimeZone("UTC"));
-                $orderResult->requirespayment = false;
-                $orders = [];
-
-                foreach($cartItems as $cartItem) {
-                    $order = new Order();
-                    $order->setGroupkey($orderResult->groupkey);
-                    $order->setStatuskey(OrderStatuses::Creating);
-
-                    if (!$cartItem->getIsfreesample()) { 
-                        $orderResult->requirespayment = true; 
-                    }
-
-                    $order->setCustomerkey($customer->getCustomerkey());
-                    $order->setCoffeekey($cartItem->getCoffeekey());
-                    $order->setRequestypekey($cartItem->getRequesttypekey());
-                    $order->setQuantity($cartItem->getQuantity());
-                    $order->setPrice($cartItem->getPrice());
-                    $order->setPricebaseunit($cartItem->getPricebaseunit());
-                    $order->setPackagingunit($cartItem->getPackagingunit());
-                    $order->setItemprice($cartItem->getItemprice());
-                    $order->setShoppingcartkey($cartItem->getShoppingcartkey());
-                    $order->setCreateddate($createdDate);
-                    $this->ordersRepo->add($order);
-                    $orders[] = $order;
-                }
-
-                if(!$orderResult->requirespayment) {                    
-                    $this->em->createQuery("UPDATE Application\API\Canonicals\Entity\Order o SET o.shoppingcartkey=null, statuskey=2 WHERE o.groupkey='$orderResult->groupkey'")->execute();
-                    $this->cartRepo->deleteList($this->cartRepo->findBy(['cookiekey' => $cookieKey]));
-                    
-                    $shoppersCopy = $this->createReceivedEmail($orderResult->groupkey);
-                    $topbeansCopy = $this->createNewOrderAlertEmail($orderResult->groupkey);
-                    $this->emailSvc->sendMail($shoppersCopy);
-                    $this->emailSvc->sendMail($topbeansCopy);
-                }
-
-                $this->em->flush();
-                $this->em->getConnection()->commit();
-                
-                return $orderResult;
-                
-            } catch (\Exception $ex) {
-                $this->em->getConnection()->rollBack();
-                throw $ex;
-            }
-        }
-        
-        public function receiveOrderByCookie($cookie) {
-            try {
-                $this->em->getConnection()->beginTransaction();
-                
-                $groupkey = $this->getGroupByCookie($cookie);
-                $orders = $this->ordersRepo->findBy(['groupkey' => $groupkey]);
-                
-                foreach ($orders as $order) {
-                    $order->setShoppingcartkey(null);
-                    $order->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
-                    $order->setStatuskey(OrderStatuses::Received);
-                    $this->ordersRepo->add($order);
-                }
-                
-                $this->cartRepo->deleteList($this->cartRepo->findBy(['cookiekey' => $cookie]));
-
-                $shoppersCopy = $this->createReceivedEmail($groupkey);
-                $topbeansCopy = $this->createNewOrderAlertEmail($groupkey);
-                $this->emailSvc->sendMail($shoppersCopy);
-                $this->emailSvc->sendMail($topbeansCopy);
-                
-                $this->em->flush();
-                $this->em->getConnection()->commit();
-                
-            } catch (\Exception $ex) {
-                $this->em->getConnection()->rollBack();
-                throw $ex;
-            }
-        }
-
-        public function getOrderTotalByCookie($cookie, $status = null) {
-            $groupkey = $this->getGroupByCookie($cookie);
-            
-            if ($status == null) {
-                $orders = $this->orderViewRepo->findBy(['groupkey' => $groupkey]);
-            } else {
-                $orders = $this->orderViewRepo->findBy(['groupkey' => $groupkey, 'statuskey' => $status]);
-            }
-            
-            $total = 0;
-            
-            foreach($orders as $order) {
-                $total += $order->getItemPrice();
-            }
-            
-            return number_format($total, 2, '.', '');
-        }
-
-        public function getOrderTotalByGroup($groupkey, $status = null) {
-
-            if ($status == null) {
-                $orders = $this->orderViewRepo->findBy(['groupkey' => $groupkey]);
-            } else {
-                $orders = $this->orderViewRepo->findBy(['groupkey' => $groupkey, 'statuskey' => $status]);
-            }
-            
-            $total = 0;
-            
-            foreach($orders as $order) {
-                $total += $order->getItemPrice();
-            }
-            
-            return number_format($total, 2, '.', '');
-        }
-        
-        public function createDispatchedEmail($orderGroupKey) {
-            $orders = $this->orderViewRepo->findBy(['groupkey' => $orderGroupKey, 'statuskey' => OrderStatuses::Dispatched]);
-            
-            if (count($orders) == 0) {
-                throw new \Exception("Could not find the order required to prepare an Order Dispatch Email");
-            }
-            
-            $customer = $this->getCustomerByGroup($orderGroupKey);
-            $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
-            $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
-            $orderTotal = $this->getOrderTotalByGroup($orderGroupKey, OrderStatuses::Received);
-            
-            $template = new TemplateEngine("data/templates/order-dispatch.phtml", [
-                'domainPath' => $domainPath,
-                'orderGroupKey' => $orderGroupKey,
-                'orders' => $orders,
-                'orderTotal' => $orderTotal,
-                'deliveryAddress' => $deliveryAddress
-            ]);
-            
-            $request = new EmailRequest();
-            $request->recipient = $deliveryAddress->getEmail();
-            $request->subject = "Your TopBeans.co.uk Order has been Dispatched";
-            $request->htmlbody = $template->render();
-            $request->textbody = null;
-            
-            return $request;
-        }
-
-        public function createNewOrderAlertEmail($orderGroupKey) {
-            $orders = $this->orderViewRepo->findBy(['groupkey' => $orderGroupKey, 'statuskey' => OrderStatuses::Received]);
-            
-            if (count($orders) == 0) {
-                throw new \Exception("Could not find the order required to prepare an Order Alert Email");
-            }
-            
-            $customer = $this->getCustomerByGroup($orderGroupKey);
-            $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
-            $billingAddress = $this->addressViewRepo->fetch($customer->getBillingaddresskey());
-            $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
-            $orderTotal = $this->getOrderTotalByGroup($orderGroupKey, OrderStatuses::Received);
-            
-            $template = new TemplateEngine("data/templates/order-alert.phtml", [
-                'domainPath' => $domainPath,
-                'orderGroupKey' => $orderGroupKey,
-                'orders' => $orders,
-                'orderTotal' => $orderTotal,
-                'deliveryAddress' => $deliveryAddress,
-                'billingAddress' => $billingAddress
-            ]);
-            
-            $request = new EmailRequest();
-            $request->recipient = $deliveryAddress->getEmail();
-            $request->subject = "New Order Alert";
-            $request->htmlbody = $template->render();
-            $request->textbody = null;
-            
-            return $request;
-        }
-
-        public function createReceivedEmail($orderGroupKey) {
-            $orders = $this->orderViewRepo->findBy(['groupkey' => $orderGroupKey, 'statuskey' => OrderStatuses::Received]);
-            
-            if (count($orders) == 0) {
-                throw new \Exception("Could not find the order required to prepare an Order Received Confirmation Email");
-            }
-            
-            $customer = $this->getCustomerByGroup($orderGroupKey);
-            $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
-            $billingAddress = $this->addressViewRepo->fetch($customer->getBillingaddresskey());
-            $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
-            $orderTotal = $this->getOrderTotalByGroup($orderGroupKey, OrderStatuses::Received);
-            
-            $template = new TemplateEngine("data/templates/order-confirmation.phtml", [
-                'domainPath' => $domainPath,
-                'orderGroupKey' => $orderGroupKey,
-                'orders' => $orders,
-                'orderTotal' => $orderTotal,
-                'deliveryAddress' => $deliveryAddress,
-                'billingAddress' => $billingAddress
-            ]);
-            
-            $request = new EmailRequest();
-            $request->recipient = $deliveryAddress->getEmail();
-            $request->subject = "Your TopBeans.co.uk Order has been Received";
-            $request->htmlbody = $template->render();
-            $request->textbody = null;
-            
-            return $request;
-        }
-
-        public function getOrder($groupKey) {
-            $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
-        }
-
         public function searchOrderHeaders(array $criteria, array $orderBy = null, $page = 0, $pageSize = 10) {
             $params = new OrderSearch($criteria);
             $criteriaObj = new Criteria();
@@ -442,17 +159,513 @@ namespace Application\API\Repositories\Implementations {
             
             return $this->orderHeaderViewRepo->searchByCriteria($criteriaObj, $page, $pageSize);
         }
-
-        public function cancelOrder($groupkey) {
+        
+        public function getOrder($groupKey) {
+            $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
         }
 
-        public function refundOrder($groupkey) {
+        public function getNewGroupKey() {
+            do {
+                $uniqid = uniqid();
+                $splits = [];
+                $index = 0;
+                $divisor = 4;
+
+                for ($index = 0; $index + $divisor < strlen($uniqid); $index += $divisor) {
+                    $splits[] = substr($uniqid, $index, $divisor);
+                }
+
+                if ($index < strlen($uniqid)) {
+                    $splits[] = substr($uniqid, $index, strlen($uniqid) - $index);
+                }
+
+                $groupKey = strtoupper(join('-', $splits));
+                $duplicateFound = $this->ordersRepo->count(['groupkey' => $groupKey]) > 0;
+                
+            } while ($duplicateFound);
+            
+            return $groupKey;
+        }
+        
+        public function getGroupByCookie($cookieKey) {
+            $cartItems = $this->cartRepo->findBy(['cookiekey' => $cookieKey]);
+            
+            if (count($cartItems) == 0) {
+                return null;
+            }
+            
+            $shoppingCartKey = $cartItems[0]->getShoppingcartkey();
+            $orderItems = $this->ordersRepo->findBy(['shoppingcartkey' => $shoppingCartKey]);
+            
+            if (count($orderItems) == 0) {
+                return null;
+            }
+            
+            return $orderItems[0]->getGroupkey();
         }
 
-        public function deleteItem($groupkey, $coffeeKey) {
+        public function getCustomerByGroup($groupKey) {
+            $orders = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
+            
+            if (count($orders) == 0) {
+                return null;
+            } else {
+                $customerKey = $orders[0]->getCustomerkey();
+                return $this->customerRepo->fetch($customerKey);
+            }
         }
 
-        public function refundItem($groupkey, $coffeeKey) {
+        public function getAddress($key) {
+            return $this->addressViewRepo->fetch($key);
+        }
+        
+        public function getOrderTotalByCookie($cookie, $status = null) {
+            $groupKey = $this->getGroupByCookie($cookie);
+            
+            if ($status == null) {
+                $orders = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
+            } else {
+                $orders = $this->orderViewRepo->findBy(['groupkey' => $groupKey, 'statuskey' => $status]);
+            }
+            
+            $total = 0;
+            
+            foreach($orders as $order) {
+                $total += $order->getItemPrice();
+            }
+            
+            return number_format($total, 2, '.', '');
+        }
+
+        public function getOrderTotalByGroup($groupKey, $status = null) {
+
+            if ($status == null) {
+                $orders = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
+            } else {
+                $orders = $this->orderViewRepo->findBy(['groupkey' => $groupKey, 'statuskey' => $status]);
+            }
+            
+            $total = 0;
+            
+            foreach($orders as $order) {
+                $total += $order->getItemPrice();
+            }
+            
+            return number_format($total, 2, '.', '');
+        }
+        
+        
+        public function addAnonymousOrder($cookieKey, Address $deliveryAddress, Address $billingAddress) {
+            
+            try {
+                $this->em->getConnection()->beginTransaction();
+                $orderResult = new OrderResult();
+                $orderResult->groupkey = $this->getGroupByCookie($cookieKey);
+
+                if ($orderResult->groupkey == null) {
+                    $orderResult->groupkey = $this->getNewGroupKey();
+                    $customer = new Customer();
+
+                    $this->addressRepo->add($deliveryAddress);
+                    $this->addressRepo->add($billingAddress);
+                    $customer->setDeliveryaddresskey($deliveryAddress->getAddresskey());
+                    $customer->setBillingaddresskey($billingAddress->getAddresskey());
+                    $this->customerRepo->add($customer);
+                } else {
+                    $customer = $this->getCustomerByGroup($orderResult->groupkey);
+                    $deliveryAddress->setAddresskey($customer->getDeliveryaddresskey());
+                    $billingAddress->setAddresskey($customer->getBillingaddresskey());
+                    $this->addressRepo->update($deliveryAddress);
+                    $this->addressRepo->update($billingAddress);
+                    $this->ordersRepo->deleteList($this->ordersRepo->findBy(['groupkey' => $orderResult->groupkey]));
+                }
+
+                $cartItems = $this->cartViewRepo->findBy(['cookiekey' => $cookieKey]);
+                $createdDate = new \DateTime("now", new \DateTimeZone("UTC"));
+                $orderResult->requirespayment = false;
+
+                foreach($cartItems as $cartItem) {
+                    $order = new Order();
+                    $order->setGroupkey($orderResult->groupkey);
+                    $order->setStatuskey(OrderStatuses::Creating);
+
+                    if (!$cartItem->getIsfreesample()) { 
+                        $orderResult->requirespayment = true; 
+                    }
+
+                    $order->setCustomerkey($customer->getCustomerkey());
+                    $order->setCoffeekey($cartItem->getCoffeekey());
+                    $order->setRequestypekey($cartItem->getRequesttypekey());
+                    $order->setQuantity($cartItem->getQuantity());
+                    $order->setPrice($cartItem->getPrice());
+                    $order->setPricebaseunit($cartItem->getPricebaseunit());
+                    $order->setPackagingunit($cartItem->getPackagingunit());
+                    $order->setItemprice($cartItem->getItemprice());
+                    $order->setShoppingcartkey($cartItem->getShoppingcartkey());
+                    $order->setCreateddate($createdDate);
+                    $this->ordersRepo->add($order);
+                }
+
+                if(!$orderResult->requirespayment) {
+                    $this->receiveOrder($orderResult->groupkey);
+                }
+
+                $this->em->flush();
+                $this->em->getConnection()->commit();
+                
+                return $orderResult;
+                
+            } catch (\Exception $ex) {
+                $this->em->getConnection()->rollBack();
+                throw $ex;
+            }
+        }
+
+        public function addAdminOrder($cookieKey, Address $deliveryAddress, Address $billingAddress) {
+            throw new \Exception("Not implemented");
+        }
+        
+        
+        public function deleteItem($groupKey, $coffeeKey) {
+            $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+            
+            if ($orderItem == null) {
+                throw new \Exception("Could not find the coffee to delete");
+            } else if ($orderItem->getStatuskey() != OrderStatuses::Received) {
+                throw new \Exception("This operation is only available for Received orders");
+            }
+            
+            $this->ordersRepo->delete($orderItem);
+        }
+
+        public function requestItemRefund($groupKey, $coffeeKey) {
+            throw new \Exception("Not implemented");
+        }
+
+        public function refundItem($groupKey, $coffeeKey) {
+            $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+            
+            if ($orderItem == null) {
+                throw new \Exception("Could not find the coffee to refund");
+            } else if ($orderItem->getStatuskey() != OrderStatuses::Returned) {
+                throw new \Exception("This operation is only available for Returned orders");
+            }
+            
+            throw new \Exception ("Partialy implemented");
+        }
+        
+        public function returnItem($groupKey, $coffeeKey) {
+            throw new \Exception("Not implemented");
+        }
+
+        
+        public function dispatchOrder($groupKey) {
+            $this->em->transactional(function(EntityManagerInterface $em) use($groupKey) {
+                $orderHeader = $this->orderHeaderViewRepo->findOneBy(['groupkey' => $groupKey]);
+
+                if ($orderHeader == null) {
+                    throw new \Exception("Could not find the order to cancel");
+                } else if ($orderHeader->getAllreceived() != 1) {
+                    throw new \Exception("This operation is only available for Received orders");
+                }
+            
+                $orderItems = $this->ordersRepo->findBy(['groupkey' => $groupKey]);
+                
+                foreach($orderItems as $orderItem) {
+                    $orderItem->setStatuskey(OrderStatuses::Dispatched);
+                    $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
+                    $this->ordersRepo->update($orderItem);
+                }
+                
+                $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
+                $shoppersCopy = $this->createDispatchedEmail($orderViewItems, $groupKey);
+                $this->emailSvc->sendMail($shoppersCopy);
+            });
+        }
+
+        public function cancelOrder($groupKey) {
+            $this->em->transactional(function(EntityManagerInterface $em) use($groupKey) {
+                $orderHeader = $this->orderHeaderViewRepo->findOneBy(['groupkey' => $groupKey]);
+
+                if ($orderHeader == null) {
+                    throw new \Exception("Could not find the order to cancel");
+                } else if ($orderHeader->getAllreceived() != 1) {
+                    throw new \Exception("This operation is only available for Received orders");
+                }
+            
+                $orderItems = $this->ordersRepo->findBy(['groupkey' => $groupKey]);
+                
+                foreach($orderItems as $orderItem) {
+                    $orderItem->setStatuskey(OrderStatuses::Cancelled);
+                    $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
+                    $this->ordersRepo->update($orderItem);
+                }
+                
+                $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
+                $shoppersCopy = $this->createCancelledEmail($orderViewItems, $groupKey);
+                $this->emailSvc->sendMail($shoppersCopy);
+                
+                return $this->orderHeaderViewRepo->findOneBy(['groupkey' => $groupKey]);
+            });
+        }
+
+        public function returnOrder($groupKey) {
+            $this->em->transactional(function(EntityManagerInterface $em) use($groupKey) {
+                $orderHeader = $this->orderHeaderViewRepo->findOneBy(['groupkey' => $groupKey]);
+
+                if ($orderHeader == null) {
+                    throw new \Exception("Could not find the order to cancel");
+                } else if ($orderHeader->getAlldispatched() != 1) {
+                    throw new \Exception("This operation is only available for Dispatched orders");
+                }
+            
+                $orderItems = $this->ordersRepo->findBy(['groupkey' => $groupKey]);
+                
+                foreach($orderItems as $orderItem) {
+                    $orderItem->setStatuskey(OrderStatuses::Returned);
+                    $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
+                    $this->ordersRepo->update($orderItem);
+                }
+                
+                $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
+                $shoppersCopy = $this->createReturnedEmail($orderViewItems, $groupKey);
+                $this->emailSvc->sendMail($shoppersCopy);
+            });
+        }
+
+        public function requestOrderRefund($groupKey) {
+            
+        }
+
+        public function refundOrder($groupKey) {
+            $orderHeader = $this->orderHeaderViewRepo->findOneBy(['groupkey' => $groupKey]);
+            
+            if ($orderHeader == null) {
+                throw new \Exception("Could not find the order to cancel");
+            } else if ($orderHeader->getAllreturned() != 1) {
+                throw new \Exception("This operation is only available for Returned orders");
+            }
+            
+            throw new \Exception ("Partialy implemented");
+        }
+
+        public function receiveOrder($groupKey) {
+            $this->em->transactional(function(EntityManagerInterface $em) use($groupKey) {
+                $orderHeader = $this->orderHeaderViewRepo->findOneBy(['groupkey' => $groupKey]);
+
+                if ($orderHeader == null) {
+                    throw new \Exception("Could not find the order to receive");
+                } else if ($orderHeader->getAllcreating() != 1) {
+                    throw new \Exception("This operation is only available for non received orders (Creating)");
+                }
+            
+                $orderItems = $this->ordersRepo->findBy(['groupkey' => $groupKey]);
+                
+                foreach($orderItems as $orderItem) {
+                    $cartItem = $this->cartRepo->fetch($orderItem->getShoppingcartkey());
+                    $orderItem->setStatuskey(OrderStatuses::Received);
+                    $orderItem->setShoppingcartkey(null);
+                    $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
+                    $this->ordersRepo->update($orderItem);
+                    $this->cartRepo->delete($cartItem);
+                }
+                
+                $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
+                $shoppersCopy = $this->createReceivedEmail($orderViewItems, $groupKey);
+                $topbeansCopy = $this->createNewOrderAlertEmail($orderViewItems, $groupKey);
+                $this->emailSvc->sendMail($shoppersCopy);
+                $this->emailSvc->sendMail($topbeansCopy);
+            });
+        }
+
+        public function receiveOrderByCookie($cookie) {
+            $groupKey = $this->getGroupByCookie($cookie);
+            $this->receiveOrder($groupKey);
+        }
+        
+        
+        public function createReceivedEmail(array $orders, $orderGroupKey) {
+            
+            if (count($orders) == 0) {
+                throw new \Exception("Could not find the order required to prepare an Order Received Email");
+            }
+            
+            foreach($orders as $order) {
+                if ($order->getStatuskey() != OrderStatuses::Received) {
+                    throw new \Exception("This operation is only available for Received orders");
+                } else if ($order->getGroupkey() != $orderGroupKey) {
+                    throw new \Exception("Orders Items must be from same group");
+                }
+            }
+
+            $customer = $this->getCustomerByGroup($orderGroupKey);
+            $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
+            $billingAddress = $this->addressViewRepo->fetch($customer->getBillingaddresskey());
+            $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
+            $orderTotal = $this->getOrderTotalByGroup($orderGroupKey, OrderStatuses::Received);
+            
+            $template = new TemplateEngine("data/templates/order-confirmation.phtml", [
+                'domainPath' => $domainPath,
+                'orderGroupKey' => $orderGroupKey,
+                'orders' => $orders,
+                'orderTotal' => $orderTotal,
+                'deliveryAddress' => $deliveryAddress,
+                'billingAddress' => $billingAddress
+            ]);
+            
+            $request = new EmailRequest();
+            $request->recipient = $deliveryAddress->getEmail();
+            $request->subject = "Your TopBeans.co.uk Order has been Received";
+            $request->htmlbody = $template->render();
+            $request->textbody = null;
+            
+            return $request;
+        }
+        
+        public function createNewOrderAlertEmail(array $orders, $orderGroupKey) {
+            
+            if (count($orders) == 0) {
+                throw new \Exception("Could not find the order required to prepare an Order Received Email");
+            }
+            
+            foreach($orders as $order) {
+                if ($order->getStatuskey() != OrderStatuses::Received) {
+                    throw new \Exception("This operation is only available for Received orders");
+                } else if ($order->getGroupkey() != $orderGroupKey) {
+                    throw new \Exception("Orders Items must be from same group");
+                }
+            }
+
+            $customer = $this->getCustomerByGroup($orderGroupKey);
+            $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
+            $billingAddress = $this->addressViewRepo->fetch($customer->getBillingaddresskey());
+            $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
+            $orderTotal = $this->getOrderTotalByGroup($orderGroupKey, OrderStatuses::Received);
+            
+            $template = new TemplateEngine("data/templates/order-alert.phtml", [
+                'domainPath' => $domainPath,
+                'orderGroupKey' => $orderGroupKey,
+                'orders' => $orders,
+                'orderTotal' => $orderTotal,
+                'deliveryAddress' => $deliveryAddress,
+                'billingAddress' => $billingAddress
+            ]);
+            
+            $request = new EmailRequest();
+            $request->recipient = $deliveryAddress->getEmail();
+            $request->subject = "New Order Alert";
+            $request->htmlbody = $template->render();
+            $request->textbody = null;
+            
+            return $request;
+        }
+
+        public function createDispatchedEmail(array $orders, $orderGroupKey) {
+            
+            if (count($orders) == 0) {
+                throw new \Exception("Could not find the order required to prepare an Order Dispatch Email");
+            }
+            
+            foreach($orders as $order) {
+                if ($order->getStatuskey() != OrderStatuses::Dispatched) {
+                    throw new \Exception("This operation is only available for Dispatched orders");
+                } else if ($order->getGroupkey() != $orderGroupKey) {
+                    throw new \Exception("Orders Items must be from same group");
+                }
+            }
+
+            $customer = $this->getCustomerByGroup($orderGroupKey);
+            $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
+            $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
+            $orderTotal = $this->getOrderTotalByGroup($orderGroupKey, OrderStatuses::Dispatched);
+            
+            $template = new TemplateEngine("data/templates/order-dispatch.phtml", [
+                'domainPath' => $domainPath,
+                'orderGroupKey' => $orderGroupKey,
+                'orders' => $orders,
+                'orderTotal' => $orderTotal,
+                'deliveryAddress' => $deliveryAddress
+            ]);
+            
+            $request = new EmailRequest();
+            $request->recipient = $deliveryAddress->getEmail();
+            $request->subject = "Your TopBeans.co.uk Order has been Dispatched";
+            $request->htmlbody = $template->render();
+            $request->textbody = null;
+            
+            return $request;
+        }
+
+        public function createCancelledEmail(array $orders, $orderGroupKey) {
+            
+            if (count($orders) == 0) {
+                throw new \Exception("Could not find the order required to prepare an Order Cancel Email");
+            }
+            
+            foreach($orders as $order) {
+                if ($order->getStatuskey() != OrderStatuses::Cancelled) {
+                    throw new \Exception("This operation is only available for Cancelled orders");
+                } else if ($order->getGroupkey() != $orderGroupKey) {
+                    throw new \Exception("Orders Items must be from same group");
+                }
+            }
+
+            $customer = $this->getCustomerByGroup($orderGroupKey);
+            $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
+            $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
+            $orderTotal = $this->getOrderTotalByGroup($orderGroupKey, OrderStatuses::Cancelled);
+            
+            $template = new TemplateEngine("data/templates/order-cancelled.phtml", [
+                'domainPath' => $domainPath,
+                'orderGroupKey' => $orderGroupKey,
+                'orders' => $orders,
+                'orderTotal' => $orderTotal,
+                'deliveryAddress' => $deliveryAddress
+            ]);
+            
+            $request = new EmailRequest();
+            $request->recipient = $deliveryAddress->getEmail();
+            $request->subject = "Your TopBeans.co.uk Order has been Cancelled";
+            $request->htmlbody = $template->render();
+            $request->textbody = null;
+            
+            return $request;
+        }
+        
+        public function createReturnedEmail(array $orders, $orderGroupKey) {
+            
+            if (count($orders) == 0) {
+                throw new \Exception("Could not find the order required to prepare an Order Return Email");
+            }
+            
+            foreach($orders as $order) {
+                if ($order->getStatuskey() != OrderStatuses::Returned) {
+                    throw new \Exception("This operation is only available for Returned orders");
+                } else if ($order->getGroupkey() != $orderGroupKey) {
+                    throw new \Exception("Orders Items must be from same group");
+                }
+            }
+            
+            $customer = $this->getCustomerByGroup($orderGroupKey);
+            $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
+            $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
+            $orderTotal = $this->getOrderTotalByGroup($orderGroupKey, OrderStatuses::Returned);
+            
+            $template = new TemplateEngine("data/templates/order-returned.phtml", [
+                'domainPath' => $domainPath,
+                'orderGroupKey' => $orderGroupKey,
+                'orders' => $orders,
+                'orderTotal' => $orderTotal,
+                'deliveryAddress' => $deliveryAddress
+            ]);
+            
+            $request = new EmailRequest();
+            $request->recipient = $deliveryAddress->getEmail();
+            $request->subject = "Your TopBeans.co.uk Order has been Returned";
+            $request->htmlbody = $template->render();
+            $request->textbody = null;
+            
+            return $request;
         }
     }
 }

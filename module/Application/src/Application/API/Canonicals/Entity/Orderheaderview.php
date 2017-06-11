@@ -91,6 +91,14 @@ class Orderheaderview
      * @Type("integer")
      * @var integer
      *
+     * @ORM\Column(name="allReturned", type="integer", nullable=false)
+     */
+    private $allreturned;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
      * @ORM\Column(name="allMixed", type="integer", nullable=false)
      */
     private $allmixed;
@@ -353,6 +361,7 @@ class Orderheaderview
     function getAllcancelled() { return $this->allcancelled; }
     function getAllsentforrefund() { return $this->allsentforrefund; }
     function getAllrefunded() { return $this->allrefunded; }
+    function getAllreturned() { return $this->allreturned; }
     function getAllmixed() { return $this->allmixed; }
     function getTotalprice() { return $this->totalprice; }
     function getUpdateddate() { return $this->updateddate; }
@@ -395,6 +404,7 @@ class Orderheaderview
     function setAllcancelled($val) { $this->allcancelled = $val; }
     function setAllsentforrefund($val) { $this->allsentforrefund = $val; }
     function setAllrefunded($val) { $this->allrefunded = $val; }
+    function setAllreturned($val) { $this->allreturned = $val; }
     function setAllmixed($val) { $this->allmixed = $val; }
     function setTotalprice($val) { $this->totalprice = $val; }
     function setUpdateddate($val) { $this->updateddate = $val; } 

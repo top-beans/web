@@ -8,5 +8,6 @@ namespace Application\API\Canonicals\Entity {
         const Cancelled = 4;
         const SentForRefund = 5;
         const Refunded = 6;
+        const Returned = 7;
     }
 }
