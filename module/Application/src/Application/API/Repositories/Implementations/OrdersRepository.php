@@ -490,10 +490,10 @@ namespace Application\API\Repositories\Implementations {
                 throw new \Exception("Could not find the order required to prepare an Order Received Email");
             }
             
+            $orderTotal = 0;
             foreach($orders as $order) {
-                if ($order->getStatuskey() != OrderStatuses::Received) {
-                    throw new \Exception("This operation is only available for Received orders");
-                } else if ($order->getGroupkey() != $orderGroupKey) {
+                $orderTotal += $order->getItemprice();
+                if ($order->getGroupkey() != $orderGroupKey) {
                     throw new \Exception("Orders Items must be from same group");
                 }
             }
@@ -502,7 +502,6 @@ namespace Application\API\Repositories\Implementations {
             $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
             $billingAddress = $this->addressViewRepo->fetch($customer->getBillingaddresskey());
             $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
-            $orderTotal = $this->getOrderTotalByGroup($orderGroupKey, OrderStatuses::Received);
             
             $template = new TemplateEngine("data/templates/order-confirmation.phtml", [
                 'domainPath' => $domainPath,
@@ -528,10 +527,10 @@ namespace Application\API\Repositories\Implementations {
                 throw new \Exception("Could not find the order required to prepare an Order Received Email");
             }
             
+            $orderTotal = 0;
             foreach($orders as $order) {
-                if ($order->getStatuskey() != OrderStatuses::Received) {
-                    throw new \Exception("This operation is only available for Received orders");
-                } else if ($order->getGroupkey() != $orderGroupKey) {
+                $orderTotal += $order->getItemprice();
+                if ($order->getGroupkey() != $orderGroupKey) {
                     throw new \Exception("Orders Items must be from same group");
                 }
             }
@@ -540,7 +539,6 @@ namespace Application\API\Repositories\Implementations {
             $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
             $billingAddress = $this->addressViewRepo->fetch($customer->getBillingaddresskey());
             $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
-            $orderTotal = $this->getOrderTotalByGroup($orderGroupKey, OrderStatuses::Received);
             
             $template = new TemplateEngine("data/templates/order-alert.phtml", [
                 'domainPath' => $domainPath,
@@ -566,10 +564,10 @@ namespace Application\API\Repositories\Implementations {
                 throw new \Exception("Could not find the order required to prepare an Order Dispatch Email");
             }
             
+            $orderTotal = 0;
             foreach($orders as $order) {
-                if ($order->getStatuskey() != OrderStatuses::Dispatched) {
-                    throw new \Exception("This operation is only available for Dispatched orders");
-                } else if ($order->getGroupkey() != $orderGroupKey) {
+                $orderTotal += $order->getItemprice();
+                if ($order->getGroupkey() != $orderGroupKey) {
                     throw new \Exception("Orders Items must be from same group");
                 }
             }
@@ -577,7 +575,6 @@ namespace Application\API\Repositories\Implementations {
             $customer = $this->getCustomerByGroup($orderGroupKey);
             $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
             $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
-            $orderTotal = $this->getOrderTotalByGroup($orderGroupKey, OrderStatuses::Dispatched);
             
             $template = new TemplateEngine("data/templates/order-dispatch.phtml", [
                 'domainPath' => $domainPath,
@@ -602,10 +599,10 @@ namespace Application\API\Repositories\Implementations {
                 throw new \Exception("Could not find the order required to prepare an Order Cancel Email");
             }
             
+            $orderTotal = 0;
             foreach($orders as $order) {
-                if ($order->getStatuskey() != OrderStatuses::Cancelled) {
-                    throw new \Exception("This operation is only available for Cancelled orders");
-                } else if ($order->getGroupkey() != $orderGroupKey) {
+                $orderTotal += $order->getItemprice();
+                if ($order->getGroupkey() != $orderGroupKey) {
                     throw new \Exception("Orders Items must be from same group");
                 }
             }
@@ -613,7 +610,6 @@ namespace Application\API\Repositories\Implementations {
             $customer = $this->getCustomerByGroup($orderGroupKey);
             $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
             $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
-            $orderTotal = $this->getOrderTotalByGroup($orderGroupKey, OrderStatuses::Cancelled);
             
             $template = new TemplateEngine("data/templates/order-cancelled.phtml", [
                 'domainPath' => $domainPath,
@@ -638,18 +634,17 @@ namespace Application\API\Repositories\Implementations {
                 throw new \Exception("Could not find the order required to prepare an Order Return Email");
             }
             
+            $orderTotal = 0;
             foreach($orders as $order) {
-                if ($order->getStatuskey() != OrderStatuses::Returned) {
-                    throw new \Exception("This operation is only available for Returned orders");
-                } else if ($order->getGroupkey() != $orderGroupKey) {
+                $orderTotal += $order->getItemprice();
+                if ($order->getGroupkey() != $orderGroupKey) {
                     throw new \Exception("Orders Items must be from same group");
                 }
             }
-            
+
             $customer = $this->getCustomerByGroup($orderGroupKey);
             $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
             $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
-            $orderTotal = $this->getOrderTotalByGroup($orderGroupKey, OrderStatuses::Returned);
             
             $template = new TemplateEngine("data/templates/order-returned.phtml", [
                 'domainPath' => $domainPath,

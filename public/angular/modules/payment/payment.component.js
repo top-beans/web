@@ -14,10 +14,15 @@ angular.module('payment')
             self.cartTotal = 0;
             self.card = new models.card();
             self.loading = false;
-            self.getCartTotal();
+            
+            self.getCartTotal(function (cartTotal) {
+                if (cartTotal > 0) {
+                    self.initializeWorldPay();
+                }
+            });
         };
 
-        self.getCartTotal = function () {
+        self.getCartTotal = function (callback) {
             self.loading = true;
             
             cartService.getCartTotal(function (data) {
@@ -27,29 +32,34 @@ angular.module('payment')
                 } else {
                     if (data.warnings.length) toastrWarningFromList(data.warnings);
                     self.cartTotal = data.item;
+                    if (callback) { callback(self.cartTotal); }
                 }
             }, false);
         };
         
-        self.confirm = function() {
-            var form = document.getElementById('paymentForm');
-            
-            if ($(form).hasClass('ng-invalid-required') || $(form).hasClass('ng-invalid-pattern')) {
-                toastrError('Please review form', 'Invalid Details');
-                return false;
-            }
-            
-            showOverlay('Processing payment ...');
-            
-            Worldpay.useOwnForm({
-                'clientKey': self.worldPayClientKey,
-                'form': form,
-                'reusable': false,
-                'callback': function(status, response) {
-                    if (status !== 200 || !response || response && response.error && response.error.message) {
+        self.initializeWorldPay = function () {
+            Worldpay.useTemplateForm({
+                'clientKey':self.worldPayClientKey,
+                'saveButton':false,
+                'templateOptions': {
+                    images:{enabled:false},
+                    dimensions: {width: 380,height: 260}
+                },
+                'paymentSection':'paymentSection',
+                'display':'inline',
+                'beforeSubmit': function() {
+                    showOverlay('Processing payment ...');
+                    return true;
+                },
+                'validationError': function(obj) {
+                    hideOverlay();
+                },                
+                'callback': function(response) {
+                    if (response && response.error && response.error.message || !response || !response.token) {
                         toastrError(response && response.error && response.error.message || 'Please contact us immediately', 'Payment Errors');
                         hideOverlay();
-                    } else if (response.token) {
+                    } else {
+                        showOverlay('Processing payment ...');
                         orderService.takePayment(response.token, function (data) {
                             hideOverlay();
                             if (!data.success) {
@@ -64,7 +74,12 @@ angular.module('payment')
                         });
                     }
                 }
-            });            
+            });
+        };
+
+        self.confirm = function() {
+            showOverlay('Processing payment ...');
+            Worldpay.submitTemplateForm();
         };
     }]
 });

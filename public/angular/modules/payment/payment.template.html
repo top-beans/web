@@ -15,54 +15,24 @@
     </div>
     
     <div class="range" ng-if="$ctrl.cartTotal > 0">
-        <div class="cell-xs-3">&nbsp;</div>
-        <div class="cell-xs-6">
-            <form class="rd-mailform form-modern" name="paymentForm" id="paymentForm" autocomplete="off" novalidate>
-                <div class="range">
-                    <div class="cell-xs-12">
-                        <div class="form-group">
-                            Name on Card
-                            <input ng-model="$ctrl.card.name" data-worldpay="name" type="text" placeholder="Name" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="cell-xs-12">
-                        <div class="form-group">
-                            Card Number
-                            <input ng-model="$ctrl.card.card" data-worldpay="number" 
-                                   maxlength="16" ng-pattern='$ctrl.card.cardPattern'
-                                   type="text" placeholder="0000111122223333" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="cell-xs-4">
-                        <div class="form-group">
-                            Expiry
-                            <input ng-model="$ctrl.card.month" data-worldpay="exp-month" 
-                                   maxlength="2" ng-pattern='$ctrl.card.monthPattern'
-                                   type="text" placeholder="MM" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="cell-xs-4">
-                        <div class="form-group">
-                            &nbsp;
-                            <input ng-model="$ctrl.card.year" data-worldpay="exp-year" 
-                                   maxlength="4" ng-pattern='$ctrl.card.yearPattern'
-                                   type="text" placeholder="YYYY" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="cell-xs-4">
-                        <div class="form-group">
-                            CVC
-                            <input ng-model="$ctrl.card.cvc" data-worldpay="cvc" 
-                                   maxlength="4" ng-pattern='$ctrl.card.cvcPattern'
-                                   type="text" placeholder="123" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="cell-xs-12 text-right offset-top-22">
-                        <button ng-click="$ctrl.confirm()"
-                                class="btn btn-sm btn-primary-contrast">Confirm</button>
-                    </div>
-                </div>
-            </form>
+        <div class="cell-xs-12 offset-top-0 my-underline">
+            <h3>Payment Details</h3>
+        </div>
+    </div>
+</div>
+
+<div class="text-center">
+    <div id='paymentSection'></div>
+</div>
+
+<div ng-hide="$ctrl.loading" class="shell">
+    <div class="range" ng-if="$ctrl.cartTotal > 0">
+        <div class="cell-xs-12 offset-top-0 text-center">
+            <button ng-click="$ctrl.confirm()"
+                    class="btn btn-sm btn-primary-contrast">Confirm</button>            
+        </div>
+        <div class="cell-xs-12 offset-top-15 my-overline text-center">
+            <a href="https://online.worldpay.com/"><img ng-if="$ctrl.cartTotal > 0" src="/images/worldpay.png" alt=""/></a>
         </div>
     </div>
 </div>
