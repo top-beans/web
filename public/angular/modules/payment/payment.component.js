@@ -47,17 +47,9 @@ angular.module('payment')
                 },
                 'paymentSection':'paymentSection',
                 'display':'inline',
-                'beforeSubmit': function() {
-                    showOverlay('Processing payment ...');
-                    return true;
-                },
-                'validationError': function(obj) {
-                    hideOverlay();
-                },                
                 'callback': function(response) {
                     if (response && response.error && response.error.message || !response || !response.token) {
                         toastrError(response && response.error && response.error.message || 'Please contact us immediately', 'Payment Errors');
-                        hideOverlay();
                     } else {
                         showOverlay('Processing payment ...');
                         orderService.takePayment(response.token, function (data) {
@@ -78,7 +70,6 @@ angular.module('payment')
         };
 
         self.confirm = function() {
-            showOverlay('Processing payment ...');
             Worldpay.submitTemplateForm();
         };
     }]
