@@ -1,8 +1,53 @@
 <div class="shell">
     <div class="range">
+        
+        <div class="cell-xs-12">
+            <form class="rd-mailform form-modern">
+                <div class="range">
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Search Text
+                            <input type="text" class="form-control" placeholder="Order No, Name, Address, or Postcode Search"
+                                   ng-model-options="{ debounce: 500 }"
+                                   ng-model="$ctrl.searchParams.criteria[0].searchtext">
+                        </div>
+                    </div>
+                    <div class="cell-xs-2">
+                        <div class="form-group">
+                            Status
+                            <select ng-model="$ctrl.searchParams.criteria[1].status" class="form-control">
+                                <option value="">All</option>
+                                <option value="1">Creating</option>
+                                <option value="2">Received</option>
+                                <option value="3">Dispatched</option>
+                                <option value="4">Cancelled</option>
+                                <option value="5">Sent For Refund</option>
+                                <option value="6">Refunded</option>
+                                <option value="7">Returned</option>
+                            </select>                            
+                        </div>
+                    </div>
+                    <div class="cell-xs-4">
+                        <div class="form-group">
+                            &nbsp;
+                            <div class="form-control text-right" style="padding: 0px; border: none;">
+                                <button type="button" class="btn btn-xs btn-primary" ng-click="$ctrl.filter()">
+                                    <span class="glyphicon glyphicon-search"></span> Filter
+                                </button>
+                                &nbsp;
+                                <button type="button" class="btn btn-xs btn-primary" ng-click="$ctrl.addOrEditCoffee(null)">
+                                    <span class="glyphicon glyphicon-plus"></span> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
         <div class="cell-xs-12">
 
-            <table class="table table-condensed">
+            <table class="table table-condensed my-overline">
                 <thead>
                     <tr>
                         <th class="col-md-2">Order</th>
@@ -50,6 +95,17 @@
                     </tr>
                 </tbody>
             </table>
+            
+            <div ng-show="$ctrl.loading">
+                <div class="col12 text-center">
+                    <i class="fa fa-spinner fa-spin fa-2x"></i>
+                </div>
+            </div>
+
+            <div ng-show="!$ctrl.loading && $ctrl.hasMoreRecords" class="text-center">
+                <i class="fa fa-arrow-circle-o-down fa-2x top10" ng-click="$ctrl.appendNextPage()"></i>
+            </div>
+
         </div>
         
         <div class="cell-xs-12">

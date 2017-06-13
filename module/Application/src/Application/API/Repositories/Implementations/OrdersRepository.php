@@ -123,6 +123,14 @@ namespace Application\API\Repositories\Implementations {
                 $criteriaObj->andWhere($criteriaObj->expr()->eq('allreceived', 1));
             } else if ($params->getStatus() == OrderStatuses::Dispatched) {
                 $criteriaObj->andWhere($criteriaObj->expr()->eq('alldispatched', 1));
+            } else if ($params->getStatus() == OrderStatuses::Cancelled) {
+                $criteriaObj->andWhere($criteriaObj->expr()->eq('allcancelled', 1));
+            } else if ($params->getStatus() == OrderStatuses::SentForRefund) {
+                $criteriaObj->andWhere($criteriaObj->expr()->eq('allsentforrefund', 1));
+            } else if ($params->getStatus() == OrderStatuses::Refunded) {
+                $criteriaObj->andWhere($criteriaObj->expr()->eq('allrefunded', 1));
+            } else if ($params->getStatus() == OrderStatuses::Returned) {
+                $criteriaObj->andWhere($criteriaObj->expr()->eq('allreturned', 1));
             }
 
             if ($params->getSearchtext() != null) {
