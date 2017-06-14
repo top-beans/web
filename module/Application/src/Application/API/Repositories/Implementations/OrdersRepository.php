@@ -322,7 +322,7 @@ namespace Application\API\Repositories\Implementations {
         }
 
         public function addAdminOrder($cookieKey, Address $deliveryAddress, Address $billingAddress) {
-            throw new \Exception("Not implemented");
+            
         }
         
         
@@ -339,28 +339,22 @@ namespace Application\API\Repositories\Implementations {
         }
 
         public function requestItemRefund($groupKey, $coffeeKey) {
-            throw new \Exception("Not implemented");
+            
         }
 
         public function refundItem($groupKey, $coffeeKey) {
-            $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
-            
-            if ($orderItem == null) {
-                throw new \Exception("Could not find the coffee to refund");
-            } else if ($orderItem->getStatuskey() != OrderStatuses::Returned) {
-                throw new \Exception("This operation is only available for Returned orders");
-            }
-            
-            throw new \Exception ("Partialy implemented");
+
         }
         
         public function returnItem($groupKey, $coffeeKey) {
-            throw new \Exception("Not implemented");
+
         }
 
         
         public function dispatchOrder($groupKey) {
-            $this->em->transactional(function(EntityManagerInterface $em) use($groupKey) {
+            try {
+                $this->em->getConnection()->beginTransaction();
+
                 $orderHeader = $this->orderHeaderViewRepo->findOneBy(['groupkey' => $groupKey]);
 
                 if ($orderHeader == null) {
@@ -380,11 +374,24 @@ namespace Application\API\Repositories\Implementations {
                 $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
                 $shoppersCopy = $this->createDispatchedEmail($orderViewItems, $groupKey);
                 $this->emailSvc->sendMail($shoppersCopy);
-            });
+                
+                $this->em->flush();
+                $this->em->getConnection()->commit();
+                
+                $orderHeader->setAllreceived(0);
+                $orderHeader->setAlldispatched(1);
+                return $orderHeader;
+                
+            } catch (\Exception $ex) {
+                $this->em->getConnection()->rollBack();
+                throw $ex;
+            }
         }
 
         public function cancelOrder($groupKey) {
-            $this->em->transactional(function(EntityManagerInterface $em) use($groupKey) {
+            try {
+                $this->em->getConnection()->beginTransaction();
+
                 $orderHeader = $this->orderHeaderViewRepo->findOneBy(['groupkey' => $groupKey]);
 
                 if ($orderHeader == null) {
@@ -405,12 +412,23 @@ namespace Application\API\Repositories\Implementations {
                 $shoppersCopy = $this->createCancelledEmail($orderViewItems, $groupKey);
                 $this->emailSvc->sendMail($shoppersCopy);
                 
-                return $this->orderHeaderViewRepo->findOneBy(['groupkey' => $groupKey]);
-            });
+                $this->em->flush();
+                $this->em->getConnection()->commit();
+                
+                $orderHeader->setAllreceived(0);
+                $orderHeader->setAllcancelled(1);
+                return $orderHeader;
+                
+            } catch (\Exception $ex) {
+                $this->em->getConnection()->rollBack();
+                throw $ex;
+            }
         }
 
         public function returnOrder($groupKey) {
-            $this->em->transactional(function(EntityManagerInterface $em) use($groupKey) {
+            try {
+                $this->em->getConnection()->beginTransaction();
+
                 $orderHeader = $this->orderHeaderViewRepo->findOneBy(['groupkey' => $groupKey]);
 
                 if ($orderHeader == null) {
@@ -430,7 +448,18 @@ namespace Application\API\Repositories\Implementations {
                 $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
                 $shoppersCopy = $this->createReturnedEmail($orderViewItems, $groupKey);
                 $this->emailSvc->sendMail($shoppersCopy);
-            });
+                
+                $this->em->flush();
+                $this->em->getConnection()->commit();
+                
+                $orderHeader->setAlldispatched(0);
+                $orderHeader->setAllreturned(1);
+                return $orderHeader;
+                
+            } catch (\Exception $ex) {
+                $this->em->getConnection()->rollBack();
+                throw $ex;
+            }
         }
 
         public function requestOrderRefund($groupKey) {
@@ -438,19 +467,13 @@ namespace Application\API\Repositories\Implementations {
         }
 
         public function refundOrder($groupKey) {
-            $orderHeader = $this->orderHeaderViewRepo->findOneBy(['groupkey' => $groupKey]);
             
-            if ($orderHeader == null) {
-                throw new \Exception("Could not find the order to cancel");
-            } else if ($orderHeader->getAllreturned() != 1) {
-                throw new \Exception("This operation is only available for Returned orders");
-            }
-            
-            throw new \Exception ("Partialy implemented");
         }
 
         public function receiveOrder($groupKey) {
-            $this->em->transactional(function(EntityManagerInterface $em) use($groupKey) {
+            try {
+                $this->em->getConnection()->beginTransaction();
+
                 $orderHeader = $this->orderHeaderViewRepo->findOneBy(['groupkey' => $groupKey]);
 
                 if ($orderHeader == null) {
@@ -475,7 +498,18 @@ namespace Application\API\Repositories\Implementations {
                 $topbeansCopy = $this->createNewOrderAlertEmail($orderViewItems, $groupKey);
                 $this->emailSvc->sendMail($shoppersCopy);
                 $this->emailSvc->sendMail($topbeansCopy);
-            });
+                
+                $this->em->flush();
+                $this->em->getConnection()->commit();
+                
+                $orderHeader->getAllcreating(0);
+                $orderHeader->setAllreceived(1);
+                return $orderHeader;
+                
+            } catch (\Exception $ex) {
+                $this->em->getConnection()->rollBack();
+                throw $ex;
+            }
         }
 
         public function receiveOrderByCookie($cookie) {
