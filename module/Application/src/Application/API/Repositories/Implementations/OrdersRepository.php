@@ -174,23 +174,15 @@ namespace Application\API\Repositories\Implementations {
 
         public function getNewGroupKey() {
             do {
-                $uniqid = uniqid();
-                $splits = [];
-                $index = 0;
-                $divisor = 4;
-
-                for ($index = 0; $index + $divisor < strlen($uniqid); $index += $divisor) {
-                    $splits[] = substr($uniqid, $index, $divisor);
-                }
-
-                if ($index < strlen($uniqid)) {
-                    $splits[] = substr($uniqid, $index, strlen($uniqid) - $index);
-                }
-
-                $groupKey = strtoupper(join('-', $splits));
-                $duplicateFound = $this->ordersRepo->count(['groupkey' => $groupKey]) > 0;
+                $char = str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+                $groupKey = "";
+                $length = 5;
                 
-            } while ($duplicateFound);
+                for($i = 0, $l = strlen($char) - 1; $i < $length; $i ++) {
+                    $groupKey .= strtoupper($char{mt_rand(0, $l)});
+                }
+
+            } while ($this->ordersRepo->count(['groupkey' => $groupKey]) > 0);
             
             return $groupKey;
         }
