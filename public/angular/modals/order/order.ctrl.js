@@ -1,11 +1,12 @@
     'use strict';
 
-namespace('modals').orderCtrl = function ($uibModalInstance, orderService, groupKey) {
+namespace('modals').orderCtrl = function ($uibModalInstance, orderService, orderHeader) {
     var self = this;
 
     self.$onInit = function () {
         self.order = null;
-        self.groupKey = groupKey;
+        self.orderHeader = orderHeader;
+        self.groupKey = !orderHeader ? null : orderHeader.groupkey;
         self.getOrder();
     };
 

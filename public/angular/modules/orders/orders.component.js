@@ -78,25 +78,25 @@ angular.module('orders')
             });
         };
         
-        self.addOrEditOrder = function (groupKey) {
+        self.addOrEditOrder = function (orderHeader) {
             $uibModal.open({
                 backdrop: 'static',
                 templateUrl: '/angular/modals/order/order.template.html',
-                controller: ['$uibModalInstance', 'orderService', 'groupKey', modals.orderCtrl],
+                controller: ['$uibModalInstance', 'orderService', 'orderHeader', modals.orderCtrl],
                 controllerAs: "$mctrl",
                 openedClass: 'page modal-open',
                 resolve: {
-                    groupKey: groupKey
+                    orderHeader: orderHeader
                 }
-            }).result.then(function (newOrder) {
-                if (!newOrder) {
+            }).result.then(function (newOrderHeader) {
+                if (!newOrderHeader) {
                     return;
-                } else if (!groupKey) {
-                    self.orderHeaders.splice(0, 0, newOrder);
+                } else if (!orderHeader) {
+                    self.orderHeaders.splice(0, 0, newOrderHeader);
                     toastrSuccess("Added Order Successfully");
                 } else {
-                    var index = _.findIndex(self.orderHeaders, function (o) { return o.groupkey === groupKey; });
-                    self.orderHeaders.splice(index, 1, newOrder);
+                    var index = _.findIndex(self.orderHeaders, function (o) { return o.groupkey === orderHeader.groupkey; });
+                    self.orderHeaders.splice(index, 1, newOrderHeader);
                     toastrSuccess("Updated Order Successfully");
                 }
             }, function () { });
