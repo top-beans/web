@@ -43,6 +43,38 @@ class Orderheaderview
      * @Type("integer")
      * @var integer
      *
+     * @ORM\Column(name="allPurchase", type="integer", nullable=false)
+     */
+    private $allpurchase;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="allSample", type="integer", nullable=false)
+     */
+    private $allsample;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="allPaidSample", type="integer", nullable=false)
+     */
+    private $allpaidsample;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="allFreeSample", type="integer", nullable=false)
+     */
+    private $allfreesample;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
      * @ORM\Column(name="allCreating", type="integer", nullable=false)
      */
     private $allcreating;
@@ -355,6 +387,10 @@ class Orderheaderview
     function getGroupkey() { return $this->groupkey; }
     function getCustomerkey() { return $this->customerkey; }
     function getTotalitems() { return $this->totalitems; }
+    function getAllpurchase() { return $this->allpurchase; }
+    function getAllsample() { return $this->allsample; }
+    function getAllpaidsample() { return $this->allpaidsample; }
+    function getAllfreesample() { return $this->allfreesample; }
     function getAllcreating() { return $this->allcreating; }
     function getAllreceived() { return $this->allreceived; }
     function getAlldispatched() { return $this->alldispatched; }
@@ -398,6 +434,10 @@ class Orderheaderview
     function setGroupkey($val) { $this->groupkey = $val; }
     function setCustomerkey($val) { $this->customerkey = $val; }
     function setTotalitems($val) { $this->totalitems = $val; }
+    function setAllpurchase($val) { $this->allpurchase = $val; }
+    function setAllsample($val) { $this->allsample = $val; }
+    function setAllpaidsample($val) { $this->allpaidsample = $val; }
+    function setAllfreesample($val) { $this->allfreesample = $val; }
     function setAllcreating($val) { $this->allcreating = $val; }
     function setAllreceived($val) { $this->allreceived = $val; }
     function setAlldispatched($val) { $this->alldispatched = $val; }

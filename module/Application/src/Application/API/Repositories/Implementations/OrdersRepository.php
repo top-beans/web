@@ -322,32 +322,64 @@ namespace Application\API\Repositories\Implementations {
         }
 
         public function addAdminOrder($cookieKey, Address $deliveryAddress, Address $billingAddress) {
-            
+            throw new \Exception("Not Implemented");
         }
         
         
         public function deleteItem($groupKey, $coffeeKey) {
-            $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+            $orderViewItem = $this->orderViewRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
             
-            if ($orderItem == null) {
+            if ($orderViewItem == null) {
                 throw new \Exception("Could not find the coffee to delete");
-            } else if ($orderItem->getStatuskey() != OrderStatuses::Received) {
+            } else if ($orderViewItem->getStatuskey() != OrderStatuses::Received) {
                 throw new \Exception("This operation is only available for Received orders");
+            } else if (!$orderViewItem->getIsfreesample()) {
+                throw new \Exception("This operation is only available for Received free samples only");
             }
             
+            $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
             $this->ordersRepo->delete($orderItem);
         }
 
         public function requestItemRefund($groupKey, $coffeeKey) {
-            
+            throw new \Exception("Not Implemented");
         }
 
         public function refundItem($groupKey, $coffeeKey) {
-
+            throw new \Exception("Not Implemented");
         }
         
         public function returnItem($groupKey, $coffeeKey) {
+            try {
+                $this->em->getConnection()->beginTransaction();
 
+                $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+
+                if ($orderItem == null) {
+                    throw new \Exception("Could not find the item to return");
+                } else if ($orderItem->getStatuskey() != OrderStatuses::Dispatched) {
+                    throw new \Exception("This operation is only available for Dispatched items");
+                }
+                
+                $orderItem->setStatuskey(OrderStatuses::Returned);
+                $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
+                $this->ordersRepo->update($orderItem);
+                
+                $orderViewItem = $this->orderViewRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+                $shoppersCopy = $this->createReturnedEmail([$orderViewItem], $groupKey);
+                $this->emailSvc->sendMail($shoppersCopy);
+                
+                $this->em->flush();
+                $this->em->getConnection()->commit();
+                
+                $orderViewItem->setStatuskey(OrderStatuses::Returned);
+                $orderViewItem->setUpdateddate($orderItem->getUpdateddate());
+                return $orderViewItem;
+                
+            } catch (\Exception $ex) {
+                $this->em->getConnection()->rollBack();
+                throw $ex;
+            }
         }
 
         
@@ -398,6 +430,8 @@ namespace Application\API\Repositories\Implementations {
                     throw new \Exception("Could not find the order to cancel");
                 } else if ($orderHeader->getAllreceived() != 1) {
                     throw new \Exception("This operation is only available for Received orders");
+                } else if ($orderHeader->getAllfreesample() != 1) {
+                    throw new \Exception("This operation is only available for Received orders containing free samples only");
                 }
             
                 $orderItems = $this->ordersRepo->findBy(['groupkey' => $groupKey]);
@@ -432,7 +466,7 @@ namespace Application\API\Repositories\Implementations {
                 $orderHeader = $this->orderHeaderViewRepo->findOneBy(['groupkey' => $groupKey]);
 
                 if ($orderHeader == null) {
-                    throw new \Exception("Could not find the order to cancel");
+                    throw new \Exception("Could not find the order to return");
                 } else if ($orderHeader->getAlldispatched() != 1) {
                     throw new \Exception("This operation is only available for Dispatched orders");
                 }
@@ -463,11 +497,11 @@ namespace Application\API\Repositories\Implementations {
         }
 
         public function requestOrderRefund($groupKey) {
-            
+            throw new \Exception("Not Implemented");
         }
 
         public function refundOrder($groupKey) {
-            
+            throw new \Exception("Not Implemented");
         }
 
         public function receiveOrder($groupKey) {
