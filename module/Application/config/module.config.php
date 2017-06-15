@@ -251,7 +251,7 @@ namespace Application {
                 ],
                 'Index.contacts' => [
                     'id' => 'Contacts',
-                    'label' => 'Contacts',
+                    'label' => 'Contact Us',
                     'route' => 'web',
                     'controller' => 'Index',
                     'action' => 'contacts',

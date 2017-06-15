@@ -22,8 +22,8 @@
 <div ng-hide="($ctrl.loading() || $ctrl.worldPayOk)" class="shell">
     <div class="range">
         <div class="cell-xs-12 offset-top-0">
-            <h3 class="my-underline">No Internet Connection</h3>
-            <p>Please contact us immediately <span ng-if="$ctrl.worldPayLoadingError">quoting the following message:</span></p>
+            <h3 class="my-underline">Connection Problem</h3>
+            <p>Please fix your connection or, if necessary, contact us immediately <span ng-if="$ctrl.worldPayLoadingError">quoting the following message:</span></p>
             <p ng-if="$ctrl.worldPayLoadingError"><strong>{{$ctrl.worldPayLoadingError}}</strong></p>
         </div>
     </div>
