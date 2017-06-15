@@ -182,6 +182,23 @@ namespace Application\Controller {
             }
         }
 
+        public function updatecustomeraddressesAction() {
+            try {
+                if (!$this->authService->hasIdentity()) {
+                    throw new \Exception("Unauthorized Access");
+                }
+                
+                $groupKey = $this->getRequest()->getContent();
+                
+                $orderHeader = $this->ordersRepo->refundOrder($groupKey);
+                $response = ResponseUtils::responseItem($orderHeader);
+                return $this->jsonResponse($response);
+            } catch (\Exception $ex) {
+                $response = ResponseUtils::createExceptionResponse($ex);
+                return $this->jsonResponse($response);
+            }
+        }
+        
         public function getcustomeraddressesAction() {
             try {
                 $cookieKey = $this->getRequest()->getContent();

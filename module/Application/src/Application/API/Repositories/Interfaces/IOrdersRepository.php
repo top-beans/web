@@ -14,6 +14,8 @@ namespace Application\API\Repositories\Interfaces {
         public function getOrderTotalByCookie($cookie, $status);
         public function getOrderTotalByGroup($groupkey, $status = null);
         
+        public function updateAddresses(Address $deliveryAddress, Address $billingAddress);
+        
         public function addAnonymousOrder($cookieKey, Address $deliveryAddress, Address $billingAddress);
         public function addAdminOrder($cookieKey, Address $deliveryAddress, Address $billingAddress);
         

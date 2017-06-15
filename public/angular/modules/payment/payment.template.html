@@ -1,4 +1,4 @@
-<div ng-show="$ctrl.loading" class="shell">
+<div ng-show="$ctrl.loading()" class="shell">
     <div class="range">
         <div class="cell-xs-12 text-center">
             <h4><span class='fa fa-spinner fa-spin'></span>  Loading ...</h4>
@@ -6,17 +6,25 @@
     </div>
 </div>
 
-<div ng-hide="$ctrl.loading" class="shell">
-    <div class="range" ng-if="$ctrl.cartTotal == 0">
-        <div class="cell-xs-12">
+<div ng-hide="($ctrl.loading() || !$ctrl.worldPayOk)" class="shell">
+    <div class="range">
+        <div class="cell-xs-12" ng-if="$ctrl.cartTotal == 0">
             <h3 class="my-underline">You have no items that require payment</h3>
             <a href="/Index/buyorsample" class="btn btn-xl btn-red-orange">Buy or sample</a>
         </div>
+
+        <div class="cell-xs-12 offset-top-0" ng-if="$ctrl.cartTotal > 0">
+            <h3 class="my-underline">Payment Details</h3>
+        </div>
     </div>
-    
-    <div class="range" ng-if="$ctrl.cartTotal > 0">
-        <div class="cell-xs-12 offset-top-0 my-underline">
-            <h3>Payment Details</h3>
+</div>
+
+<div ng-hide="($ctrl.loading() || $ctrl.worldPayOk)" class="shell">
+    <div class="range">
+        <div class="cell-xs-12 offset-top-0">
+            <h3 class="my-underline">No Internet Connection</h3>
+            <p>Please contact us immediately <span ng-if="$ctrl.worldPayLoadingError">quoting the following message:</span></p>
+            <p ng-if="$ctrl.worldPayLoadingError"><strong>{{$ctrl.worldPayLoadingError}}</strong></p>
         </div>
     </div>
 </div>
@@ -25,14 +33,15 @@
     <div id='paymentSection'></div>
 </div>
 
-<div ng-hide="$ctrl.loading" class="shell">
-    <div class="range" ng-if="$ctrl.cartTotal > 0">
-        <div class="cell-xs-12 offset-top-0 text-center">
+<div ng-hide="$ctrl.loading()" class="shell">
+    <div class="range">
+        <div class="cell-xs-12 offset-top-0 text-center" ng-if="$ctrl.cartTotal > 0 && $ctrl.worldPayOk">
             <button ng-click="$ctrl.confirm()"
                     class="btn btn-sm btn-primary-contrast">Confirm</button>            
         </div>
+        
         <div class="cell-xs-12 offset-top-15 my-overline text-center">
-            <a href="https://online.worldpay.com/"><img ng-if="$ctrl.cartTotal > 0" src="/images/worldpay.png" alt=""/></a>
+            <a href="https://online.worldpay.com/"><img src="/images/worldpay.png" alt=""/></a>
         </div>
     </div>
 </div>

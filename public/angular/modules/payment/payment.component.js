@@ -13,7 +13,10 @@ angular.module('payment')
         self.$onInit = function () {
             self.cartTotal = 0;
             self.card = new models.card();
-            self.loading = false;
+            self.loadingCart = false;
+            self.loadingWorldPay = false;
+            self.worldPayOk = true;
+            self.worldPayLoadingError = null;
             
             self.getCartTotal(function (cartTotal) {
                 if (cartTotal > 0) {
@@ -22,11 +25,15 @@ angular.module('payment')
             });
         };
 
+        self.loading = function () {
+            return self.loadingCart || self.loadingWorldPay;
+        };
+        
         self.getCartTotal = function (callback) {
-            self.loading = true;
+            self.loadingCart = true;
             
             cartService.getCartTotal(function (data) {
-                self.loading = false;
+                self.loadingCart = false;
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
                 } else {
@@ -38,35 +45,44 @@ angular.module('payment')
         };
         
         self.initializeWorldPay = function () {
-            Worldpay.useTemplateForm({
-                'clientKey':self.worldPayClientKey,
-                'saveButton':false,
-                'templateOptions': {
-                    images:{enabled:false},
-                    dimensions: {width: 380,height: 260}
-                },
-                'paymentSection':'paymentSection',
-                'display':'inline',
-                'callback': function(response) {
-                    if (response && response.error && response.error.message || !response || !response.token) {
-                        toastrError(response && response.error && response.error.message || 'Please contact us immediately', 'Payment Errors');
-                    } else {
-                        showOverlay('Processing payment ...');
-                        orderService.takePayment(response.token, function (data) {
-                            hideOverlay();
-                            if (!data.success) {
-                                toastrErrorFromList(data.errors, 'Payment Errors');
-                            } else if (data.item.paymentStatus === "FAILED") {
-                                toastrError(data.item.paymentStatusReason);
-                            } else if (data.item.paymentStatus === "ERROR") {
-                                toastrError('Please contact us immediately', 'Payment Errors');
-                            } else {
-                                location.href = "/Index/shoppingcart";
-                            }
-                        });
+            self.loadingWorldPay = true;
+            
+            try {
+                Worldpay.useTemplateForm({
+                    'clientKey':self.worldPayClientKey,
+                    'saveButton':false,
+                    'templateOptions': {
+                        images:{enabled:false},
+                        dimensions: {width: 380,height: 260}
+                    },
+                    'paymentSection':'paymentSection',
+                    'display':'inline',
+                    'callback': function(response) {
+                        if (response && response.error && response.error.message || !response || !response.token) {
+                            toastrError(response && response.error && response.error.message || 'Please contact us immediately', 'Payment Errors');
+                        } else {
+                            showOverlay('Processing payment ...');
+                            orderService.takePayment(response.token, function (data) {
+                                hideOverlay();
+                                if (!data.success) {
+                                    toastrErrorFromList(data.errors, 'Payment Errors');
+                                } else if (data.item.paymentStatus === "FAILED") {
+                                    toastrError(data.item.paymentStatusReason);
+                                } else if (data.item.paymentStatus === "ERROR") {
+                                    toastrError('Please contact us immediately', 'Payment Errors');
+                                } else {
+                                    location.href = "/Index/shoppingcart";
+                                }
+                            });
+                        }
                     }
-                }
-            });
+                });
+                
+            } catch(e) {
+                self.worldPayLoadingError = e && e.message;
+                self.loadingWorldPay = false;
+                self.worldPayOk = false;
+            }
         };
 
         self.confirm = function() {

@@ -3,7 +3,7 @@
 namespace Application\API\Canonicals\Dto {
     use JMS\Serializer\Annotation\Type;
     
-    class Checkout { 
+    class Checkout extends CustomerAddresses { 
         
         /**
          * @Type("string")
@@ -14,15 +14,5 @@ namespace Application\API\Canonicals\Dto {
          * @Type("Application\API\Canonicals\Dto\Credentials")
          */
         public $user;
-
-        /**
-         * @Type("Application\API\Canonicals\Entity\Address")
-         */
-        public $deliveryaddress;
-
-        /**
-         * @Type("Application\API\Canonicals\Entity\Address")
-         */
-        public $billingaddress;
     }
 }

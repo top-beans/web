@@ -255,6 +255,23 @@ namespace Application\API\Repositories\Implementations {
         }
         
         
+        public function updateAddresses(Address $deliveryAddress, Address $billingAddress) {
+            try {
+                $this->em->getConnection()->beginTransaction();
+                
+                $this->addressRepo->update($deliveryAddress);
+                $this->addressRepo->update($billingAddress);
+                
+                $this->em->flush();
+                $this->em->getConnection()->commit();
+                
+            } catch (\Exception $ex) {
+                $this->em->getConnection()->rollBack();
+                throw $ex;
+            }
+        }
+        
+        
         public function addAnonymousOrder($cookieKey, Address $deliveryAddress, Address $billingAddress) {
             
             try {
