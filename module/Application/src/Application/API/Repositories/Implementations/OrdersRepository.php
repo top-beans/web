@@ -194,14 +194,15 @@ namespace Application\API\Repositories\Implementations {
                 return null;
             }
             
-            $shoppingCartKey = $cartItems[0]->getShoppingcartkey();
-            $orderItems = $this->ordersRepo->findBy(['shoppingcartkey' => $shoppingCartKey]);
-            
-            if (count($orderItems) == 0) {
-                return null;
+            foreach ($cartItems as $cartItem) {
+                $orderItems = $this->ordersRepo->findBy(['shoppingcartkey' => $cartItem->getShoppingcartkey()]);
+
+                if (count($orderItems) > 0) {
+                    return $orderItems[0]->getGroupkey();
+                }
             }
             
-            return $orderItems[0]->getGroupkey();
+            return null;
         }
 
         public function getCustomerByGroup($groupKey) {
