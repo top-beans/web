@@ -77,7 +77,7 @@ angular.module('payment')
                         }
                     }
                 });
-                
+                self.loadingWorldPay = false;
             } catch(e) {
                 self.worldPayLoadingError = e && e.message;
                 self.loadingWorldPay = false;
