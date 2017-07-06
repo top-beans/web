@@ -20,15 +20,12 @@ namespace Application\API\Repositories\Interfaces {
         public function addAdminOrder($cookieKey, Address $deliveryAddress, Address $billingAddress);
         
         public function deleteItem($groupkey, $coffeeKey);
-        public function requestItemRefund($groupkey, $coffeeKey);
-        public function refundItem($groupkey, $coffeeKey);
+        public function refundItems(array $orderItems);
         public function returnItem($groupkey, $coffeeKey);
         
         public function dispatchOrder($groupkey);
         public function cancelOrder($groupKey);
         public function returnOrder($groupKey);
-        public function requestOrderRefund($groupKey);
-        public function refundOrder($groupKey);
         public function receiveOrder($groupKey);
         public function receiveOrderByCookie($cookie);
         

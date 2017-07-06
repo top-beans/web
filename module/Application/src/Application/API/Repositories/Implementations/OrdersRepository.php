@@ -116,23 +116,25 @@ namespace Application\API\Repositories\Implementations {
         public function searchOrderHeaders(array $criteria, array $orderBy = null, $page = 0, $pageSize = 10) {
             $params = new OrderSearch($criteria);
             $criteriaObj = new Criteria();
-
-            if ($params->getStatus() == OrderStatuses::Creating) {
-                $criteriaObj->andWhere($criteriaObj->expr()->eq('allcreating', 1));
-            } else if ($params->getStatus() == OrderStatuses::Received) {
-                $criteriaObj->andWhere($criteriaObj->expr()->eq('allreceived', 1));
-            } else if ($params->getStatus() == OrderStatuses::Dispatched) {
-                $criteriaObj->andWhere($criteriaObj->expr()->eq('alldispatched', 1));
-            } else if ($params->getStatus() == OrderStatuses::Cancelled) {
-                $criteriaObj->andWhere($criteriaObj->expr()->eq('allcancelled', 1));
-            } else if ($params->getStatus() == OrderStatuses::SentForRefund) {
-                $criteriaObj->andWhere($criteriaObj->expr()->eq('allsentforrefund', 1));
-            } else if ($params->getStatus() == OrderStatuses::Refunded) {
-                $criteriaObj->andWhere($criteriaObj->expr()->eq('allrefunded', 1));
-            } else if ($params->getStatus() == OrderStatuses::Returned) {
-                $criteriaObj->andWhere($criteriaObj->expr()->eq('allreturned', 1));
+            
+            foreach($params->getStatuses() as $status) {
+                if ($status == OrderStatuses::Creating) {
+                    $criteriaObj->orWhere($criteriaObj->expr()->eq('allcreating', 1));
+                } else if ($status == OrderStatuses::Received) {
+                    $criteriaObj->orWhere($criteriaObj->expr()->eq('allreceived', 1));
+                } else if ($status == OrderStatuses::Dispatched) {
+                    $criteriaObj->orWhere($criteriaObj->expr()->eq('alldispatched', 1));
+                } else if ($status == OrderStatuses::Cancelled) {
+                    $criteriaObj->orWhere($criteriaObj->expr()->eq('allcancelled', 1));
+                } else if ($status == OrderStatuses::SentForRefund) {
+                    $criteriaObj->orWhere($criteriaObj->expr()->eq('allsentforrefund', 1));
+                } else if ($status == OrderStatuses::Refunded) {
+                    $criteriaObj->orWhere($criteriaObj->expr()->eq('allrefunded', 1));
+                } else if ($status == OrderStatuses::Returned) {
+                    $criteriaObj->orWhere($criteriaObj->expr()->eq('allreturned', 1));
+                }
             }
-
+            
             if ($params->getSearchtext() != null) {
                 $criteriaObj->andWhere($criteriaObj->expr()->orX(
                     $criteriaObj->expr()->contains('groupkey', $params->getSearchtext()),
@@ -345,28 +347,35 @@ namespace Application\API\Repositories\Implementations {
         
         
         public function deleteItem($groupKey, $coffeeKey) {
-            $orderViewItem = $this->orderViewRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
-            
-            if ($orderViewItem == null) {
-                throw new \Exception("Could not find the coffee to delete");
-            } else if ($orderViewItem->getStatuskey() != OrderStatuses::Received) {
-                throw new \Exception("This operation is only available for Received orders");
-            } else if (!$orderViewItem->getIsfreesample()) {
-                throw new \Exception("This operation is only available for Received free samples only");
+            try {
+                $this->em->getConnection()->beginTransaction();
+
+                $orderViewItem = $this->orderViewRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+
+                if ($orderViewItem == null) {
+                    throw new \Exception("Could not find the coffee to delete");
+                } else if ($orderViewItem->getStatuskey() != OrderStatuses::Received) {
+                    throw new \Exception("This operation is only available for Received orders");
+                } else if (!$orderViewItem->getIsfreesample()) {
+                    throw new \Exception("This operation is only available for Received free samples only");
+                }
+
+                $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+                $this->ordersRepo->delete($orderItem);
+                
+                $this->em->flush();
+                $this->em->getConnection()->commit();
+                
+            } catch (\Exception $ex) {
+                $this->em->getConnection()->rollBack();
+                throw $ex;
             }
-            
-            $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
-            $this->ordersRepo->delete($orderItem);
         }
 
-        public function requestItemRefund($groupKey, $coffeeKey) {
+        public function refundItems(array $orderItems) {
             throw new \Exception("Not Implemented");
         }
 
-        public function refundItem($groupKey, $coffeeKey) {
-            throw new \Exception("Not Implemented");
-        }
-        
         public function returnItem($groupKey, $coffeeKey) {
             try {
                 $this->em->getConnection()->beginTransaction();
@@ -389,10 +398,6 @@ namespace Application\API\Repositories\Implementations {
                 
                 $this->em->flush();
                 $this->em->getConnection()->commit();
-                
-                $orderViewItem->setStatuskey(OrderStatuses::Returned);
-                $orderViewItem->setUpdateddate($orderItem->getUpdateddate());
-                return $orderViewItem;
                 
             } catch (\Exception $ex) {
                 $this->em->getConnection()->rollBack();
@@ -428,10 +433,6 @@ namespace Application\API\Repositories\Implementations {
                 $this->em->flush();
                 $this->em->getConnection()->commit();
                 
-                $orderHeader->setAllreceived(0);
-                $orderHeader->setAlldispatched(1);
-                return $orderHeader;
-                
             } catch (\Exception $ex) {
                 $this->em->getConnection()->rollBack();
                 throw $ex;
@@ -448,11 +449,10 @@ namespace Application\API\Repositories\Implementations {
                     throw new \Exception("Could not find the order to cancel");
                 } else if ($orderHeader->getAllreceived() != 1) {
                     throw new \Exception("This operation is only available for Received orders");
-                } else if ($orderHeader->getAllfreesample() != 1) {
-                    throw new \Exception("This operation is only available for Received orders containing free samples only");
                 }
             
                 $orderItems = $this->ordersRepo->findBy(['groupkey' => $groupKey]);
+                $paidItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey, 'isfreesample' => 0]);
                 
                 foreach($orderItems as $orderItem) {
                     $orderItem->setStatuskey(OrderStatuses::Cancelled);
@@ -463,13 +463,13 @@ namespace Application\API\Repositories\Implementations {
                 $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
                 $shoppersCopy = $this->createCancelledEmail($orderViewItems, $groupKey);
                 $this->emailSvc->sendMail($shoppersCopy);
+
+                if (count($paidItems) > 0) {
+                    $this->refundItems($paidItems);
+                }
                 
                 $this->em->flush();
                 $this->em->getConnection()->commit();
-                
-                $orderHeader->setAllreceived(0);
-                $orderHeader->setAllcancelled(1);
-                return $orderHeader;
                 
             } catch (\Exception $ex) {
                 $this->em->getConnection()->rollBack();
@@ -490,6 +490,7 @@ namespace Application\API\Repositories\Implementations {
                 }
             
                 $orderItems = $this->ordersRepo->findBy(['groupkey' => $groupKey]);
+                $paidItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey, 'isfreesample' => 0]);
                 
                 foreach($orderItems as $orderItem) {
                     $orderItem->setStatuskey(OrderStatuses::Returned);
@@ -501,25 +502,19 @@ namespace Application\API\Repositories\Implementations {
                 $shoppersCopy = $this->createReturnedEmail($orderViewItems, $groupKey);
                 $this->emailSvc->sendMail($shoppersCopy);
                 
+                if (count($paidItems) > 0) {
+                    $this->refundItems($paidItems);
+                }
+                
                 $this->em->flush();
                 $this->em->getConnection()->commit();
                 
-                $orderHeader->setAlldispatched(0);
-                $orderHeader->setAllreturned(1);
-                return $orderHeader;
+                return $this->orderHeaderViewRepo->findOneBy(['groupkey' => $groupKey]);
                 
             } catch (\Exception $ex) {
                 $this->em->getConnection()->rollBack();
                 throw $ex;
             }
-        }
-
-        public function requestOrderRefund($groupKey) {
-            throw new \Exception("Not Implemented");
-        }
-
-        public function refundOrder($groupKey) {
-            throw new \Exception("Not Implemented");
         }
 
         public function receiveOrder($groupKey) {
@@ -554,10 +549,6 @@ namespace Application\API\Repositories\Implementations {
                 $this->em->flush();
                 $this->em->getConnection()->commit();
                 
-                $orderHeader->getAllcreating(0);
-                $orderHeader->setAllreceived(1);
-                return $orderHeader;
-                
             } catch (\Exception $ex) {
                 $this->em->getConnection()->rollBack();
                 throw $ex;
@@ -579,9 +570,7 @@ namespace Application\API\Repositories\Implementations {
             $orderTotal = 0;
             foreach($orders as $order) {
                 $orderTotal += $order->getItemprice();
-                if ($order->getGroupkey() != $orderGroupKey) {
-                    throw new \Exception("Orders Items must be from same group");
-                }
+                if ($order->getGroupkey() != $orderGroupKey) { throw new \Exception("Orders Items must be from same group"); }
             }
 
             $customer = $this->getCustomerByGroup($orderGroupKey);
@@ -616,9 +605,7 @@ namespace Application\API\Repositories\Implementations {
             $orderTotal = 0;
             foreach($orders as $order) {
                 $orderTotal += $order->getItemprice();
-                if ($order->getGroupkey() != $orderGroupKey) {
-                    throw new \Exception("Orders Items must be from same group");
-                }
+                if ($order->getGroupkey() != $orderGroupKey) { throw new \Exception("Orders Items must be from same group"); }
             }
 
             $customer = $this->getCustomerByGroup($orderGroupKey);
@@ -653,9 +640,7 @@ namespace Application\API\Repositories\Implementations {
             $orderTotal = 0;
             foreach($orders as $order) {
                 $orderTotal += $order->getItemprice();
-                if ($order->getGroupkey() != $orderGroupKey) {
-                    throw new \Exception("Orders Items must be from same group");
-                }
+                if ($order->getGroupkey() != $orderGroupKey) { throw new \Exception("Orders Items must be from same group"); }
             }
 
             $customer = $this->getCustomerByGroup($orderGroupKey);
@@ -688,9 +673,7 @@ namespace Application\API\Repositories\Implementations {
             $orderTotal = 0;
             foreach($orders as $order) {
                 $orderTotal += $order->getItemprice();
-                if ($order->getGroupkey() != $orderGroupKey) {
-                    throw new \Exception("Orders Items must be from same group");
-                }
+                if ($order->getGroupkey() != $orderGroupKey) { throw new \Exception("Orders Items must be from same group"); }
             }
 
             $customer = $this->getCustomerByGroup($orderGroupKey);
@@ -723,9 +706,7 @@ namespace Application\API\Repositories\Implementations {
             $orderTotal = 0;
             foreach($orders as $order) {
                 $orderTotal += $order->getItemprice();
-                if ($order->getGroupkey() != $orderGroupKey) {
-                    throw new \Exception("Orders Items must be from same group");
-                }
+                if ($order->getGroupkey() != $orderGroupKey) { throw new \Exception("Orders Items must be from same group"); }
             }
 
             $customer = $this->getCustomerByGroup($orderGroupKey);

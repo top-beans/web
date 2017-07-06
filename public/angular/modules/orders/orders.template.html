@@ -15,16 +15,17 @@
                     <div class="cell-xs-2">
                         <div class="form-group">
                             Status
-                            <select ng-model="$ctrl.searchParams.criteria[1].status" class="form-control">
-                                <option value="">All</option>
-                                <option value="1">Creating</option>
-                                <option value="2">Received</option>
-                                <option value="3">Dispatched</option>
-                                <option value="4">Cancelled</option>
-                                <option value="5">Sent For Refund</option>
-                                <option value="6">Refunded</option>
-                                <option value="7">Returned</option>
-                            </select>                            
+                            <div class="bm-select">
+                                <select ng-model="$ctrl.searchParams.criteria[1].statuses" class="form-control" multiple="multiple" id="statuses">
+                                    <option value="1">Creating</option>
+                                    <option value="2">Received</option>
+                                    <option value="3">Dispatched</option>
+                                    <option value="4">Cancelled</option>
+                                    <option value="5">Sent For Refund</option>
+                                    <option value="6">Refunded</option>
+                                    <option value="7">Returned</option>
+                                </select>                            
+                            </div>
                         </div>
                     </div>
                     <div class="cell-xs-4">
@@ -82,15 +83,22 @@
                         <td>&pound;{{orderHeader.totalprice}}</td>
                         <td>{{orderHeader.createddate | amDateFormat: 'DD/MMM/YYYY'}}</td>
                         <td class="cart-actions">
-                            <span ng-hide="orderHeader.refunding" class="glyphicon glyphicon-repeat text-info" title="Refund Order" ng-click="$ctrl.refundOrder(orderHeader)"></span>
-                            <span ng-show="orderHeader.refunding" class="fa fa-spin fa-spinner"></span>
                             
-                            <span ng-hide="orderHeader.cancelling" class="glyphicon glyphicon-ban-circle text-danger" title="Cancel Order" ng-click="$ctrl.cancelOrder(orderHeader)"></span>
-                            <span ng-show="orderHeader.cancelling" class="fa fa-spin fa-spinner"></span>
-                            
-                            <span class="glyphicon glyphicon-pencil" title="Edit Order" 
-                                  ng-click="$ctrl.addOrEditOrder(orderHeader)">
+                            <span ng-hide="!orderHeader.alldispatched">
+                                <span ng-hide="orderHeader.returning" class="glyphicon-repeat text-info" title="Return Order" ng-click="$ctrl.returnOrder(orderHeader)"></span>
+                                <span ng-show="orderHeader.returning" class="fa fa-spin fa-spinner"></span>
                             </span>
+                            
+                            <span ng-hide="!orderHeader.allreceived">
+                                <span ng-hide="orderHeader.dispatching" class="fa fa-truck" title="Dispatch Order" ng-click="$ctrl.dispatchOrder(orderHeader)"></span>
+                                <span ng-show="orderHeader.dispatching" class="fa fa-spin fa-spinner"></span>
+
+                                <span ng-hide="orderHeader.cancelling" class="glyphicon glyphicon-ban-circle text-danger" title="Cancel Order" ng-click="$ctrl.cancelOrder(orderHeader)"></span>
+                                <span ng-show="orderHeader.cancelling" class="fa fa-spin fa-spinner"></span>
+
+                                <span class="glyphicon glyphicon-pencil" title="Edit Order" ng-click="$ctrl.addOrEditOrder(orderHeader)"></span>
+                            </span>
+                            
                         </td>
                     </tr>
                 </tbody>

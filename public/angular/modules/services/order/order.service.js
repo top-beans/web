@@ -60,24 +60,16 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
         });
     };
     
-    self.refundOrderItem = function (groupKey, coffeeKey, callback) {
-        var orderItem = {
-            groupkey: groupKey,
-            coffeekey: coffeeKey
-        };
-
-        $http.post("/api/OrdersApi/refundorderitem", orderItem).then(function (response) {
+    self.dispatchOrder = function (groupKey, callback) {
+        $http.post("/api/OrdersApi/dispatchorder", groupKey).then(function (response) {
             if (callback) callback(response.data);
-            if (response.data.success) {
-                self.getOrderTotal(groupKey, self.notifyTotalSubscriptions);
-            }
         }, function (error) {
-
+            
         });
     };
     
-    self.refundOrder = function (groupKey, callback) {
-        $http.post("/api/OrdersApi/refundorder", groupKey).then(function (response) {
+    self.returnOrder = function (groupKey, callback) {
+        $http.post("/api/OrdersApi/returnorder", groupKey).then(function (response) {
             if (callback) callback(response.data);
         }, function (error) {
             

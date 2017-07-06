@@ -15,8 +15,8 @@ angular.module('orders')
                 page: 0,
                 pagesize: 10,
                 criteria: [
-                    { searchtext: null }, 
-                    { status: null }
+                    { searchtext: null },
+                    { statuses: [] }
                 ],
                 orderby: [
                     { createddate: 'DESC' }
@@ -24,6 +24,7 @@ angular.module('orders')
             };
             
             self.filter();
+            $('#statuses').multiselect();
         };
         
         self.filter = function() {
@@ -50,17 +51,30 @@ angular.module('orders')
             }
         };
         
-        self.refundOrder = function (orderHeader) {
+        self.dispatchOrder = function (orderHeader) {
             orderHeader.refunding  = true;
-            orderService.refundOrder(orderHeader.groupkey, function (data) {
+            orderService.dispatchOrder(orderHeader.groupkey, function (data) {
+                orderHeader.refunding = false;
+                if (!data.success) {
+                    toastrErrorFromList(data.errors);
+                } else {
+                    if (data.warnings.length) toastrWarningFromList(data.warnings);
+                    orderHeader.alldispatched = true;
+                    orderHeader.allreceived = false;
+                }
+            });
+        };
+        
+        self.returnOrder = function (orderHeader) {
+            orderHeader.returning  = true;
+            orderService.returnOrder(orderHeader.groupkey, function (data) {
                 orderHeader.refunding = false;
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
                 } else {
                     if (data.warnings.length) toastrWarningFromList(data.warnings);
                     var index = _.findIndex(self.orderHeaders, function (o) { return o.groupkey === orderHeader.groupkey; });
-                    self.orderHeaders.splice(index, 1, data.item);
-                }
+                    self.orderHeaders.splice(index, 1, data.item);                }
             });
         };
         
@@ -72,8 +86,8 @@ angular.module('orders')
                     toastrErrorFromList(data.errors);
                 } else {
                     if (data.warnings.length) toastrWarningFromList(data.warnings);
-                    var index = _.findIndex(self.orderHeaders, function (o) { return o.groupkey === orderHeader.groupkey; });
-                    self.orderHeaders.splice(index, 1, data.item);
+                    orderHeader.allcancelled = true;
+                    orderHeader.allreceived = false;
                 }
             });
         };

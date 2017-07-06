@@ -135,8 +135,8 @@ namespace Application\Controller {
                 
                 $groupKey = $this->getRequest()->getContent();
                 
-                $orderHeader = $this->ordersRepo->cancelOrder($groupKey);
-                $response = ResponseUtils::responseItem($orderHeader);
+                $this->ordersRepo->cancelOrder($groupKey);
+                $response = ResponseUtils::response();
                 return $this->jsonResponse($response);
             } catch (\Exception $ex) {
                 $response = ResponseUtils::createExceptionResponse($ex);
@@ -144,28 +144,7 @@ namespace Application\Controller {
             }
         }
         
-        public function refundorderitemAction() {
-            try {
-                if (!$this->authService->hasIdentity()) {
-                    throw new \Exception("Unauthorized Access");
-                }
-                
-                $jsonData = $this->getRequest()->getContent();
-                $data = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Dto\OrderItem", "json");
-                
-                $groupkey = $data->groupkey;
-                $coffeeKey = $data->coffeekey;
-                
-                $orderItem = $this->ordersRepo->refundItem($groupkey, $coffeeKey);
-                $response = ResponseUtils::responseItem($orderItem);
-                return $this->jsonResponse($response);
-            } catch (\Exception $ex) {
-                $response = ResponseUtils::createExceptionResponse($ex);
-                return $this->jsonResponse($response);
-            }
-        }
-        
-        public function refundorderAction() {
+        public function returnorderAction() {
             try {
                 if (!$this->authService->hasIdentity()) {
                     throw new \Exception("Unauthorized Access");
@@ -173,8 +152,25 @@ namespace Application\Controller {
                 
                 $groupKey = $this->getRequest()->getContent();
                 
-                $orderHeader = $this->ordersRepo->refundOrder($groupKey);
+                $orderHeader = $this->ordersRepo->returnOrder($groupKey);
                 $response = ResponseUtils::responseItem($orderHeader);
+                return $this->jsonResponse($response);
+            } catch (\Exception $ex) {
+                $response = ResponseUtils::createExceptionResponse($ex);
+                return $this->jsonResponse($response);
+            }
+        }
+        
+        public function dispatchorderAction() {
+            try {
+                if (!$this->authService->hasIdentity()) {
+                    throw new \Exception("Unauthorized Access");
+                }
+                
+                $groupKey = $this->getRequest()->getContent();
+                
+                $this->ordersRepo->dispatchOrder($groupKey);
+                $response = ResponseUtils::response();
                 return $this->jsonResponse($response);
             } catch (\Exception $ex) {
                 $response = ResponseUtils::createExceptionResponse($ex);
@@ -188,10 +184,12 @@ namespace Application\Controller {
                     throw new \Exception("Unauthorized Access");
                 }
                 
-                $groupKey = $this->getRequest()->getContent();
+                $jsonData = $this->getRequest()->getContent();
+                $data = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Dto\CustomerAddresses", "json");
                 
-                $orderHeader = $this->ordersRepo->refundOrder($groupKey);
-                $response = ResponseUtils::responseItem($orderHeader);
+                $this->ordersRepo->updateAddresses($data->deliveryaddress, $data->billingaddress);
+                $response = ResponseUtils::response();
+
                 return $this->jsonResponse($response);
             } catch (\Exception $ex) {
                 $response = ResponseUtils::createExceptionResponse($ex);

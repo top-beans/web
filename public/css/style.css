@@ -216,3 +216,15 @@ form.my-submitted textarea.ng-invalid-pattern:not(:focus) {
     max-height: calc(100vh - 250px);
     overflow-y: auto;
 }
+
+.bm-select {
+    margin-top: 5px;
+}
+
+.bm-select button {
+    min-width: 100px;
+    padding: 6px 14px;
+    font-size: 11px;
+    line-height: 1.71429;
+    border-radius: 6px;
+}

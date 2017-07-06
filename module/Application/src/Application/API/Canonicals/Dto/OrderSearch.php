@@ -5,17 +5,17 @@ namespace Application\API\Canonicals\Dto {
     class OrderSearch  { 
         
         private $searchtext;
-        private $status;
+        private $statuses;
 
         public function __construct(array $criteria) {
             $this->searchtext = $criteria['searchtext'];
-            $this->status = $criteria['status'];
+            $this->statuses = $criteria['statuses'];
         }
         
         function getSearchtext() { return $this->searchtext; } 
-        function getStatus() { return $this->status; } 
+        function getStatuses() { return $this->statuses; } 
 
         function setSearchtext($val) { $this->searchtext  = $val; } 
-        function setStatus($val) { $this->status = $val; } 
+        function setStatuses($val) { $this->statuses = $val; } 
     }
 }
