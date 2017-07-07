@@ -373,7 +373,7 @@ namespace Application\API\Repositories\Implementations {
         }
 
         public function refundItems(array $orderItems) {
-            throw new \Exception("Not Implemented");
+            throw new \Exception("OrdersRepository.refundItems Not Implemented");
         }
 
         public function returnItem($groupKey, $coffeeKey) {
@@ -433,6 +433,9 @@ namespace Application\API\Repositories\Implementations {
                 $this->em->flush();
                 $this->em->getConnection()->commit();
                 
+                $this->em->refresh($orderHeader);
+                return $orderHeader;
+                
             } catch (\Exception $ex) {
                 $this->em->getConnection()->rollBack();
                 throw $ex;
@@ -470,6 +473,9 @@ namespace Application\API\Repositories\Implementations {
                 
                 $this->em->flush();
                 $this->em->getConnection()->commit();
+                
+                $this->em->refresh($orderHeader);
+                return $orderHeader;
                 
             } catch (\Exception $ex) {
                 $this->em->getConnection()->rollBack();
@@ -509,7 +515,8 @@ namespace Application\API\Repositories\Implementations {
                 $this->em->flush();
                 $this->em->getConnection()->commit();
                 
-                return $this->orderHeaderViewRepo->findOneBy(['groupkey' => $groupKey]);
+                $this->em->refresh($orderHeader);
+                return $orderHeader;
                 
             } catch (\Exception $ex) {
                 $this->em->getConnection()->rollBack();

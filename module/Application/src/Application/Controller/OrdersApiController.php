@@ -135,8 +135,8 @@ namespace Application\Controller {
                 
                 $groupKey = $this->getRequest()->getContent();
                 
-                $this->ordersRepo->cancelOrder($groupKey);
-                $response = ResponseUtils::response();
+                $orderHeader = $this->ordersRepo->cancelOrder($groupKey);
+                $response = ResponseUtils::responseItem($orderHeader);
                 return $this->jsonResponse($response);
             } catch (\Exception $ex) {
                 $response = ResponseUtils::createExceptionResponse($ex);
@@ -169,8 +169,8 @@ namespace Application\Controller {
                 
                 $groupKey = $this->getRequest()->getContent();
                 
-                $this->ordersRepo->dispatchOrder($groupKey);
-                $response = ResponseUtils::response();
+                $orderHeader = $this->ordersRepo->dispatchOrder($groupKey);
+                $response = ResponseUtils::responseItem($orderHeader);
                 return $this->jsonResponse($response);
             } catch (\Exception $ex) {
                 $response = ResponseUtils::createExceptionResponse($ex);

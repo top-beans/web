@@ -24,6 +24,7 @@
                                     <option value="5">Sent For Refund</option>
                                     <option value="6">Refunded</option>
                                     <option value="7">Returned</option>
+                                    <option value="8">Refund Failed</option>
                                 </select>                            
                             </div>
                         </div>
@@ -58,6 +59,11 @@
                         <th class="col-md-2">Actions</th>
                     </tr>
                 </thead>
+                <tbody ng-show="(!$ctrl.loading && !$ctrl.orderHeaders.length)">
+                    <tr>
+                        <td colspan="5"><em>No Records</em></td>
+                    </tr>
+                </tbody>
                 <tbody>
                     <tr ng-repeat="orderHeader in $ctrl.orderHeaders">
                         <td>
@@ -70,6 +76,8 @@
                                 <span ng-if="orderHeader.allcancelled">Cancelled</span>
                                 <span ng-if="orderHeader.allsentforrefund">Sent For Refund</span>
                                 <span ng-if="orderHeader.allrefunded">Refunded</span>
+                                <span ng-if="orderHeader.allreturned">Returned</span>
+                                <span ng-if="orderHeader.allrefundfailed">Refund Failed</span>
                                 <span ng-if="orderHeader.allmixed">Mixed</span>
                             </div>
                         </td>
@@ -84,20 +92,23 @@
                         <td>{{orderHeader.createddate | amDateFormat: 'DD/MMM/YYYY'}}</td>
                         <td class="cart-actions">
                             
-                            <span ng-hide="!orderHeader.alldispatched">
-                                <span ng-hide="orderHeader.returning" class="glyphicon-repeat text-info" title="Return Order" ng-click="$ctrl.returnOrder(orderHeader)"></span>
-                                <span ng-show="orderHeader.returning" class="fa fa-spin fa-spinner"></span>
-                            </span>
+                            <span ng-show="orderHeader.returning" class="fa fa-spin fa-spinner"></span>
+                            <span ng-hide="orderHeader.returning" class="glyphicon glyphicon-repeat" title="Return Order"
+                                  ng-class="{'text-muted' : !orderHeader.alldispatched, 'text-info': orderHeader.alldispatched}"
+                                  ng-click="$ctrl.returnOrder(orderHeader)"></span>
+
+                            <span ng-show="orderHeader.dispatching" class="fa fa-spin fa-spinner"></span>
+                            <span ng-hide="orderHeader.dispatching" class="glyphicon glyphicon-share" title="Dispatch Order"
+                                  ng-class="{'text-muted' : !orderHeader.allreceived, 'text-info': orderHeader.allreceived}"
+                                  ng-click="$ctrl.dispatchOrder(orderHeader)"></span>
                             
-                            <span ng-hide="!orderHeader.allreceived">
-                                <span ng-hide="orderHeader.dispatching" class="fa fa-truck" title="Dispatch Order" ng-click="$ctrl.dispatchOrder(orderHeader)"></span>
-                                <span ng-show="orderHeader.dispatching" class="fa fa-spin fa-spinner"></span>
-
-                                <span ng-hide="orderHeader.cancelling" class="glyphicon glyphicon-ban-circle text-danger" title="Cancel Order" ng-click="$ctrl.cancelOrder(orderHeader)"></span>
-                                <span ng-show="orderHeader.cancelling" class="fa fa-spin fa-spinner"></span>
-
-                                <span class="glyphicon glyphicon-pencil" title="Edit Order" ng-click="$ctrl.addOrEditOrder(orderHeader)"></span>
-                            </span>
+                            <span ng-show="orderHeader.cancelling" class="fa fa-spin fa-spinner"></span>
+                            <span ng-hide="orderHeader.cancelling" class="glyphicon glyphicon-ban-circle" title="Cancel Order"
+                                  ng-class="{'text-muted' : !orderHeader.allreceived, 'text-danger': orderHeader.allreceived}"
+                                  ng-click="$ctrl.cancelOrder(orderHeader)"></span>
+                            
+                            <span class="glyphicon glyphicon-pencil" title="Edit Order"
+                                  ng-click="$ctrl.addOrEditOrder(orderHeader)"></span>
                             
                         </td>
                     </tr>

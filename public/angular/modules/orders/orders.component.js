@@ -4,7 +4,7 @@ angular.module('orders')
 
 .component('orders', {
     templateUrl: '/angular/modules/orders/orders.template.html',
-    controller: ['$scope', '$uibModal', 'moment', 'orderService', function ($scope, $uibModal, moment, orderService) {
+    controller: ['$scope', '$uibModal', 'moment', 'orderService', 'bbox', function ($scope, $uibModal, moment, orderService, bbox) {
         var self = this;
 
         self.$onInit = function () {
@@ -52,43 +52,65 @@ angular.module('orders')
         };
         
         self.dispatchOrder = function (orderHeader) {
-            orderHeader.refunding  = true;
-            orderService.dispatchOrder(orderHeader.groupkey, function (data) {
-                orderHeader.refunding = false;
-                if (!data.success) {
-                    toastrErrorFromList(data.errors);
-                } else {
-                    if (data.warnings.length) toastrWarningFromList(data.warnings);
-                    orderHeader.alldispatched = true;
-                    orderHeader.allreceived = false;
-                }
+            if (!orderHeader.allreceived) {
+                toastrError("This operation is only valid of Received Orders");
+                return;
+            }
+            
+            bbox.confirm(function () {
+                orderHeader.dispatching  = true;
+                orderService.dispatchOrder(orderHeader.groupkey, function (data) {
+                    orderHeader.dispatching = false;
+                    if (!data.success) {
+                        toastrErrorFromList(data.errors);
+                    } else {
+                        if (data.warnings.length) toastrWarningFromList(data.warnings);
+                        var index = _.findIndex(self.orderHeaders, function (o) { return o.groupkey === orderHeader.groupkey; });
+                        self.orderHeaders.splice(index, 1, data.item);
+                    }
+                });
             });
         };
         
         self.returnOrder = function (orderHeader) {
-            orderHeader.returning  = true;
-            orderService.returnOrder(orderHeader.groupkey, function (data) {
-                orderHeader.refunding = false;
-                if (!data.success) {
-                    toastrErrorFromList(data.errors);
-                } else {
-                    if (data.warnings.length) toastrWarningFromList(data.warnings);
-                    var index = _.findIndex(self.orderHeaders, function (o) { return o.groupkey === orderHeader.groupkey; });
-                    self.orderHeaders.splice(index, 1, data.item);                }
+            if (!orderHeader.alldispatched) {
+                toastrError("This operation is only valid of Dispatched Orders");
+                return;
+            }
+            
+            bbox.confirm(function () {
+                orderHeader.returning  = true;
+                orderService.returnOrder(orderHeader.groupkey, function (data) {
+                    orderHeader.returning = false;
+                    if (!data.success) {
+                        toastrErrorFromList(data.errors);
+                    } else {
+                        if (data.warnings.length) toastrWarningFromList(data.warnings);
+                        var index = _.findIndex(self.orderHeaders, function (o) { return o.groupkey === orderHeader.groupkey; });
+                        self.orderHeaders.splice(index, 1, data.item);
+                    }
+                });
             });
         };
         
         self.cancelOrder = function (orderHeader) {
-            orderHeader.cancelling  = true;
-            orderService.cancelOrder(orderHeader.groupkey, function (data) {
-                orderHeader.cancelling = false;
-                if (!data.success) {
-                    toastrErrorFromList(data.errors);
-                } else {
-                    if (data.warnings.length) toastrWarningFromList(data.warnings);
-                    orderHeader.allcancelled = true;
-                    orderHeader.allreceived = false;
-                }
+            if (!orderHeader.allreceived) {
+                toastrError("This operation is only valid of Received Orders");
+                return;
+            }
+            
+            bbox.confirm(function () {
+                orderHeader.cancelling  = true;
+                orderService.cancelOrder(orderHeader.groupkey, function (data) {
+                    orderHeader.cancelling = false;
+                    if (!data.success) {
+                        toastrErrorFromList(data.errors);
+                    } else {
+                        if (data.warnings.length) toastrWarningFromList(data.warnings);
+                        var index = _.findIndex(self.orderHeaders, function (o) { return o.groupkey === orderHeader.groupkey; });
+                        self.orderHeaders.splice(index, 1, data.item);
+                    }
+                });
             });
         };
         
