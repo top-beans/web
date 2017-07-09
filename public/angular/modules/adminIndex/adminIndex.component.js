@@ -27,7 +27,7 @@ component('adminIndex', {
                 if (!response.data.success) {
                     toastrErrorFromList(response.data.errors, "Login Failed");
                 } else {
-                    location.href = "/Admin/useradmin";
+                    location.href = "/Admin/orders";
                 }
             });
         };
