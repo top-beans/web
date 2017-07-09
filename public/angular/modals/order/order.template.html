@@ -12,7 +12,7 @@
                 <table class="table table-condensed">
                     <thead>
                         <tr>
-                            <th class="col-md-4">Name</th>
+                            <th class="col-md-4">Item</th>
                             <th class="col-md-2">Qty</th>
                             <th class="col-md-2">Cost</th>
                             <th class="col-md-1">Actions</th>
@@ -20,7 +20,20 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="item in $mctrl.orderItems">
-                            <td>{{item.name}}</td>
+                            <td>
+                                <div><strong>{{item.name}}</strong></div>
+                                <div>
+                                    <strong>Status:</strong>
+                                    <span ng-if="item.creating">Creating</span>
+                                    <span ng-if="item.received">Received</span>
+                                    <span ng-if="item.dispatched">Dispatched</span>
+                                    <span ng-if="item.cancelled">Cancelled</span>
+                                    <span ng-if="item.sentforrefund">Sent For Refund</span>
+                                    <span ng-if="item.refunded">Refunded</span>
+                                    <span ng-if="item.returned">Returned</span>
+                                    <span ng-if="item.refundfailed">Refund Failed</span>
+                                </div>
+                            </td>
                             <td>
                                 <span ng-if="item.ispurchase">{{item.quantity}} &times; {{item.packagingunit}}</span>
                                 <span ng-if="item.issample">{{item.quantity}} {{item.pricebaseunit}}</span>
