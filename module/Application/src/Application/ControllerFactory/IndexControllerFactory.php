@@ -17,7 +17,7 @@ namespace Application\ControllerFactory {
             $serializer = SerializerBuilder::create()->build();
             $wpRepo = $serviceLocator->get('WordPrRepo');
             $config = $serviceLocator->get('Config');
-            $worldpayClientKey = $config["WorldPayClientKey"];
+            $worldpayClientKey = $config["WorldpayClientKey"];
             
             return new IndexController($navService, $authService, $serializer, $wpRepo, $worldpayClientKey);
         }

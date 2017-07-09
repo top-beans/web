@@ -14,19 +14,19 @@ angular.module('payment')
             self.cartTotal = 0;
             self.card = new models.card();
             self.loadingCart = false;
-            self.loadingWorldPay = false;
+            self.loadingWorldpay = false;
             self.worldpayOk = true;
             self.worldpayLoadingError = null;
             
             self.getCartTotal(function (cartTotal) {
                 if (cartTotal > 0) {
-                    self.initializeWorldPay();
+                    self.initializeWorldpay();
                 }
             });
         };
 
         self.loading = function () {
-            return self.loadingCart || self.loadingWorldPay;
+            return self.loadingCart || self.loadingWorldpay;
         };
         
         self.getCartTotal = function (callback) {
@@ -44,8 +44,8 @@ angular.module('payment')
             }, false);
         };
         
-        self.initializeWorldPay = function () {
-            self.loadingWorldPay = true;
+        self.initializeWorldpay = function () {
+            self.loadingWorldpay = true;
             
             try {
                 Worldpay.useTemplateForm({
@@ -77,10 +77,10 @@ angular.module('payment')
                         }
                     }
                 });
-                self.loadingWorldPay = false;
+                self.loadingWorldpay = false;
             } catch(e) {
                 self.worldpayLoadingError = e && e.message;
-                self.loadingWorldPay = false;
+                self.loadingWorldpay = false;
                 self.worldpayOk = false;
             }
         };
