@@ -18,9 +18,11 @@ namespace Application\API\Repositories\Implementations {
     use Application\API\Canonicals\Entity\Orderview;
     use Application\API\Canonicals\Entity\Orderheaderview;
     use Application\API\Canonicals\Entity\OrderStatuses;
+    use Application\API\Canonicals\Entity\RequestTypes;
     use Application\API\Repositories\Base\IRepository;
     use Application\API\Repositories\Base\Repository;
     use Application\API\Repositories\Interfaces\IEMailService;
+    use Application\API\Repositories\Interfaces\IWorldpayService;
     use Application\API\Repositories\Interfaces\IOrdersRepository;
     use Application\API\Canonicals\Dto\EmailRequest;
 
@@ -35,6 +37,11 @@ namespace Application\API\Repositories\Implementations {
          * @var IEMailService
          */
         private $emailSvc;
+        
+        /**
+         * @var IWorldpayService
+         */
+        private $worldpayService;
         
         /**
          * @var IRepository
@@ -96,9 +103,10 @@ namespace Application\API\Repositories\Implementations {
          */
         private $isDevelopment;
         
-        public function __construct(EntityManagerInterface $em, IEMailService $emailSvc, $supportEmail, $domainName, $isDevelopment) {
+        public function __construct(EntityManagerInterface $em, IEMailService $emailSvc, IWorldpayService $worldpayService, $supportEmail, $domainName, $isDevelopment) {
             $this->em = $em;
             $this->emailSvc = $emailSvc;
+            $this->worldpayService = $worldpayService;
             $this->ordersRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Order()))));
             $this->customerRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Customer()))));
             $this->userRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new User()))));
@@ -368,7 +376,7 @@ namespace Application\API\Repositories\Implementations {
                 $this->ordersRepo->update($orderItem);
                 
                 if (!$orderViewItem->getIsfreesample()) {
-                    $this->refundItems([$orderItem]);
+                    $this->refundItems([$orderItem->getOrderkey()]);
                 }
                 
                 $this->em->flush();
@@ -380,8 +388,34 @@ namespace Application\API\Repositories\Implementations {
             }
         }
 
-        public function refundItems(array $orderItems) {
-            throw new \Exception("OrdersRepository.refundItems Not Implemented");
+        public function refundItems(array $orderKeys) {
+            $refunds = [];
+            
+            foreach($orderKeys as $orderKey) {
+                $orderView = $this->orderViewRepo->findOneBy(['orderkey' => $orderKey]);
+                $groupKey = $orderView->getGroupkey();
+                $amount = round($orderView->getItemprice(), 2) * 100;
+                
+                if (!$orderView->getCancelled() || !$orderView->getReturned()) {
+                    throw new \Exception("This operation is only available for Cancelled or Returned items");
+                } else if ($amount <= 0) {
+                    throw new \Exception("This operation is only available for amounts greater than zero");
+                }
+                
+                if (!array_key_exists($groupKey, $refunds)) {
+                    $refunds[$groupKey] = $amount;
+                } else {
+                    $refunds[$groupKey] += $amount;
+                }
+                
+                $order = $this->ordersRepo->fetch($orderKey);
+                $order->setStatuskey(OrderStatuses::SentForRefund);
+                $this->ordersRepo->update($order);
+            }
+            
+            foreach ($refunds as $groupKey => $amount) {
+                $this->worldpayService->refundOrder($groupKey, $amount);
+            }
         }
 
         public function returnItem($groupKey, $coffeeKey) {
@@ -467,6 +501,7 @@ namespace Application\API\Repositories\Implementations {
             
                 $orderItems = $this->ordersRepo->findBy(['groupkey' => $groupKey]);
                 $paidItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey, 'isfreesample' => 0]);
+                $paidItemKeys = array_map(function ($x) { return $x->getOrderkey(); }, $paidItems);
                 
                 foreach($orderItems as $orderItem) {
                     $orderItem->setStatuskey(OrderStatuses::Cancelled);
@@ -479,7 +514,7 @@ namespace Application\API\Repositories\Implementations {
                 $this->emailSvc->sendMail($shoppersCopy);
 
                 if (count($paidItems) > 0) {
-                    $this->refundItems($paidItems);
+                    $this->refundItems($paidItemKeys);
                 }
                 
                 $this->em->flush();
@@ -508,6 +543,7 @@ namespace Application\API\Repositories\Implementations {
             
                 $orderItems = $this->ordersRepo->findBy(['groupkey' => $groupKey]);
                 $paidItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey, 'isfreesample' => 0]);
+                $paidItemKeys = array_map(function ($x) { return $x->getOrderkey(); }, $paidItems);
                 
                 foreach($orderItems as $orderItem) {
                     $orderItem->setStatuskey(OrderStatuses::Returned);
@@ -520,7 +556,7 @@ namespace Application\API\Repositories\Implementations {
                 $this->emailSvc->sendMail($shoppersCopy);
                 
                 if (count($paidItems) > 0) {
-                    $this->refundItems($paidItems);
+                    $this->refundItems($paidItemKeys);
                 }
                 
                 $this->em->flush();

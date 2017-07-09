@@ -6,7 +6,7 @@
     </div>
 </div>
 
-<div ng-hide="($ctrl.loading() || !$ctrl.worldPayOk)" class="shell">
+<div ng-hide="($ctrl.loading() || !$ctrl.worldpayOk)" class="shell">
     <div class="range">
         <div class="cell-xs-12" ng-if="$ctrl.cartTotal == 0">
             <h3 class="my-underline">You have no items that require payment</h3>
@@ -19,12 +19,12 @@
     </div>
 </div>
 
-<div ng-hide="($ctrl.loading() || $ctrl.worldPayOk)" class="shell">
+<div ng-hide="($ctrl.loading() || $ctrl.worldpayOk)" class="shell">
     <div class="range">
         <div class="cell-xs-12 offset-top-0">
             <h3 class="my-underline">Connection Problem</h3>
-            <p>Please fix your connection or, if necessary, contact us immediately <span ng-if="$ctrl.worldPayLoadingError">quoting the following message:</span></p>
-            <p ng-if="$ctrl.worldPayLoadingError"><strong>{{$ctrl.worldPayLoadingError}}</strong></p>
+            <p>Please fix your connection or, if necessary, contact us immediately <span ng-if="$ctrl.worldpayLoadingError">quoting the following message:</span></p>
+            <p ng-if="$ctrl.worldpayLoadingError"><strong>{{$ctrl.worldpayLoadingError}}</strong></p>
         </div>
     </div>
 </div>
@@ -35,7 +35,7 @@
 
 <div ng-hide="$ctrl.loading()" class="shell">
     <div class="range">
-        <div class="cell-xs-12 offset-top-0 text-center" ng-if="$ctrl.cartTotal > 0 && $ctrl.worldPayOk">
+        <div class="cell-xs-12 offset-top-0 text-center" ng-if="$ctrl.cartTotal > 0 && $ctrl.worldpayOk">
             <button ng-click="$ctrl.confirm()"
                     class="btn btn-sm btn-primary-contrast">Confirm</button>            
         </div>

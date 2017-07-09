@@ -40,15 +40,15 @@ namespace Application\Controller {
         /**
          * @var string
          */
-        private $worldPayServiceKey;
+        private $worldpayServiceKey;
         
-        public function __construct(AbstractContainer $navService, AuthenticationServiceInterface $authService, SerializerInterface $serializer, IOrdersRepository $ordersRepo, IUsersRepository $usersRepository, ManagerInterface $sessionManager, $maxLoginTries, $worldPayServiceKey, $settlementCurrency) {
+        public function __construct(AbstractContainer $navService, AuthenticationServiceInterface $authService, SerializerInterface $serializer, IOrdersRepository $ordersRepo, IUsersRepository $usersRepository, ManagerInterface $sessionManager, $maxLoginTries, $worldpayServiceKey, $settlementCurrency) {
             parent::__construct($navService, $authService, $serializer);
             $this->ordersRepo = $ordersRepo;
             $this->usersRepository = $usersRepository;
             $this->sessionManager = $sessionManager;
             $this->maxLoginTries = $maxLoginTries;
-            $this->worldPayServiceKey = $worldPayServiceKey;
+            $this->worldpayServiceKey = $worldpayServiceKey;
             $this->settlementCurrency = $settlementCurrency;
         }
         
@@ -342,7 +342,7 @@ namespace Application\Controller {
                     "telephoneNumber" => $dl->getPhone(),
                 ];
                 
-                $worldpay = new Worldpay($this->worldPayServiceKey);
+                $worldpay = new Worldpay($this->worldpayServiceKey);
                 $wpResponse = $worldpay->createOrder([
                     'token' => $data->token,
                     'amount' => round($amount, 2) * 100, // Amount is only transacted in cents/pennies

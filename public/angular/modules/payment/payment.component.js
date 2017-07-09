@@ -5,7 +5,7 @@ angular.module('payment')
 .component('payment', {
     templateUrl: '/angular/modules/payment/payment.template.html',
     bindings: {
-        worldPayClientKey: '@'
+        worldpayClientKey: '@'
     },
     controller: ['cartService', 'orderService', function (cartService, orderService) {
         var self = this;
@@ -15,8 +15,8 @@ angular.module('payment')
             self.card = new models.card();
             self.loadingCart = false;
             self.loadingWorldPay = false;
-            self.worldPayOk = true;
-            self.worldPayLoadingError = null;
+            self.worldpayOk = true;
+            self.worldpayLoadingError = null;
             
             self.getCartTotal(function (cartTotal) {
                 if (cartTotal > 0) {
@@ -49,7 +49,7 @@ angular.module('payment')
             
             try {
                 Worldpay.useTemplateForm({
-                    'clientKey':self.worldPayClientKey,
+                    'clientKey':self.worldpayClientKey,
                     'saveButton':false,
                     'templateOptions': {
                         images:{enabled:false},
@@ -79,9 +79,9 @@ angular.module('payment')
                 });
                 self.loadingWorldPay = false;
             } catch(e) {
-                self.worldPayLoadingError = e && e.message;
+                self.worldpayLoadingError = e && e.message;
                 self.loadingWorldPay = false;
-                self.worldPayOk = false;
+                self.worldpayOk = false;
             }
         };
 

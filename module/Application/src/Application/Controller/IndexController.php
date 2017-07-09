@@ -21,12 +21,12 @@ namespace Application\Controller {
         /**
          * @var string
          */
-        private $worldPayClientKey;
+        private $worldpayClientKey;
         
-        public function __construct(AbstractContainer $navService, AuthenticationServiceInterface $authService, SerializerInterface $serializer, IWordPressRepository $wpRepo, $worldPayClientKey) {
+        public function __construct(AbstractContainer $navService, AuthenticationServiceInterface $authService, SerializerInterface $serializer, IWordPressRepository $wpRepo, $worldpayClientKey) {
             parent::__construct($navService, $authService, $serializer);
             $this->wpRepo = $wpRepo;
-            $this->worldPayClientKey = $worldPayClientKey;
+            $this->worldpayClientKey = $worldpayClientKey;
         }        
         
         public function indexAction() {
@@ -91,7 +91,7 @@ namespace Application\Controller {
         
         public function paymentAction() {
             return [
-                'worldPayClientKey' => $this->worldPayClientKey
+                'worldpayClientKey' => $this->worldpayClientKey
             ];
         }
     }

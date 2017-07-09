@@ -19,10 +19,10 @@ namespace Application\ControllerFactory {
             $sessionManager = $serviceLocator->get('SessionManager');
             $config = $serviceLocator->get('Config');
             $maxLoginTries = $config["MaxLoginTries"];
-            $worldPayServiceKey = $config["WorldPayServiceKey"];
+            $worldpayServiceKey = $config["WorldpayServiceKey"];
             $settlementCurrency = $config["SettlementCurrency"];
             
-            return new OrdersApiController($navRepo, $authService, $serializer, $ordersRepo, $usersRepo, $sessionManager, $maxLoginTries, $worldPayServiceKey, $settlementCurrency);
+            return new OrdersApiController($navRepo, $authService, $serializer, $ordersRepo, $usersRepo, $sessionManager, $maxLoginTries, $worldpayServiceKey, $settlementCurrency);
         }
     }
 }
