@@ -535,7 +535,7 @@ namespace Application\API\Repositories\Implementations {
             }
         }
 
-        public function receiveOrder($groupKey) {
+        public function receiveOrder($groupKey, $worldpayOrderCode = null) {
             try {
                 $this->em->getConnection()->beginTransaction();
 
@@ -553,6 +553,7 @@ namespace Application\API\Repositories\Implementations {
                     $cartItem = $this->cartRepo->fetch($orderItem->getShoppingcartkey());
                     $orderItem->setStatuskey(OrderStatuses::Received);
                     $orderItem->setShoppingcartkey(null);
+                    $orderItem->setWorldpayordercode($worldpayOrderCode);
                     $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
                     $this->ordersRepo->update($orderItem);
                     $this->cartRepo->delete($cartItem);
@@ -573,11 +574,6 @@ namespace Application\API\Repositories\Implementations {
             }
         }
 
-        public function receiveOrderByCookie($cookie) {
-            $groupKey = $this->getGroupByCookie($cookie);
-            $this->receiveOrder($groupKey);
-        }
-        
         
         public function createReceivedEmail(array $orders, $orderGroupKey) {
             

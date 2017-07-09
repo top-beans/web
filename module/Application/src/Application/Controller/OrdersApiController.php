@@ -359,7 +359,7 @@ namespace Application\Controller {
                 ]);
 
                 if ($wpResponse["paymentStatus"] == "SUCCESS") {
-                    $this->ordersRepo->receiveOrderByCookie($data->cookiekey);
+                    $this->ordersRepo->receiveOrder($groupKey, $wpResponse["orderCode"]);
                     $this->addFlashSuccessMsgs([FlashMessages::OrderComplete]);
                 }
                 

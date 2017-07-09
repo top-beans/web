@@ -27,8 +27,7 @@ namespace Application\API\Repositories\Interfaces {
         public function dispatchOrder($groupkey);
         public function cancelOrder($groupKey);
         public function returnOrder($groupKey);
-        public function receiveOrder($groupKey);
-        public function receiveOrderByCookie($cookie);
+        public function receiveOrder($groupKey, $worldpayOrderCode = null);
         
         public function createReceivedEmail(array $orders, $orderGroupKey);
         public function createNewOrderAlertEmail(array $orders, $orderGroupKey);
