@@ -12,7 +12,8 @@ namespace Application\API\Repositories\Factories {
             $config = $serviceLocator->get('Config');
             $em = $serviceLocator->get('doctrine.entitymanager.orm_default');
             $emailSvc = $serviceLocator->get('EMailSvc');
-            return new OrdersRepository($em, $emailSvc, $config['SupportEmail'], $config['DomainName'], $config['ENV'] === 'development');
+            $worldpaySvc = $serviceLocator->get('WorldpaySvc');
+            return new OrdersRepository($em, $emailSvc, $worldpaySvc, $config['SupportEmail'], $config['DomainName'], $config['ENV'] === 'development');
         }
     }
 }

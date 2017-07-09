@@ -94,6 +94,7 @@ namespace Application {
                 'OrdersRepo'        => 'Application\API\Repositories\Factories\OrdersRepositoryFactory',
                 'CartRepo'          => 'Application\API\Repositories\Factories\CartRepositoryFactory',
                 'EnquiryRepo'       => 'Application\API\Repositories\Factories\EnquiryRepositoryFactory',
+                'WorldpaySvc'       => 'Application\API\Repositories\Factories\WorldpayServiceFactory',
                 'SessionManager'    => 'Zend\Session\Service\SessionManagerFactory',
             ],
         ],

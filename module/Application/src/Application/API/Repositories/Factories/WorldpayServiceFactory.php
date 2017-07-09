@@ -2,7 +2,9 @@
 
 namespace Application\API\Repositories\Factories {
     
-    use Application\API\Repositories\Implementations\WorldpayService;
+    use Zend\ServiceManager\FactoryInterface,
+        Zend\ServiceManager\ServiceLocatorInterface,
+        Application\API\Repositories\Implementations\WorldpayService;
 
     class WorldpayServiceFactory implements FactoryInterface {
 

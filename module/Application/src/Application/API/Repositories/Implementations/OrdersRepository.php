@@ -18,7 +18,6 @@ namespace Application\API\Repositories\Implementations {
     use Application\API\Canonicals\Entity\Orderview;
     use Application\API\Canonicals\Entity\Orderheaderview;
     use Application\API\Canonicals\Entity\OrderStatuses;
-    use Application\API\Canonicals\Entity\RequestTypes;
     use Application\API\Repositories\Base\IRepository;
     use Application\API\Repositories\Base\Repository;
     use Application\API\Repositories\Interfaces\IEMailService;

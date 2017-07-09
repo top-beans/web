@@ -16,7 +16,10 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
             if (callback) callback(response.data);
             if (subscribe) self.totalSubscriptions.push(callback);
         }, function (error) {
-
+            if (callback) callback({
+                success: false,
+                errors: ['Error ' + error.status + ': ' + error.statusText]
+            });
         });
     };
     
@@ -24,7 +27,10 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
         $http.post("/api/OrdersApi/searchorderheaders", searchParams).then(function (response) {
             if (callback) callback(response.data);
         }, function (error) {
-            
+            if (callback) callback({
+                success: false,
+                errors: ['Error ' + error.status + ': ' + error.statusText]
+            });
         });
     };
     
@@ -32,7 +38,10 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
         $http.post("/api/OrdersApi/getorder", groupKey).then(function (response) {
             if (callback) callback(response.data);
         }, function (error) {
-            
+            if (callback) callback({
+                success: false,
+                errors: ['Error ' + error.status + ': ' + error.statusText]
+            });
         });
     };
     
@@ -40,7 +49,10 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
         $http.post("/api/OrdersApi/getorderheader", groupKey).then(function (response) {
             if (callback) callback(response.data);
         }, function (error) {
-            
+            if (callback) callback({
+                success: false,
+                errors: ['Error ' + error.status + ': ' + error.statusText]
+            });
         });
     };
     
@@ -56,7 +68,10 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
                 self.getOrderTotal(groupKey, self.notifyTotalSubscriptions);
             }
         }, function (error) {
-
+            if (callback) callback({
+                success: false,
+                errors: ['Error ' + error.status + ': ' + error.statusText]
+            });
         });
     };
     
@@ -69,7 +84,10 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
         $http.post("/api/OrdersApi/returnorderitem", orderItem).then(function (response) {
             if (callback) callback(response.data);
         }, function (error) {
-
+            if (callback) callback({
+                success: false,
+                errors: ['Error ' + error.status + ': ' + error.statusText]
+            });
         });
     };
     
@@ -77,7 +95,10 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
         $http.post("/api/OrdersApi/cancelorder", groupKey).then(function (response) {
             if (callback) callback(response.data);
         }, function (error) {
-            
+            if (callback) callback({
+                success: false,
+                errors: ['Error ' + error.status + ': ' + error.statusText]
+            });
         });
     };
     
@@ -85,7 +106,10 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
         $http.post("/api/OrdersApi/updatecustomeraddresses", addresses).then(function (response) {
             if (callback) callback(response.data);
         }, function (error) {
-            
+            if (callback) callback({
+                success: false,
+                errors: ['Error ' + error.status + ': ' + error.statusText]
+            });
         });
     };
     
@@ -93,7 +117,10 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
         $http.post("/api/OrdersApi/dispatchorder", groupKey).then(function (response) {
             if (callback) callback(response.data);
         }, function (error) {
-            
+            if (callback) callback({
+                success: false,
+                errors: ['Error ' + error.status + ': ' + error.statusText]
+            });
         });
     };
     
@@ -101,7 +128,10 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
         $http.post("/api/OrdersApi/returnorder", groupKey).then(function (response) {
             if (callback) callback(response.data);
         }, function (error) {
-            
+            if (callback) callback({
+                success: false,
+                errors: ['Error ' + error.status + ': ' + error.statusText]
+            });
         });
     };
     
@@ -109,7 +139,10 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
         $http.patch("/api/OrdersApi/addanonymousorder", order).then(function (response) {
             if (callback) callback(response.data);
         }, function (error) {
-            
+            if (callback) callback({
+                success: false,
+                errors: ['Error ' + error.status + ': ' + error.statusText]
+            });
         });
     };
     
@@ -118,7 +151,10 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
             $http.post("/api/OrdersApi/getcustomeraddresses", cookieKey).then(function (response) {
                 if (callback) callback(response.data);
             }, function (error) {
-
+                if (callback) callback({
+                    success: false,
+                    errors: ['Error ' + error.status + ': ' + error.statusText]
+                });
             });
         });
     };
@@ -133,7 +169,10 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
             $http.post("/api/OrdersApi/takepayment", paymentDetails).then(function (response) {
                 if (callback) callback(response.data);
             }, function (error) {
-
+                if (callback) callback({
+                    success: false,
+                    errors: ['Error ' + error.status + ': ' + error.statusText]
+                });
             });
         });
     };
