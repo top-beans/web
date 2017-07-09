@@ -94,7 +94,9 @@ angular.module('checkout')
             }
             
             if (!self.billingDifferent) {
+                var key = self.order.billingaddress.addresskey;
                 self.order.billingaddress = new models.address(self.order.deliveryaddress);
+                self.order.billingaddress.addresskey = key;
             }
             
             showOverlay('Processing order ...');

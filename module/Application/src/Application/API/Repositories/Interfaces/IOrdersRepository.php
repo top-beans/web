@@ -7,6 +7,7 @@ namespace Application\API\Repositories\Interfaces {
     interface IOrdersRepository {
         public function searchOrderHeaders(array $criteria, array $orderBy = null, $page = 0, $pageSize = 10);
         public function getOrder($groupKey);
+        public function getOrderHeader($groupKey);
         public function getNewGroupKey();
         public function getGroupByCookie($cookie);
         public function getCustomerByGroup($groupKey);
@@ -19,7 +20,7 @@ namespace Application\API\Repositories\Interfaces {
         public function addAnonymousOrder($cookieKey, Address $deliveryAddress, Address $billingAddress);
         public function addAdminOrder($cookieKey, Address $deliveryAddress, Address $billingAddress);
         
-        public function deleteItem($groupkey, $coffeeKey);
+        public function cancelItem($groupkey, $coffeeKey);
         public function refundItems(array $orderItems);
         public function returnItem($groupkey, $coffeeKey);
         

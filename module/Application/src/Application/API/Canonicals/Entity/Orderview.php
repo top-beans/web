@@ -96,6 +96,70 @@ class Orderview
     private $statuskey;
 
     /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="creating", type="integer", nullable=false)
+     */
+    private $creating;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="received", type="integer", nullable=false)
+     */
+    private $received;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="dispatched", type="integer", nullable=false)
+     */
+    private $dispatched;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="cancelled", type="integer", nullable=false)
+     */
+    private $cancelled;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="sentForRefund", type="integer", nullable=false)
+     */
+    private $sentforrefund;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="refunded", type="integer", nullable=false)
+     */
+    private $refunded;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="returned", type="integer", nullable=false)
+     */
+    private $returned;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="refundFailed", type="integer", nullable=false)
+     */
+    private $refundfailed;
+
+    /**
      * @Type("string")
      * @var string
      *
@@ -594,6 +658,14 @@ class Orderview
     function getCustomerkey() { return $this->customerkey; }
     function getRequestypekey() { return $this->requestypekey; }
     function getStatuskey() { return $this->statuskey; }
+    function getCreating() { return $this->creating; }
+    function getReceived() { return $this->received; }
+    function getDispatched() { return $this->dispatched; }
+    function getCancelled() { return $this->cancelled; }
+    function getSentforrefund() { return $this->sentforrefund; }
+    function getRefunded() { return $this->refunded; }
+    function getReturned() { return $this->returned; }
+    function getRefundfailed() { return $this->refundfailed; }
     function getGroupkey() { return $this->groupkey; }
     function getShoppingcartkey() { return $this->shoppingcartkey; }
     function getTrackingnumber() { return $this->trackingnumber; }
@@ -666,6 +738,14 @@ class Orderview
     function setCustomerkey($val) { $this->customerkey = $val; }
     function setRequestypekey($val) { $this->requestypekey = $val; }
     function setStatuskey($val) { $this->statuskey = $val; }
+    function setCreating($val) { $this->creating = $val; }
+    function setReceived($val) { $this->received = $val; }
+    function setDispatched($val) { $this->dispatched = $val; }
+    function setCancelled($val) { $this->cancelled = $val; }
+    function setSentforrefund($val) { $this->sentforrefund = $val; }
+    function setRefunded($val) { $this->refunded = $val; }
+    function setReturned($val) { $this->returned = $val; }
+    function setRefundfailed($val) { $this->refundfailed = $val; }
     function setGroupkey($val) { $this->groupkey = $val; }
     function setShoppingcartkey($val) { $this->shoppingcartkey = $val; } 
     function setTrackingnumber($val) { $this->trackingnumber = $val; }

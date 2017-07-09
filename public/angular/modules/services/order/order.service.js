@@ -12,7 +12,7 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
     };
     
     self.getOrderTotal = function (groupKey, callback, subscribe) {
-        $http.post("/api/CartApi/getordertotal", groupKey).then(function (response) {
+        $http.post("/api/OrdersApi/getordertotal", groupKey).then(function (response) {
             if (callback) callback(response.data);
             if (subscribe) self.totalSubscriptions.push(callback);
         }, function (error) {
@@ -36,13 +36,21 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
         });
     };
     
-    self.deleteOrderItem = function (groupKey, coffeeKey, callback) {
+    self.getOrderHeader = function (groupKey, callback) {
+        $http.post("/api/OrdersApi/getorderheader", groupKey).then(function (response) {
+            if (callback) callback(response.data);
+        }, function (error) {
+            
+        });
+    };
+    
+    self.cancelOrderItem = function (groupKey, coffeeKey, callback) {
         var orderItem = {
             groupkey: groupKey,
             coffeekey: coffeeKey
         };
 
-        $http.post("/api/OrdersApi/deleteorderitem", orderItem).then(function (response) {
+        $http.post("/api/OrdersApi/cancelorderitem", orderItem).then(function (response) {
             if (callback) callback(response.data);
             if (response.data.success) {
                 self.getOrderTotal(groupKey, self.notifyTotalSubscriptions);
@@ -52,8 +60,29 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
         });
     };
     
+    self.returnOrderItem = function (groupKey, coffeeKey, callback) {
+        var orderItem = {
+            groupkey: groupKey,
+            coffeekey: coffeeKey
+        };
+
+        $http.post("/api/OrdersApi/returnorderitem", orderItem).then(function (response) {
+            if (callback) callback(response.data);
+        }, function (error) {
+
+        });
+    };
+    
     self.cancelOrder = function (groupKey, callback) {
         $http.post("/api/OrdersApi/cancelorder", groupKey).then(function (response) {
+            if (callback) callback(response.data);
+        }, function (error) {
+            
+        });
+    };
+    
+    self.updateCustomerAddresses = function (addresses, callback) {
+        $http.post("/api/OrdersApi/updatecustomeraddresses", addresses).then(function (response) {
             if (callback) callback(response.data);
         }, function (error) {
             

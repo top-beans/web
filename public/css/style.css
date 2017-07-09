@@ -159,6 +159,7 @@ i.cart-icon {
 .my-overline {
   border-top: 1px solid #999;
   margin-top: 10px;
+  padding-top:10px;
 }
 
 form input.ng-touched.ng-invalid-required:not(:focus),

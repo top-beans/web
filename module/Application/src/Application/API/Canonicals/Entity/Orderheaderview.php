@@ -171,6 +171,14 @@ class Orderheaderview
      * @Type("integer")
      * @var integer
      *
+     * @ORM\Column(name="billingDifferent", type="integer", nullable=false)
+     */
+    private $billingdifferent;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
      * @ORM\Column(name="deliveryAddressKey", type="integer", nullable=false)
      */
     private $deliveryaddresskey;
@@ -411,6 +419,7 @@ class Orderheaderview
     function getTotalprice() { return $this->totalprice; }
     function getUpdateddate() { return $this->updateddate; }
     function getCreateddate() { return $this->createddate; }
+    function getBillingdifferent() { return $this->billingdifferent; }
     function getDeliveryaddresskey() { return $this->deliveryaddresskey; }
     function getBillingaddresskey() { return $this->billingaddresskey; }
     function getDeliveryfirstname() { return $this->deliveryfirstname; }
@@ -459,6 +468,7 @@ class Orderheaderview
     function setTotalprice($val) { $this->totalprice = $val; }
     function setUpdateddate($val) { $this->updateddate = $val; } 
     function setCreateddate($val) { $this->createddate = $val; }
+    function setBillingdifferent($val) { $this->billingdifferent = $val; }
     function setDeliveryaddresskey($val) { $this->deliveryaddresskey = $val; }
     function setBillingaddresskey($val) { $this->billingaddresskey = $val; }
     function setDeliveryfirstname($val) { $this->deliveryfirstname = $val; }

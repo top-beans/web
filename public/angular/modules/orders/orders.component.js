@@ -4,10 +4,11 @@ angular.module('orders')
 
 .component('orders', {
     templateUrl: '/angular/modules/orders/orders.template.html',
-    controller: ['$scope', '$uibModal', 'moment', 'orderService', 'bbox', function ($scope, $uibModal, moment, orderService, bbox) {
+    controller: ['$http', '$uibModal', 'orderService', 'bbox', function ($http, $uibModal, orderService, bbox) {
         var self = this;
 
         self.$onInit = function () {
+            self.countries = [];
             self.orderHeaders = [];
             self.hasMoreRecords = true;
             self.loading = false;
@@ -23,6 +24,7 @@ angular.module('orders')
                 ]
             };
             
+            self.getCountries();
             self.filter();
             $('#statuses').multiselect();
         };
@@ -49,6 +51,16 @@ angular.module('orders')
                     }
                 });
             }
+        };
+            
+        self.getCountries = function() {
+            $http.get('/api/CountryApi/getcountries').then(function (response) {
+                if (!response.data.success) {
+                    toastrErrorFromList(response.data.errors);
+                } else {
+                    self.countries = response.data.items;
+                }
+            });
         };
         
         self.dispatchOrder = function (orderHeader) {
@@ -117,25 +129,33 @@ angular.module('orders')
         self.addOrEditOrder = function (orderHeader) {
             $uibModal.open({
                 backdrop: 'static',
-                templateUrl: '/angular/modals/order/order.template.html',
-                controller: ['$uibModalInstance', 'orderService', 'orderHeader', modals.orderCtrl],
+                templateUrl: '/angular/modals/order/order.template.html?3',
+                controller: ['$uibModalInstance', 'orderService', 'bbox', 'countries', 'orderHeader', modals.orderCtrl],
                 controllerAs: "$mctrl",
                 openedClass: 'page modal-open',
                 resolve: {
+                    countries: function () { return self.countries; },
                     orderHeader: orderHeader
                 }
-            }).result.then(function (newOrderHeader) {
-                if (!newOrderHeader) {
-                    return;
-                } else if (!orderHeader) {
-                    self.orderHeaders.splice(0, 0, newOrderHeader);
-                    toastrSuccess("Added Order Successfully");
-                } else {
-                    var index = _.findIndex(self.orderHeaders, function (o) { return o.groupkey === orderHeader.groupkey; });
-                    self.orderHeaders.splice(index, 1, newOrderHeader);
-                    toastrSuccess("Updated Order Successfully");
-                }
-            }, function () { });
+            }).result.then(function () {
+            }, function () {
+                
+                showOverlay('Updating Order ...');
+                orderService.getOrderHeader(orderHeader.groupkey, function (data) {
+                    hideOverlay();
+                    if (!data.success) {
+                        toastrErrorFromList(data.errors);
+                    } else {
+                        var index = _.findIndex(self.orderHeaders, function (o) { return o.groupkey === orderHeader.groupkey; });
+                        
+                        if (!data.item) {
+                            self.orderHeaders.splice(index, 1);
+                        } else {
+                            self.orderHeaders.splice(index, 1, data.item);
+                        }
+                    }
+                });
+            });
         };
     }]
 });

@@ -1,12 +1,16 @@
     'use strict';
 
-namespace('modals').orderCtrl = function ($uibModalInstance, orderService, orderHeader) {
+namespace('modals').orderCtrl = function ($uibModalInstance, orderService, bbox, countries, orderHeader) {
     var self = this;
 
     self.$onInit = function () {
-        self.order = null;
-        self.orderHeader = orderHeader;
-        self.groupKey = !orderHeader ? null : orderHeader.groupkey;
+        self.countries = countries;
+        self.addresses = new models.customerAddresses(orderHeader);
+        self.allReceived = orderHeader.allreceived;
+        self.groupKey = orderHeader.groupkey;
+        self.billingDifferent = orderHeader.billingdifferent ? true : false;
+        self.orderItems = [];
+        self.orderTotal = 0;
         self.getOrder();
     };
 
@@ -15,33 +19,104 @@ namespace('modals').orderCtrl = function ($uibModalInstance, orderService, order
             if (!data.success) {
                 toastrErrorFromList(data.errors);
             } else {
-                self.order = data.item;
+                self.orderItems = data.items;
+                self.recalculateTotal();
             }
         });
     };
 
-    self.saveOrder = function () {
-        var form = $('form[name=orderForm]');
+    self.recalculateTotal = function () {
+        orderService.getOrderTotal(self.groupKey, function (data) {
+            if (!data.success) {
+                toastrErrorFromList(data.errors);
+            } else {
+                self.orderTotal = data.item;
+            }
+        });
+    };
 
-        form.addClass('my-submitted');
+    self.cancelItem = function (item) {
+        if (!item.received) {
+            toastrError("This operation is only valid of Received items");
+            return;
+        }
 
-        if ($(form).hasClass('ng-invalid-required') || $(form).hasClass('ng-invalid-pattern')) {
+        bbox.confirm(function () {
+            item.deleting  = true;
+            orderService.cancelOrderItem(self.groupKey, item.coffeekey, function (data) {
+                item.deleting = false;
+                if (!data.success) {
+                    toastrErrorFromList(data.errors);
+                } else {
+                    if (data.warnings.length) toastrWarningFromList(data.warnings);
+                    var index = _.findIndex(self.orderItems, function (o) { return o.coffeekey === item.coffeekey; });
+                    self.orderItems.splice(index, 1);
+                    self.recalculateTotal();
+                }
+            });
+        });
+    };
+
+    self.returnItem = function (item) {
+        if (!item.dispatched) {
+            toastrError("This operation is only valid of Dispatched items");
+            return;
+        }
+
+        bbox.confirm(function () {
+            item.returning  = true;
+            orderService.returnOrderItem(self.groupKey, item.coffeekey, function (data) {
+                item.returning = false;
+                if (!data.success) {
+                    toastrErrorFromList(data.errors);
+                } else {
+                    if (data.warnings.length) toastrWarningFromList(data.warnings);
+                    var index = _.findIndex(self.orderItems, function (o) { return o.coffeekey === item.coffeekey; });
+                    self.orderItems.splice(index, 1, data.item);
+                    self.recalculateTotal();
+                }
+            });
+        });
+    };
+
+    self.updateAddresses = function () {
+        if (!self.allReceived) {
+            toastrError("This operation is only valid of Received Orders");
+            return false;
+        }
+
+        var dlForm = $('form[name=deliveryForm]');
+        var blForm = $('form[name=billingForm]');
+
+        dlForm.addClass('my-submitted');
+        blForm.addClass('my-submitted');
+
+        var dlInv = dlForm.hasClass('ng-invalid-required') || dlForm.hasClass('ng-invalid-email');
+        var blInv = blForm.hasClass('ng-invalid-required') || blForm.hasClass('ng-invalid-email');
+
+        if (dlInv || (self.billingDifferent && blInv)) {
             toastrError('Please review form', 'Invalid Details');
             return false;
         }
+
+        if (!self.billingDifferent) {
+            var key = self.addresses.billingaddress.addresskey;
+            self.addresses.billingaddress = new models.address(self.addresses.deliveryaddress);
+            self.addresses.billingaddress.addresskey = key;
+        }
+
+        showOverlay('Saving Addresses ...');
         
-        showOverlay('Saving Order ...');
-        
-        orderService.addOrUpdateOrder(self.order, function (data) {
+        orderService.updateCustomerAddresses(self.addresses, function (data) {
             hideOverlay();
             if (!data.success) {
                 toastrErrorFromList(data.errors);
             } else {
-                $uibModalInstance.close(data.item);
+                toastrSuccess("Saved Successfully");
             }
         });
     };
-
+    
     self.closeModal = function () {
         $uibModalInstance.dismiss('cancel');
     };

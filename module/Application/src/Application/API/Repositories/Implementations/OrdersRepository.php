@@ -171,12 +171,16 @@ namespace Application\API\Repositories\Implementations {
         }
         
         public function getOrder($groupKey) {
-            $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
+            return $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
+        }
+        
+        public function getOrderHeader($groupKey) {
+            return $this->orderHeaderViewRepo->findOneBy(['groupkey' => $groupKey]);
         }
 
         public function getNewGroupKey() {
             do {
-                $char = str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+                $char = str_shuffle("ABCDEFGHJKLMNPQRSTUVWXYZ3456789");
                 $groupKey = "";
                 $length = 5;
                 
@@ -346,7 +350,7 @@ namespace Application\API\Repositories\Implementations {
         }
         
         
-        public function deleteItem($groupKey, $coffeeKey) {
+        public function cancelItem($groupKey, $coffeeKey) {
             try {
                 $this->em->getConnection()->beginTransaction();
 
@@ -354,14 +358,18 @@ namespace Application\API\Repositories\Implementations {
 
                 if ($orderViewItem == null) {
                     throw new \Exception("Could not find the coffee to delete");
-                } else if ($orderViewItem->getStatuskey() != OrderStatuses::Received) {
-                    throw new \Exception("This operation is only available for Received orders");
-                } else if (!$orderViewItem->getIsfreesample()) {
-                    throw new \Exception("This operation is only available for Received free samples only");
+                } else if (!$orderViewItem->getReceived()) {
+                    throw new \Exception("This operation is only available for Received items");
                 }
 
                 $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
-                $this->ordersRepo->delete($orderItem);
+                $orderItem->setStatuskey(OrderStatuses::Cancelled);
+                $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
+                $this->ordersRepo->update($orderItem);
+                
+                if (!$orderViewItem->getIsfreesample()) {
+                    $this->refundItems([$orderItem]);
+                }
                 
                 $this->em->flush();
                 $this->em->getConnection()->commit();
@@ -384,7 +392,7 @@ namespace Application\API\Repositories\Implementations {
 
                 if ($orderItem == null) {
                     throw new \Exception("Could not find the item to return");
-                } else if ($orderItem->getStatuskey() != OrderStatuses::Dispatched) {
+                } else if (!$orderItem->getDispatched()) {
                     throw new \Exception("This operation is only available for Dispatched items");
                 }
                 
@@ -398,6 +406,9 @@ namespace Application\API\Repositories\Implementations {
                 
                 $this->em->flush();
                 $this->em->getConnection()->commit();
+                
+                $this->em->refresh($orderViewItem);
+                return $orderViewItem;
                 
             } catch (\Exception $ex) {
                 $this->em->getConnection()->rollBack();
