@@ -379,7 +379,7 @@ namespace Application\API\Repositories\Implementations {
                     $orderItem->setStatuskey(OrderStatuses::SentForRefund);
                     $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
                     $this->ordersRepo->update($orderItem);
-                    $this->worldpayService->refundOrder($groupKey, $refundAmount);
+                    $this->worldpayService->refundOrder($orderItem->getWorldpayordercode(), $refundAmount);
                 }
                 
                 $this->em->flush();
@@ -473,13 +473,11 @@ namespace Application\API\Repositories\Implementations {
                 }
             
                 $orderItems = $this->ordersRepo->findBy(['groupkey' => $groupKey]);
-                $refundAmount = 0;
                 
                 foreach($orderItems as $orderItem) {
-                    $itemPrice = round($orderItem->getItemprice(), 2) * 100;
-                    $refundAmount += $itemPrice;
+                    $refundAmount = round($orderItem->getItemprice(), 2) * 100;
 
-                    if ($itemPrice == 0) {
+                    if ($refundAmount == 0) {
                         $orderItem->setStatuskey(OrderStatuses::Cancelled);
                         $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
                         $this->ordersRepo->update($orderItem);
@@ -487,13 +485,10 @@ namespace Application\API\Repositories\Implementations {
                         $orderItem->setStatuskey(OrderStatuses::SentForRefund);
                         $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
                         $this->ordersRepo->update($orderItem);
+                        $this->worldpayService->refundOrder($orderItem->getWorldpayordercode(), $refundAmount);
                     }
                 }
 
-                if ($refundAmount > 0) {
-                    $this->worldpayService->refundOrder($groupKey, $refundAmount);
-                }
-                
                 $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
                 $shoppersCopy = $this->createCancelledEmail($orderViewItems, $groupKey);
                 $this->emailSvc->sendMail($shoppersCopy);
@@ -523,13 +518,11 @@ namespace Application\API\Repositories\Implementations {
                 }
             
                 $orderItems = $this->ordersRepo->findBy(['groupkey' => $groupKey]);
-                $refundAmount = 0;
                 
                 foreach($orderItems as $orderItem) {
-                    $itemPrice = round($orderItem->getItemprice(), 2) * 100;
-                    $refundAmount += $itemPrice;
+                    $refundAmount = round($orderItem->getItemprice(), 2) * 100;
 
-                    if ($itemPrice == 0) {
+                    if ($refundAmount == 0) {
                         $orderItem->setStatuskey(OrderStatuses::Returned);
                         $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
                         $this->ordersRepo->update($orderItem);
@@ -537,13 +530,10 @@ namespace Application\API\Repositories\Implementations {
                         $orderItem->setStatuskey(OrderStatuses::SentForRefund);
                         $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
                         $this->ordersRepo->update($orderItem);
+                        $this->worldpayService->refundOrder($orderItem->getWorldpayordercode(), $refundAmount);
                     }
                 }
 
-                if ($refundAmount > 0) {
-                    $this->worldpayService->refundOrder($groupKey, $refundAmount);
-                }
-                
                 $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
                 $shoppersCopy = $this->createReturnedEmail($orderViewItems, $groupKey);
                 $this->emailSvc->sendMail($shoppersCopy);
