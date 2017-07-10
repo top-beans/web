@@ -10,17 +10,9 @@
                 <h5 class="my-underline">Order Items</h5>
                 
                 <table class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th class="col-md-4">Item</th>
-                            <th class="col-md-2">Qty</th>
-                            <th class="col-md-2">Cost</th>
-                            <th class="col-md-1">Actions</th>
-                        </tr>
-                    </thead>
                     <tbody>
                         <tr ng-repeat="item in $mctrl.orderItems">
-                            <td>
+                            <td class="col-md-4">
                                 <div><strong>{{item.name}}</strong></div>
                                 <div>
                                     <strong>Status:</strong>
@@ -34,12 +26,12 @@
                                     <span ng-if="item.refundfailed">Refund Failed</span>
                                 </div>
                             </td>
-                            <td>
+                            <td class="col-md-2">
                                 <span ng-if="item.ispurchase">{{item.quantity}} &times; {{item.packagingunit}}</span>
                                 <span ng-if="item.issample">{{item.quantity}} {{item.pricebaseunit}}</span>
                             </td>
-                            <td>{{item.itemprice}}</td>
-                            <td class="cart-actions">
+                            <td class="col-md-2">&pound;{{item.itemprice}}</td>
+                            <td class="cart-actions col-md-1">
 
                                 <span ng-show="item.returning" class="fa fa-spin fa-spinner"></span>
                                 <span ng-hide="item.returning" class="glyphicon glyphicon-repeat" title="Return Item"
@@ -65,140 +57,164 @@
                 </table>
             </div>
         </div>
-        <form class="rd-mailform form-modern offset-top-22" name="deliveryForm" autocomplete="on" novalidate>
+        
+        <div ng-if="!$mctrl.allReceived" class="offset-top-22">
             <div class="range">
-                <div class="cell-xs-12">
+                <div class="cell-xs-6">
                     <h5 class="my-underline">Delivery Address</h5>
+                    {{$mctrl.addresses.deliveryaddress.firstname}} {{$mctrl.addresses.deliveryaddress.lastname}}<br/>
+                    {{$mctrl.addresses.deliveryaddress.address1}} {{$mctrl.addresses.deliveryaddress.address2}}<br/>
+                    {{$mctrl.addresses.deliveryaddress.city}} {{$mctrl.addresses.deliveryaddress.state}}<br/>
+                    {{$mctrl.addresses.deliveryaddress.postcode}}<br/>
+                    {{$mctrl.addresses.deliveryaddress.country}}
                 </div>
                 <div class="cell-xs-6">
-                    <div class="form-group">
-                        Firstname
-                        <input ng-model="$mctrl.addresses.deliveryaddress.firstname" type="text" name="firstname" placeholder="Firstname" class="form-control" required>
-                    </div>
-                </div>
-                <div class="cell-xs-6">
-                    <div class="form-group">
-                        Lastname
-                        <input ng-model="$mctrl.addresses.deliveryaddress.lastname" type="text" name="lastname" placeholder="Lastname" class="form-control" required>
-                    </div>
-                </div>
-                <div class="cell-xs-12">
-                    <div class="form-group">
-                        Address Line 1
-                        <input ng-model="$mctrl.addresses.deliveryaddress.address1" type="text" name="addressline1" placeholder="Address Line 1" class="form-control" required>
-                    </div>
-                </div>
-                <div class="cell-xs-6">
-                    <div class="form-group">
-                        Address Line 2
-                        <input ng-model="$mctrl.addresses.deliveryaddress.address2" type="text" name="addressline2" placeholder="Address Line 2" class="form-control">
-                    </div>
-                </div>
-                <div class="cell-xs-6">
-                    <div class="form-group">
-                        Post Code
-                        <input ng-model="$mctrl.addresses.deliveryaddress.postcode" type="text" name="postcode" placeholder="Post Code" class="form-control" required>
-                    </div>
-                </div>
-                <div class="cell-xs-6">
-                    <div class="form-group">
-                        City
-                        <input ng-model="$mctrl.addresses.deliveryaddress.city" type="text" name="city" placeholder="City" class="form-control" required>
-                    </div>
-                </div>
-                <div class="cell-xs-6">
-                    <div class="form-group">
-                        Country
-                        <select ng-model="$mctrl.addresses.deliveryaddress.countrykey" class="form-control" name="country" required>
-                            <option ng-repeat="x in $mctrl.countries" value="{{x.countrykey}}">{{x.name}}</option>
-                        </select>                            
-                    </div>
-                </div>
-                <div class="cell-xs-6">
-                    <div class="form-group">
-                        Email
-                        <input ng-model="$mctrl.addresses.deliveryaddress.email" type="email" name="email" placeholder="Email" class="form-control" required>
-                    </div>
-                </div>
-                <div class="cell-xs-6">
-                    <div class="form-group">
-                        Phone
-                        <input ng-model="$mctrl.addresses.deliveryaddress.phone" type="text" name="phone" placeholder="Phone" class="form-control">
-                    </div>
-                </div>
-                <div class="cell-xs-12">
-                    <div class="form-group">
-                        <label><input type="checkbox" ng-model="$mctrl.billingDifferent" /> &nbsp;<span>My Billing Address is different</span></label>
-                    </div>
-                </div>
-            </div>
-        </form>
-        <form class="rd-mailform form-modern offset-top-22" name="billingForm" ng-show="$mctrl.billingDifferent" autocomplete="on" novalidate>
-            <div class="range">
-                <div class="cell-xs-12">
                     <h5 class="my-underline">Billing Address</h5>
-                </div>
-                <div class="cell-xs-6">
-                    <div class="form-group">
-                        Firstname
-                        <input ng-model="$mctrl.addresses.billingaddress.firstname" type="text" placeholder="Firstname" class="form-control" required>
-                    </div>
-                </div>
-                <div class="cell-xs-6">
-                    <div class="form-group">
-                        Lastname
-                        <input ng-model="$mctrl.addresses.billingaddress.lastname" type="text" placeholder="Lastname" class="form-control" required>
-                    </div>
-                </div>
-                <div class="cell-xs-12">
-                    <div class="form-group">
-                        Address Line 1
-                        <input ng-model="$mctrl.addresses.billingaddress.address1" type="text" placeholder="Address Line 1" class="form-control" required>
-                    </div>
-                </div>
-                <div class="cell-xs-6">
-                    <div class="form-group">
-                        Address Line 2
-                        <input ng-model="$mctrl.addresses.billingaddress.address2" type="text" placeholder="Address Line 2" class="form-control">
-                    </div>
-                </div>
-                <div class="cell-xs-6">
-                    <div class="form-group">
-                        Post Code
-                        <input ng-model="$mctrl.addresses.billingaddress.postcode" type="text" placeholder="Post Code" class="form-control" required>
-                    </div>
-                </div>
-                <div class="cell-xs-6">
-                    <div class="form-group">
-                        City
-                        <input ng-model="$mctrl.addresses.billingaddress.city" type="text" placeholder="City" class="form-control" required>
-                    </div>
-                </div>
-                <div class="cell-xs-6">
-                    <div class="form-group">
-                        Country
-                        <select ng-model="$mctrl.addresses.billingaddress.countrykey" class="form-control" required>
-                            <option ng-repeat="x in $mctrl.countries" value="{{x.countrykey}}">{{x.name}}</option>
-                        </select>                            
-                    </div>
-                </div>
-                <div class="cell-xs-6">
-                    <div class="form-group">
-                        Email
-                        <input ng-model="$mctrl.addresses.billingaddress.email" type="email" placeholder="Email" class="form-control">
-                    </div>
-                </div>
-                <div class="cell-xs-6">
-                    <div class="form-group">
-                        Phone
-                        <input ng-model="$mctrl.addresses.billingaddress.phone" type="text" placeholder="Phone" class="form-control">
-                    </div>
+                    {{$mctrl.addresses.billingaddress.firstname}} {{$mctrl.addresses.billingaddress.lastname}}<br/>
+                    {{$mctrl.addresses.billingaddress.address1}} {{$mctrl.addresses.billingaddress.address2}}<br/>
+                    {{$mctrl.addresses.billingaddress.city}} {{$mctrl.addresses.billingaddress.state}}<br/>
+                    {{$mctrl.addresses.billingaddress.postcode}}<br/>
+                    {{$mctrl.addresses.billingaddress.country}}
                 </div>
             </div>
-        </form>
-        <div class="my-overline">
-            <button type="button" class="btn btn-xs btn-primary" ng-click="$mctrl.updateAddresses()">Save Addresses</button>
-        </div>    
+        </div>
+        <div ng-if="$mctrl.allReceived">
+            <form class="rd-mailform form-modern offset-top-22" name="deliveryForm" autocomplete="on" novalidate>
+                <div class="range">
+                    <div class="cell-xs-12">
+                        <h5 class="my-underline">Delivery Address</h5>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Firstname
+                            <input ng-model="$mctrl.addresses.deliveryaddress.firstname" type="text" name="firstname" placeholder="Firstname" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Lastname
+                            <input ng-model="$mctrl.addresses.deliveryaddress.lastname" type="text" name="lastname" placeholder="Lastname" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="cell-xs-12">
+                        <div class="form-group">
+                            Address Line 1
+                            <input ng-model="$mctrl.addresses.deliveryaddress.address1" type="text" name="addressline1" placeholder="Address Line 1" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Address Line 2
+                            <input ng-model="$mctrl.addresses.deliveryaddress.address2" type="text" name="addressline2" placeholder="Address Line 2" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Post Code
+                            <input ng-model="$mctrl.addresses.deliveryaddress.postcode" type="text" name="postcode" placeholder="Post Code" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            City
+                            <input ng-model="$mctrl.addresses.deliveryaddress.city" type="text" name="city" placeholder="City" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Country
+                            <select ng-model="$mctrl.addresses.deliveryaddress.countrykey" class="form-control" name="country" required>
+                                <option ng-repeat="x in $mctrl.countries" value="{{x.countrykey}}">{{x.name}}</option>
+                            </select>                            
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Email
+                            <input ng-model="$mctrl.addresses.deliveryaddress.email" type="email" name="email" placeholder="Email" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Phone
+                            <input ng-model="$mctrl.addresses.deliveryaddress.phone" type="text" name="phone" placeholder="Phone" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-12">
+                        <div class="form-group">
+                            <label><input type="checkbox" ng-model="$mctrl.billingDifferent" /> &nbsp;<span>My Billing Address is different</span></label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form class="rd-mailform form-modern offset-top-22" name="billingForm" ng-show="$mctrl.billingDifferent" autocomplete="on" novalidate>
+                <div class="range">
+                    <div class="cell-xs-12">
+                        <h5 class="my-underline">Billing Address</h5>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Firstname
+                            <input ng-model="$mctrl.addresses.billingaddress.firstname" type="text" placeholder="Firstname" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Lastname
+                            <input ng-model="$mctrl.addresses.billingaddress.lastname" type="text" placeholder="Lastname" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="cell-xs-12">
+                        <div class="form-group">
+                            Address Line 1
+                            <input ng-model="$mctrl.addresses.billingaddress.address1" type="text" placeholder="Address Line 1" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Address Line 2
+                            <input ng-model="$mctrl.addresses.billingaddress.address2" type="text" placeholder="Address Line 2" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Post Code
+                            <input ng-model="$mctrl.addresses.billingaddress.postcode" type="text" placeholder="Post Code" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            City
+                            <input ng-model="$mctrl.addresses.billingaddress.city" type="text" placeholder="City" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Country
+                            <select ng-model="$mctrl.addresses.billingaddress.countrykey" class="form-control" required>
+                                <option ng-repeat="x in $mctrl.countries" value="{{x.countrykey}}">{{x.name}}</option>
+                            </select>                            
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Email
+                            <input ng-model="$mctrl.addresses.billingaddress.email" type="email" placeholder="Email" class="form-control">
+                        </div>
+                    </div>
+                    <div class="cell-xs-6">
+                        <div class="form-group">
+                            Phone
+                            <input ng-model="$mctrl.addresses.billingaddress.phone" type="text" placeholder="Phone" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="my-overline">
+                <button type="button" class="btn btn-xs btn-primary" ng-click="$mctrl.updateAddresses()">Save Addresses</button>
+            </div>    
+        </div>
+        
     </div>    
 </div>
 
