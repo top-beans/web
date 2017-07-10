@@ -43,16 +43,16 @@ namespace('modals').orderCtrl = function ($uibModalInstance, orderService, bbox,
         }
 
         bbox.confirm(function () {
-            item.deleting  = true;
+            item.cancelling  = true;
             orderService.cancelOrderItem(self.groupKey, item.coffeekey, function (data) {
-                item.deleting = false;
+                item.cancelling = false;
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
                 } else {
                     self.changesWereMade = true;
                     if (data.warnings.length) toastrWarningFromList(data.warnings);
                     var index = _.findIndex(self.orderItems, function (o) { return o.coffeekey === item.coffeekey; });
-                    self.orderItems.splice(index, 1);
+                    self.orderItems.splice(index, 1, data.item);
                     self.recalculateTotal();
                 }
             });

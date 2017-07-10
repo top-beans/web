@@ -136,8 +136,8 @@ namespace Application\Controller {
                 $groupkey = $data->groupkey;
                 $coffeeKey = $data->coffeekey;
                 
-                $this->ordersRepo->cancelItem($groupkey, $coffeeKey);
-                $response = ResponseUtils::response();
+                $orderViewItem = $this->ordersRepo->cancelItem($groupkey, $coffeeKey);
+                $response = ResponseUtils::responseItem($orderViewItem);
                 return $this->jsonResponse($response);
             } catch (\Exception $ex) {
                 $response = ResponseUtils::createExceptionResponse($ex);

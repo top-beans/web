@@ -385,6 +385,9 @@ namespace Application\API\Repositories\Implementations {
                 $this->em->flush();
                 $this->em->getConnection()->commit();
                 
+                $orderViewItem = $this->orderViewRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+                return $orderViewItem;
+                
             } catch (\Exception $ex) {
                 $this->em->getConnection()->rollBack();
                 throw $ex;
