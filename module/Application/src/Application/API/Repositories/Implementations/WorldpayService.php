@@ -25,7 +25,7 @@ namespace Application\API\Repositories\Implementations {
         public function refundOrder($customerOrderCode, $amount = null) {
             $worldpay = new Worldpay($this->worldpayServiceKey);
 
-            if (!$amount) {
+            if ($amount == null) {
                 $worldpay->refundOrder($customerOrderCode);
             } else {
                 $worldpay->refundOrder($customerOrderCode, $amount);

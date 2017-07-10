@@ -3,6 +3,6 @@
 namespace Application\API\Repositories\Interfaces {
     
     interface IWorldpayService {
-        public function refundOrder($customerOrderCode, $amount);
+        public function refundOrder($customerOrderCode, $amount = null);
     }
 }
