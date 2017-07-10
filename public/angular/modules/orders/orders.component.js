@@ -138,7 +138,10 @@ angular.module('orders')
                     orderHeader: orderHeader
                 }
             }).result.then(function () {
-            }, function () {
+            }, function (changesWereMade) {
+                if (!changesWereMade) {
+                    return;
+                }
                 
                 showOverlay('Updating Order ...');
                 orderService.getOrderHeader(orderHeader.groupkey, function (data) {

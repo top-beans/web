@@ -11,6 +11,7 @@ namespace('modals').orderCtrl = function ($uibModalInstance, orderService, bbox,
         self.billingDifferent = orderHeader.billingdifferent ? true : false;
         self.orderItems = [];
         self.orderTotal = 0;
+        self.changesWereMade = false;
         self.getOrder();
     };
 
@@ -48,6 +49,7 @@ namespace('modals').orderCtrl = function ($uibModalInstance, orderService, bbox,
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
                 } else {
+                    self.changesWereMade = true;
                     if (data.warnings.length) toastrWarningFromList(data.warnings);
                     var index = _.findIndex(self.orderItems, function (o) { return o.coffeekey === item.coffeekey; });
                     self.orderItems.splice(index, 1);
@@ -70,6 +72,7 @@ namespace('modals').orderCtrl = function ($uibModalInstance, orderService, bbox,
                 if (!data.success) {
                     toastrErrorFromList(data.errors);
                 } else {
+                    self.changesWereMade = true;
                     if (data.warnings.length) toastrWarningFromList(data.warnings);
                     var index = _.findIndex(self.orderItems, function (o) { return o.coffeekey === item.coffeekey; });
                     self.orderItems.splice(index, 1, data.item);
@@ -112,12 +115,13 @@ namespace('modals').orderCtrl = function ($uibModalInstance, orderService, bbox,
             if (!data.success) {
                 toastrErrorFromList(data.errors);
             } else {
+                self.changesWereMade = true;
                 toastrSuccess("Saved Successfully");
             }
         });
     };
     
     self.closeModal = function () {
-        $uibModalInstance.dismiss('cancel');
+        $uibModalInstance.dismiss(self.changesWereMade);
     };
 };
