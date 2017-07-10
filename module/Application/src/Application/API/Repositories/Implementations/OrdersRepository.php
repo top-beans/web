@@ -361,21 +361,25 @@ namespace Application\API\Repositories\Implementations {
             try {
                 $this->em->getConnection()->beginTransaction();
 
-                $orderViewItem = $this->orderViewRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
-
-                if ($orderViewItem == null) {
-                    throw new \Exception("Could not find the coffee to delete");
-                } else if (!$orderViewItem->getReceived()) {
+                $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+                
+                if ($orderItem == null) {
+                    throw new \Exception("Could not find the order item to cancel");
+                } else if ($orderItem->getStatuskey() != OrderStatuses::Received) {
                     throw new \Exception("This operation is only available for Received items");
                 }
 
-                $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
-                $orderItem->setStatuskey(OrderStatuses::Cancelled);
-                $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
-                $this->ordersRepo->update($orderItem);
+                $refundAmount = round($orderItem->getItemprice(), 2) * 100;
                 
-                if (!$orderViewItem->getIsfreesample()) {
-                    $this->refundItems([$orderItem->getOrderkey()]);
+                if ($refundAmount == 0) {
+                    $orderItem->setStatuskey(OrderStatuses::Cancelled);
+                    $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
+                    $this->ordersRepo->update($orderItem);
+                } else {
+                    $orderItem->setStatuskey(OrderStatuses::SentForRefund);
+                    $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
+                    $this->ordersRepo->update($orderItem);
+                    $this->worldpayService->refundOrder($groupKey, $refundAmount);
                 }
                 
                 $this->em->flush();
@@ -384,36 +388,6 @@ namespace Application\API\Repositories\Implementations {
             } catch (\Exception $ex) {
                 $this->em->getConnection()->rollBack();
                 throw $ex;
-            }
-        }
-
-        public function refundItems(array $orderKeys) {
-            $refunds = [];
-            
-            foreach($orderKeys as $orderKey) {
-                $orderView = $this->orderViewRepo->findOneBy(['orderkey' => $orderKey]);
-                $groupKey = $orderView->getGroupkey();
-                $amount = round($orderView->getItemprice(), 2) * 100;
-                
-                if (!$orderView->getCancelled() || !$orderView->getReturned()) {
-                    throw new \Exception("This operation is only available for Cancelled or Returned items");
-                } else if ($amount <= 0) {
-                    throw new \Exception("This operation is only available for amounts greater than zero");
-                }
-                
-                if (!array_key_exists($groupKey, $refunds)) {
-                    $refunds[$groupKey] = $amount;
-                } else {
-                    $refunds[$groupKey] += $amount;
-                }
-                
-                $order = $this->ordersRepo->fetch($orderKey);
-                $order->setStatuskey(OrderStatuses::SentForRefund);
-                $this->ordersRepo->update($order);
-            }
-            
-            foreach ($refunds as $groupKey => $amount) {
-                $this->worldpayService->refundOrder($groupKey, $amount);
             }
         }
 
@@ -448,7 +422,7 @@ namespace Application\API\Repositories\Implementations {
                 throw $ex;
             }
         }
-
+        
         
         public function dispatchOrder($groupKey) {
             try {
@@ -499,23 +473,31 @@ namespace Application\API\Repositories\Implementations {
                 }
             
                 $orderItems = $this->ordersRepo->findBy(['groupkey' => $groupKey]);
-                $paidItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey, 'isfreesample' => 0]);
-                $paidItemKeys = array_map(function ($x) { return $x->getOrderkey(); }, $paidItems);
+                $refundAmount = 0;
                 
                 foreach($orderItems as $orderItem) {
-                    $orderItem->setStatuskey(OrderStatuses::Cancelled);
-                    $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
-                    $this->ordersRepo->update($orderItem);
+                    $itemPrice = round($orderItem->getItemprice(), 2) * 100;
+                    $refundAmount += $itemPrice;
+
+                    if ($itemPrice == 0) {
+                        $orderItem->setStatuskey(OrderStatuses::Cancelled);
+                        $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
+                        $this->ordersRepo->update($orderItem);
+                    } else {
+                        $orderItem->setStatuskey(OrderStatuses::SentForRefund);
+                        $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
+                        $this->ordersRepo->update($orderItem);
+                    }
+                }
+
+                if ($refundAmount > 0) {
+                    $this->worldpayService->refundOrder($groupKey, $refundAmount);
                 }
                 
                 $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
                 $shoppersCopy = $this->createCancelledEmail($orderViewItems, $groupKey);
                 $this->emailSvc->sendMail($shoppersCopy);
 
-                if (count($paidItems) > 0) {
-                    $this->refundItems($paidItemKeys);
-                }
-                
                 $this->em->flush();
                 $this->em->getConnection()->commit();
                 
@@ -541,22 +523,30 @@ namespace Application\API\Repositories\Implementations {
                 }
             
                 $orderItems = $this->ordersRepo->findBy(['groupkey' => $groupKey]);
-                $paidItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey, 'isfreesample' => 0]);
-                $paidItemKeys = array_map(function ($x) { return $x->getOrderkey(); }, $paidItems);
+                $refundAmount = 0;
                 
                 foreach($orderItems as $orderItem) {
-                    $orderItem->setStatuskey(OrderStatuses::Returned);
-                    $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
-                    $this->ordersRepo->update($orderItem);
+                    $itemPrice = round($orderItem->getItemprice(), 2) * 100;
+                    $refundAmount += $itemPrice;
+
+                    if ($itemPrice == 0) {
+                        $orderItem->setStatuskey(OrderStatuses::Returned);
+                        $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
+                        $this->ordersRepo->update($orderItem);
+                    } else {
+                        $orderItem->setStatuskey(OrderStatuses::SentForRefund);
+                        $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
+                        $this->ordersRepo->update($orderItem);
+                    }
+                }
+
+                if ($refundAmount > 0) {
+                    $this->worldpayService->refundOrder($groupKey, $refundAmount);
                 }
                 
                 $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
                 $shoppersCopy = $this->createReturnedEmail($orderViewItems, $groupKey);
                 $this->emailSvc->sendMail($shoppersCopy);
-                
-                if (count($paidItems) > 0) {
-                    $this->refundItems($paidItemKeys);
-                }
                 
                 $this->em->flush();
                 $this->em->getConnection()->commit();

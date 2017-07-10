@@ -21,7 +21,6 @@ namespace Application\API\Repositories\Interfaces {
         public function addAdminOrder($cookieKey, Address $deliveryAddress, Address $billingAddress);
         
         public function cancelItem($groupkey, $coffeeKey);
-        public function refundItems(array $orderItems);
         public function returnItem($groupkey, $coffeeKey);
         
         public function dispatchOrder($groupkey);
