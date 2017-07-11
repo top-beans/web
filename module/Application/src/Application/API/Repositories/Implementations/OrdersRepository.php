@@ -361,31 +361,26 @@ namespace Application\API\Repositories\Implementations {
             try {
                 $this->em->getConnection()->beginTransaction();
 
-                $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+                $orderViewItem = $this->orderViewRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
                 
-                if ($orderItem == null) {
+                if ($orderViewItem == null) {
                     throw new \Exception("Could not find the order item to cancel");
-                } else if ($orderItem->getStatuskey() != OrderStatuses::Received) {
+                } else if (!$orderViewItem->getReceived()) {
                     throw new \Exception("This operation is only available for Received items");
                 }
 
-                $refundAmount = round($orderItem->getItemprice(), 2) * 100;
+                $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+                $orderItem->setStatuskey(OrderStatuses::Cancelled);
+                $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
+                $this->ordersRepo->update($orderItem);
                 
-                if ($refundAmount == 0) {
-                    $orderItem->setStatuskey(OrderStatuses::Cancelled);
-                    $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
-                    $this->ordersRepo->update($orderItem);
-                } else {
-                    $orderItem->setStatuskey(OrderStatuses::SentForRefund);
-                    $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
-                    $this->ordersRepo->update($orderItem);
-                    $this->worldpayService->refundOrder($orderItem->getWorldpayordercode(), $refundAmount);
-                }
+                $shoppersCopy = $this->createCancelledEmail([$orderViewItem], $groupKey);
+                $this->emailSvc->sendMail($shoppersCopy);
                 
                 $this->em->flush();
                 $this->em->getConnection()->commit();
                 
-                $orderViewItem = $this->orderViewRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+                $this->em->refresh($orderViewItem);
                 return $orderViewItem;
                 
             } catch (\Exception $ex) {
@@ -398,25 +393,56 @@ namespace Application\API\Repositories\Implementations {
             try {
                 $this->em->getConnection()->beginTransaction();
 
-                $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+                $orderViewItem = $this->orderViewRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
 
-                if ($orderItem == null) {
+                if ($orderViewItem == null) {
                     throw new \Exception("Could not find the item to return");
-                } else if (!$orderItem->getDispatched()) {
+                } else if (!$orderViewItem->getDispatched()) {
                     throw new \Exception("This operation is only available for Dispatched items");
                 }
                 
+                $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
                 $orderItem->setStatuskey(OrderStatuses::Returned);
                 $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
                 $this->ordersRepo->update($orderItem);
                 
-                $orderViewItem = $this->orderViewRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
                 $shoppersCopy = $this->createReturnedEmail([$orderViewItem], $groupKey);
                 $this->emailSvc->sendMail($shoppersCopy);
                 
                 $this->em->flush();
                 $this->em->getConnection()->commit();
                 
+                $this->em->refresh($orderViewItem);
+                return $orderViewItem;
+                
+            } catch (\Exception $ex) {
+                $this->em->getConnection()->rollBack();
+                throw $ex;
+            }
+        }
+        
+        public function requestItemRefund($groupKey, $coffeeKey) {
+            try {
+                $this->em->getConnection()->beginTransaction();
+
+                $orderViewItem = $this->orderViewRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+                
+                if ($orderViewItem == null) {
+                    throw new \Exception("Could not find the order item to cancel");
+                } else if (!$orderViewItem->getIsrefundable()) {
+                    throw new \Exception("This operation is only available for Cancelled or Returned items that are non-free");
+                }
+
+                $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+                $refundAmount = round($orderItem->getItemprice(), 2) * 100;
+                $orderItem->setStatuskey(OrderStatuses::SentForRefund);
+                $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
+                $this->ordersRepo->update($orderItem);
+                $this->worldpayService->refundOrder($orderItem->getWorldpayordercode(), $refundAmount);
+                
+                $this->em->flush();
+                $this->em->getConnection()->commit();
+
                 $this->em->refresh($orderViewItem);
                 return $orderViewItem;
                 
@@ -478,18 +504,9 @@ namespace Application\API\Repositories\Implementations {
                 $orderItems = $this->ordersRepo->findBy(['groupkey' => $groupKey]);
                 
                 foreach($orderItems as $orderItem) {
-                    $refundAmount = round($orderItem->getItemprice(), 2) * 100;
-
-                    if ($refundAmount == 0) {
-                        $orderItem->setStatuskey(OrderStatuses::Cancelled);
-                        $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
-                        $this->ordersRepo->update($orderItem);
-                    } else {
-                        $orderItem->setStatuskey(OrderStatuses::SentForRefund);
-                        $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
-                        $this->ordersRepo->update($orderItem);
-                        $this->worldpayService->refundOrder($orderItem->getWorldpayordercode(), $refundAmount);
-                    }
+                    $orderItem->setStatuskey(OrderStatuses::Cancelled);
+                    $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
+                    $this->ordersRepo->update($orderItem);
                 }
 
                 $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
@@ -523,18 +540,9 @@ namespace Application\API\Repositories\Implementations {
                 $orderItems = $this->ordersRepo->findBy(['groupkey' => $groupKey]);
                 
                 foreach($orderItems as $orderItem) {
-                    $refundAmount = round($orderItem->getItemprice(), 2) * 100;
-
-                    if ($refundAmount == 0) {
-                        $orderItem->setStatuskey(OrderStatuses::Returned);
-                        $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
-                        $this->ordersRepo->update($orderItem);
-                    } else {
-                        $orderItem->setStatuskey(OrderStatuses::SentForRefund);
-                        $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
-                        $this->ordersRepo->update($orderItem);
-                        $this->worldpayService->refundOrder($orderItem->getWorldpayordercode(), $refundAmount);
-                    }
+                    $orderItem->setStatuskey(OrderStatuses::Returned);
+                    $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
+                    $this->ordersRepo->update($orderItem);
                 }
 
                 $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
@@ -585,6 +593,43 @@ namespace Application\API\Repositories\Implementations {
                 
                 $this->em->flush();
                 $this->em->getConnection()->commit();
+                
+            } catch (\Exception $ex) {
+                $this->em->getConnection()->rollBack();
+                throw $ex;
+            }
+        }
+        
+        public function requestOrderRefund($groupKey) {
+            try {
+                $this->em->getConnection()->beginTransaction();
+
+                $orderHeader = $this->orderHeaderViewRepo->findOneBy(['groupkey' => $groupKey]);
+
+                if ($orderHeader == null) {
+                    throw new \Exception("Could not find the order to cancel");
+                } else if (!$orderHeader->getIsrefundable()) {
+                    throw new \Exception("This operation is only available for Cancelled or Returned orders that are non-free");
+                }
+            
+                $orderItems = $this->ordersRepo->findBy(['groupkey' => $groupKey]);
+                
+                foreach($orderItems as $orderItem) {
+                    $refundAmount = round($orderItem->getItemprice(), 2) * 100;
+
+                    if ($refundAmount > 0) {
+                        $orderItem->setStatuskey(OrderStatuses::SentForRefund);
+                        $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
+                        $this->ordersRepo->update($orderItem);
+                        $this->worldpayService->refundOrder($orderItem->getWorldpayordercode(), $refundAmount);
+                    }
+                }
+
+                $this->em->flush();
+                $this->em->getConnection()->commit();
+                
+                $this->em->refresh($orderHeader);
+                return $orderHeader;
                 
             } catch (\Exception $ex) {
                 $this->em->getConnection()->rollBack();

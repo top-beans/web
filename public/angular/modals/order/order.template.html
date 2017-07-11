@@ -25,6 +25,12 @@
                                     <span ng-if="item.returned">Returned</span>
                                     <span ng-if="item.refundfailed">Refund Failed</span>
                                 </div>
+                                <div class="cart-actions">
+                                    <span ng-show="item.refunding" class="fa fa-spin fa-spinner"></span>
+                                    <span ng-hide="item.refunding" class="glyphicon glyphicon-credit-card" title="Request Refund"
+                                          ng-class="{'text-muted' : !item.isrefundable, 'text-info': item.isrefundable}"
+                                          ng-click="$mctrl.requestItemRefund(item)"></span>
+                                </div>
                             </td>
                             <td class="col-md-2">
                                 <span ng-if="item.ispurchase">{{item.quantity}} &times; {{item.packagingunit}}</span>

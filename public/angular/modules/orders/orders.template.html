@@ -80,6 +80,12 @@
                                 <span ng-if="orderHeader.allrefundfailed">Refund Failed</span>
                                 <span ng-if="orderHeader.allmixed">Mixed</span>
                             </div>
+                            <div class="cart-actions">
+                                <span ng-show="orderHeader.refunding" class="fa fa-spin fa-spinner"></span>
+                                <span ng-hide="orderHeader.refunding" class="glyphicon glyphicon-credit-card" title="Request Refund"
+                                      ng-class="{'text-muted' : !orderHeader.isrefundable, 'text-info': orderHeader.isrefundable}"
+                                      ng-click="$ctrl.requestOrderRefund(orderHeader)"></span>
+                            </div>
                         </td>
                         <td>
                             {{orderHeader.deliveryfirstname}} {{orderHeader.deliverylastname}}<br/>

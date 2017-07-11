@@ -126,6 +126,27 @@ angular.module('orders')
             });
         };
         
+        self.requestOrderRefund = function (orderHeader) {
+            if (!orderHeader.isrefundable) {
+                toastrError("This operation is only valid of Cancelled or Returned Orders that are non-free");
+                return;
+            }
+            
+            bbox.confirm(function () {
+                orderHeader.refunding  = true;
+                orderService.requestOrderRefund(orderHeader.groupkey, function (data) {
+                    orderHeader.refunding = false;
+                    if (!data.success) {
+                        toastrErrorFromList(data.errors);
+                    } else {
+                        if (data.warnings.length) toastrWarningFromList(data.warnings);
+                        var index = _.findIndex(self.orderHeaders, function (o) { return o.groupkey === orderHeader.groupkey; });
+                        self.orderHeaders.splice(index, 1, data.item);
+                    }
+                });
+            });
+        };
+        
         self.addOrEditOrder = function (orderHeader) {
             $uibModal.open({
                 backdrop: 'static',

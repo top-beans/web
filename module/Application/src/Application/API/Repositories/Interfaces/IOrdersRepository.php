@@ -22,11 +22,13 @@ namespace Application\API\Repositories\Interfaces {
         
         public function cancelItem($groupkey, $coffeeKey);
         public function returnItem($groupkey, $coffeeKey);
+        public function requestItemRefund($groupkey, $coffeeKey);
         
         public function dispatchOrder($groupkey);
         public function cancelOrder($groupKey);
         public function returnOrder($groupKey);
         public function receiveOrder($groupKey, $worldpayOrderCode = null);
+        public function requestOrderRefund($groupKey);
         
         public function createReceivedEmail(array $orders, $orderGroupKey);
         public function createNewOrderAlertEmail(array $orders, $orderGroupKey);

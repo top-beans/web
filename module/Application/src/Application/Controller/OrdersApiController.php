@@ -166,6 +166,27 @@ namespace Application\Controller {
             }
         }
         
+        public function requestitemrefundAction() {
+            try {
+                if (!$this->authService->hasIdentity()) {
+                    throw new \Exception("Unauthorized Access");
+                }
+                
+                $jsonData = $this->getRequest()->getContent();
+                $data = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Dto\OrderItem", "json");
+                
+                $groupkey = $data->groupkey;
+                $coffeeKey = $data->coffeekey;
+                
+                $orderViewItem = $this->ordersRepo->requestItemRefund($groupkey, $coffeeKey);
+                $response = ResponseUtils::responseItem($orderViewItem);
+                return $this->jsonResponse($response);
+            } catch (\Exception $ex) {
+                $response = ResponseUtils::createExceptionResponse($ex);
+                return $this->jsonResponse($response);
+            }
+        }
+        
         public function cancelorderAction() {
             try {
                 if (!$this->authService->hasIdentity()) {
@@ -217,6 +238,23 @@ namespace Application\Controller {
             }
         }
 
+        public function requestorderrefundAction() {
+            try {
+                if (!$this->authService->hasIdentity()) {
+                    throw new \Exception("Unauthorized Access");
+                }
+                
+                $groupKey = $this->getRequest()->getContent();
+                
+                $orderHeader = $this->ordersRepo->requestOrderRefund($groupKey);
+                $response = ResponseUtils::responseItem($orderHeader);
+                return $this->jsonResponse($response);
+            } catch (\Exception $ex) {
+                $response = ResponseUtils::createExceptionResponse($ex);
+                return $this->jsonResponse($response);
+            }
+        }
+        
         public function updatecustomeraddressesAction() {
             try {
                 if (!$this->authService->hasIdentity()) {

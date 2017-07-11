@@ -67,6 +67,14 @@ class Orderview
      * @Type("integer")
      * @var integer
      *
+     * @ORM\Column(name="isRefundable", type="integer", nullable=false)
+     */
+    private $isrefundable;
+
+    /**
+     * @Type("integer")
+     * @var integer
+     *
      * @ORM\Column(name="coffeeKey", type="integer", nullable=false)
      */
     private $coffeekey;
@@ -662,6 +670,7 @@ class Orderview
     function getPricebaseunit() { return $this->pricebaseunit; }
     function getPackagingunit() { return $this->packagingunit; }
     function getItemprice() { return $this->itemprice; }
+    function getIsrefundable() { return $this->isrefundable; }
     function getCoffeekey() { return $this->coffeekey; }
     function getCustomerkey() { return $this->customerkey; }
     function getRequestypekey() { return $this->requestypekey; }
@@ -743,6 +752,7 @@ class Orderview
     function setPricebaseunit($val) { $this->pricebaseunit = $val; }
     function setPackagingunit($val) { $this->packagingunit = $val; }
     function setItemprice($val) { $this->itemprice = $val; }
+    function setIsrefundable($val) { $this->isrefundable = $val; }
     function setCoffeekey($val) { $this->coffeekey = $val; }
     function setCustomerkey($val) { $this->customerkey = $val; }
     function setRequestypekey($val) { $this->requestypekey = $val; }

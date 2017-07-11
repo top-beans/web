@@ -152,6 +152,14 @@ class Orderheaderview
     private $totalprice;
     
     /**
+     * @Type("integer")
+     * @var integer
+     *
+     * @ORM\Column(name="isRefundable", type="integer", nullable=false)
+     */
+    private $isrefundable;
+
+    /**
      * @Type("DateTime<'Y-m-d\TH:i:sO'>")
      * @var \DateTime
      *
@@ -417,6 +425,7 @@ class Orderheaderview
     function getAllrefundfailed() { return $this->allrefundfailed; }
     function getAllmixed() { return $this->allmixed; }
     function getTotalprice() { return $this->totalprice; }
+    function getIsrefundable() { return $this->isrefundable; }
     function getUpdateddate() { return $this->updateddate; }
     function getCreateddate() { return $this->createddate; }
     function getBillingdifferent() { return $this->billingdifferent; }
@@ -466,6 +475,7 @@ class Orderheaderview
     function setAllrefundfailed($val) { $this->allrefundfailed = $val; }
     function setAllmixed($val) { $this->allmixed = $val; }
     function setTotalprice($val) { $this->totalprice = $val; }
+    function setIsrefundable($val) { $this->isrefundable = $val; }
     function setUpdateddate($val) { $this->updateddate = $val; } 
     function setCreateddate($val) { $this->createddate = $val; }
     function setBillingdifferent($val) { $this->billingdifferent = $val; }

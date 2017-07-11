@@ -82,6 +82,29 @@ namespace('modals').orderCtrl = function ($uibModalInstance, orderService, bbox,
         });
     };
 
+    self.requestItemRefund = function (item) {
+        if (!item.isrefundable) {
+            toastrError("This operation is only valid of Cancelled or Returned items that are non-free");
+            return;
+        }
+
+        bbox.confirm(function () {
+            item.refunding  = true;
+            orderService.requestItemRefund(self.groupKey, item.coffeekey, function (data) {
+                item.refunding = false;
+                if (!data.success) {
+                    toastrErrorFromList(data.errors);
+                } else {
+                    self.changesWereMade = true;
+                    if (data.warnings.length) toastrWarningFromList(data.warnings);
+                    var index = _.findIndex(self.orderItems, function (o) { return o.coffeekey === item.coffeekey; });
+                    self.orderItems.splice(index, 1, data.item);
+                    self.recalculateTotal();
+                }
+            });
+        });
+    };
+
     self.updateAddresses = function () {
         if (!self.allReceived) {
             toastrError("This operation is only valid of Received Orders");

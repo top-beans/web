@@ -91,6 +91,22 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
         });
     };
     
+    self.requestItemRefund = function (groupKey, coffeeKey, callback) {
+        var orderItem = {
+            groupkey: groupKey,
+            coffeekey: coffeeKey
+        };
+
+        $http.post("/api/OrdersApi/requestitemrefund", orderItem).then(function (response) {
+            if (callback) callback(response.data);
+        }, function (error) {
+            if (callback) callback({
+                success: false,
+                errors: ['Error ' + error.status + ': ' + error.statusText]
+            });
+        });
+    };
+    
     self.cancelOrder = function (groupKey, callback) {
         $http.post("/api/OrdersApi/cancelorder", groupKey).then(function (response) {
             if (callback) callback(response.data);
@@ -126,6 +142,17 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
     
     self.returnOrder = function (groupKey, callback) {
         $http.post("/api/OrdersApi/returnorder", groupKey).then(function (response) {
+            if (callback) callback(response.data);
+        }, function (error) {
+            if (callback) callback({
+                success: false,
+                errors: ['Error ' + error.status + ': ' + error.statusText]
+            });
+        });
+    };
+    
+    self.requestOrderRefund = function (groupKey, callback) {
+        $http.post("/api/OrdersApi/requestorderrefund", groupKey).then(function (response) {
             if (callback) callback(response.data);
         }, function (error) {
             if (callback) callback({
