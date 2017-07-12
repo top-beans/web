@@ -26,6 +26,7 @@ namespace Application\API\Repositories\Implementations {
     use Application\API\Repositories\Interfaces\IOrderEmailsService;
     use Application\API\Repositories\Interfaces\IOrdersRepository;
     use Application\API\Canonicals\Dto\EmailRequest;
+    use Application\API\Canonicals\Dto\Webhook;
 
     class OrdersRepository implements IOrdersRepository {
         
@@ -677,6 +678,32 @@ namespace Application\API\Repositories\Implementations {
                 
                 $this->em->refresh($orderHeader);
                 return $orderHeader;
+                
+            } catch (\Exception $ex) {
+                $this->em->getConnection()->rollBack();
+                throw $ex;
+            }
+        }
+        
+        public function refundUpdate(Webhook $webhook) {
+            try {
+                $this->em->getConnection()->beginTransaction();
+
+                $orderItems = $this->ordersRepo->findBy(['statuskey' => OrderStatuses::SentForRefund, 'worldpayordercode' => $webhook->orderCode]);
+                
+                if ($orderItems == null || count($orderItems) == 0) {
+                    throw new \Exception("Could not find the order items to update");
+                }
+                
+                $updatedStatus = $webhook->paymentStatus == "SUCCESS" ? OrderStatuses::Refunded : OrderStatuses::RefundFailed;
+
+                foreach ($orderItems as $orderItem) {
+                    $orderItem->setStatuskey($updatedStatus);
+                    $this->ordersRepo->update($orderItem);
+                }
+                
+                $this->em->flush();
+                $this->em->getConnection()->commit();
                 
             } catch (\Exception $ex) {
                 $this->em->getConnection()->rollBack();

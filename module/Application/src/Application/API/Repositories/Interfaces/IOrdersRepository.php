@@ -3,6 +3,7 @@
 namespace Application\API\Repositories\Interfaces {
     
     use Application\API\Canonicals\Entity\Address;
+    use Application\API\Canonicals\Dto\Webhook;
     
     interface IOrdersRepository {
         public function searchOrderHeaders(array $criteria, array $orderBy = null, $page = 0, $pageSize = 10);
@@ -30,5 +31,6 @@ namespace Application\API\Repositories\Interfaces {
         public function returnOrder($groupKey);
         public function receiveOrder($groupKey, $worldpayOrderCode = null);
         public function requestOrderRefund($groupKey);
+        public function refundUpdate(Webhook $webhook);
     }
 }

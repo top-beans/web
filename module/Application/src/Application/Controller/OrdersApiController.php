@@ -42,6 +42,11 @@ namespace Application\Controller {
          */
         private $worldpayServiceKey;
         
+        /**
+         * @var string
+         */
+        private $settlementCurrency;
+        
         public function __construct(AbstractContainer $navService, AuthenticationServiceInterface $authService, SerializerInterface $serializer, IOrdersRepository $ordersRepo, IUsersRepository $usersRepository, ManagerInterface $sessionManager, $maxLoginTries, $worldpayServiceKey, $settlementCurrency) {
             parent::__construct($navService, $authService, $serializer);
             $this->ordersRepo = $ordersRepo;

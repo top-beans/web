@@ -21,6 +21,7 @@ namespace Application {
                 'CartApi'       => 'Application\ControllerFactory\CartApiControllerFactory',
                 'GuidApi'       => 'Application\ControllerFactory\GuidApiControllerFactory',
                 'WordPressApi'  => 'Application\ControllerFactory\WordPressApiControllerFactory',
+                'WorldpayApi'   => 'Application\ControllerFactory\WorldpayApiControllerFactory',
                 'BatchMail'     => 'Application\ControllerFactory\BatchMailControllerFactory',
             ],
         ],
