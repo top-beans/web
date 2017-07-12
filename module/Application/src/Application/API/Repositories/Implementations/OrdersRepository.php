@@ -695,7 +695,9 @@ namespace Application\API\Repositories\Implementations {
                     throw new \Exception("Could not find the order items to update");
                 }
                 
-                if ($webhook->paymentStatus == "PARTIALLY_REFUNDED" || $webhook->paymentStatus == "REFUNDED") {
+                if ($webhook->paymentStatus == "SENT_FOR_REFUND") {
+                    $updatedStatus = OrderStatuses::SentForRefund;
+                } else if ($webhook->paymentStatus == "PARTIALLY_REFUNDED" || $webhook->paymentStatus == "REFUNDED") {
                     $updatedStatus = OrderStatuses::Refunded;
                 } else {
                     $updatedStatus = OrderStatuses::RefundFailed;
