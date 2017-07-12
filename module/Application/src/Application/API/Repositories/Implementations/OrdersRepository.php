@@ -695,8 +695,12 @@ namespace Application\API\Repositories\Implementations {
                     throw new \Exception("Could not find the order items to update");
                 }
                 
-                $updatedStatus = $webhook->paymentStatus == "SUCCESS" ? OrderStatuses::Refunded : OrderStatuses::RefundFailed;
-
+                if ($webhook->paymentStatus == "PARTIALLY_REFUNDED" || $webhook->paymentStatus == "REFUNDED") {
+                    $updatedStatus = OrderStatuses::Refunded;
+                } else {
+                    $updatedStatus = OrderStatuses::RefundFailed;
+                }
+                
                 foreach ($orderItems as $orderItem) {
                     $orderItem->setStatuskey($updatedStatus);
                     $this->ordersRepo->update($orderItem);
