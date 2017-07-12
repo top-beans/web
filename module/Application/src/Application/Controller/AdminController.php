@@ -18,7 +18,7 @@ namespace Application\Controller {
             $this->navService->findOneById(Navigation::Admin)->setActive(true);
             
             if ($this->authService->hasIdentity()) {
-                return $this->redirect()->toUrl("/Admin/enquiries");
+                return $this->redirect()->toUrl("/Admin/orders");
             } else {
                 return [];
             }

@@ -8,6 +8,7 @@ namespace Application\API\Repositories\Implementations {
     use Doctrine\Common\Collections\Criteria;
     use Application\API\Canonicals\Dto\OrderResult;
     use Application\API\Canonicals\Dto\OrderSearch;
+    use Application\API\Canonicals\Dto\CustomerAddresses;
     use Application\API\Canonicals\Entity\Order;
     use Application\API\Canonicals\Entity\Customer;
     use Application\API\Canonicals\Entity\User;
@@ -22,6 +23,7 @@ namespace Application\API\Repositories\Implementations {
     use Application\API\Repositories\Base\Repository;
     use Application\API\Repositories\Interfaces\IEMailService;
     use Application\API\Repositories\Interfaces\IWorldpayService;
+    use Application\API\Repositories\Interfaces\IOrderEmailsService;
     use Application\API\Repositories\Interfaces\IOrdersRepository;
     use Application\API\Canonicals\Dto\EmailRequest;
 
@@ -41,6 +43,11 @@ namespace Application\API\Repositories\Implementations {
          * @var IWorldpayService
          */
         private $worldpayService;
+        
+        /**
+         * @var IOrderEmailsService
+         */
+        private $orderEmailsSvc;
         
         /**
          * @var IRepository
@@ -87,25 +94,11 @@ namespace Application\API\Repositories\Implementations {
          */
         private $orderHeaderViewRepo;
         
-        /**
-         * @var string
-         */
-        private $supportEmail;
-        
-        /**
-         * @var string
-         */
-        private $domainName;
-        
-        /**
-         * @var string
-         */
-        private $isDevelopment;
-        
-        public function __construct(EntityManagerInterface $em, IEMailService $emailSvc, IWorldpayService $worldpayService, $supportEmail, $domainName, $isDevelopment) {
+        public function __construct(EntityManagerInterface $em, IEMailService $emailSvc, IWorldpayService $worldpayService, IOrderEmailsService $orderEmailsSvc) {
             $this->em = $em;
             $this->emailSvc = $emailSvc;
             $this->worldpayService = $worldpayService;
+            $this->orderEmailsSvc = $orderEmailsSvc;
             $this->ordersRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Order()))));
             $this->customerRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Customer()))));
             $this->userRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new User()))));
@@ -115,9 +108,6 @@ namespace Application\API\Repositories\Implementations {
             $this->cartRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Shoppingcart()))));
             $this->orderViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Orderview()))));
             $this->orderHeaderViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new Orderheaderview()))));
-            $this->supportEmail = $supportEmail;
-            $this->domainName = $domainName;
-            $this->isDevelopment = $isDevelopment;
         }
 
         public function searchOrderHeaders(array $criteria, array $orderBy = null, $page = 0, $pageSize = 10) {
@@ -231,6 +221,26 @@ namespace Application\API\Repositories\Implementations {
 
         public function getAddress($key) {
             return $this->addressViewRepo->fetch($key);
+        }
+        
+        public function getCustomerAddressesByGroup($groupKey) {
+            $orders = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
+            
+            if (count($orders) == 0) {
+                return null;
+            }
+            
+            $customerKey = $orders[0]->getCustomerkey();
+            $customer = $this->customerRepo->fetch($customerKey);
+            
+            $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
+            $billingAddress = $this->addressViewRepo->fetch($customer->getBillingaddresskey());
+            
+            $addresses = new CustomerAddresses();
+            $addresses->deliveryaddress = $deliveryAddress;
+            $addresses->billingaddress = $billingAddress;
+            
+            return $addresses;
         }
         
         public function getOrderTotalByCookie($cookie, $status = null) {
@@ -374,7 +384,7 @@ namespace Application\API\Repositories\Implementations {
                 $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
                 $this->ordersRepo->update($orderItem);
                 
-                $shoppersCopy = $this->createCancelledEmail([$orderViewItem], $groupKey);
+                $shoppersCopy = $this->orderEmailsSvc->createCancelledEmail([$orderViewItem], $groupKey, $this->getCustomerAddressesByGroup($groupKey));
                 $this->emailSvc->sendMail($shoppersCopy);
                 
                 $this->em->flush();
@@ -406,7 +416,7 @@ namespace Application\API\Repositories\Implementations {
                 $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
                 $this->ordersRepo->update($orderItem);
                 
-                $shoppersCopy = $this->createReturnedEmail([$orderViewItem], $groupKey);
+                $shoppersCopy = $this->orderEmailsSvc->createReturnedEmail([$orderViewItem], $groupKey, $this->getCustomerAddressesByGroup($groupKey));
                 $this->emailSvc->sendMail($shoppersCopy);
                 
                 $this->em->flush();
@@ -474,7 +484,7 @@ namespace Application\API\Repositories\Implementations {
                 }
                 
                 $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
-                $shoppersCopy = $this->createDispatchedEmail($orderViewItems, $groupKey);
+                $shoppersCopy = $this->orderEmailsSvc->createDispatchedEmail($orderViewItems, $groupKey, $this->getCustomerAddressesByGroup($groupKey));
                 $this->emailSvc->sendMail($shoppersCopy);
                 
                 $this->em->flush();
@@ -510,7 +520,7 @@ namespace Application\API\Repositories\Implementations {
                 }
 
                 $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
-                $shoppersCopy = $this->createCancelledEmail($orderViewItems, $groupKey);
+                $shoppersCopy = $this->orderEmailsSvc->createCancelledEmail($orderViewItems, $groupKey, $this->getCustomerAddressesByGroup($groupKey));
                 $this->emailSvc->sendMail($shoppersCopy);
 
                 $this->em->flush();
@@ -546,7 +556,7 @@ namespace Application\API\Repositories\Implementations {
                 }
 
                 $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
-                $shoppersCopy = $this->createReturnedEmail($orderViewItems, $groupKey);
+                $shoppersCopy = $this->orderEmailsSvc->createReturnedEmail($orderViewItems, $groupKey, $this->getCustomerAddressesByGroup($groupKey));
                 $this->emailSvc->sendMail($shoppersCopy);
                 
                 $this->em->flush();
@@ -586,8 +596,9 @@ namespace Application\API\Repositories\Implementations {
                 }
                 
                 $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
-                $shoppersCopy = $this->createReceivedEmail($orderViewItems, $groupKey);
-                $topbeansCopy = $this->createNewOrderAlertEmail($orderViewItems, $groupKey);
+                $addresses = $this->getCustomerAddressesByGroup($groupKey);
+                $shoppersCopy = $this->orderEmailsSvc->createReceivedEmail($orderViewItems, $groupKey, $addresses);
+                $topbeansCopy = $this->orderEmailsSvc->createNewOrderAlertEmail($orderViewItems, $groupKey, $addresses);
                 $this->emailSvc->sendMail($shoppersCopy);
                 $this->emailSvc->sendMail($topbeansCopy);
                 
@@ -635,176 +646,6 @@ namespace Application\API\Repositories\Implementations {
                 $this->em->getConnection()->rollBack();
                 throw $ex;
             }
-        }
-
-        
-        public function createReceivedEmail(array $orders, $orderGroupKey) {
-            
-            if (count($orders) == 0) {
-                throw new \Exception("Could not find the order required to prepare an Order Received Email");
-            }
-            
-            $orderTotal = 0;
-            foreach($orders as $order) {
-                $orderTotal += $order->getItemprice();
-                if ($order->getGroupkey() != $orderGroupKey) { throw new \Exception("Orders Items must be from same group"); }
-            }
-
-            $customer = $this->getCustomerByGroup($orderGroupKey);
-            $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
-            $billingAddress = $this->addressViewRepo->fetch($customer->getBillingaddresskey());
-            $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
-            
-            $template = new TemplateEngine("data/templates/order-confirmation.phtml", [
-                'domainPath' => $domainPath,
-                'orderGroupKey' => $orderGroupKey,
-                'orders' => $orders,
-                'orderTotal' => $orderTotal,
-                'deliveryAddress' => $deliveryAddress,
-                'billingAddress' => $billingAddress
-            ]);
-            
-            $request = new EmailRequest();
-            $request->recipient = $deliveryAddress->getEmail();
-            $request->subject = "Your TopBeans.co.uk Order has been Received";
-            $request->htmlbody = $template->render();
-            $request->textbody = null;
-            
-            return $request;
-        }
-        
-        public function createNewOrderAlertEmail(array $orders, $orderGroupKey) {
-            
-            if (count($orders) == 0) {
-                throw new \Exception("Could not find the order required to prepare an Order Received Email");
-            }
-            
-            $orderTotal = 0;
-            foreach($orders as $order) {
-                $orderTotal += $order->getItemprice();
-                if ($order->getGroupkey() != $orderGroupKey) { throw new \Exception("Orders Items must be from same group"); }
-            }
-
-            $customer = $this->getCustomerByGroup($orderGroupKey);
-            $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
-            $billingAddress = $this->addressViewRepo->fetch($customer->getBillingaddresskey());
-            $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
-            
-            $template = new TemplateEngine("data/templates/order-alert.phtml", [
-                'domainPath' => $domainPath,
-                'orderGroupKey' => $orderGroupKey,
-                'orders' => $orders,
-                'orderTotal' => $orderTotal,
-                'deliveryAddress' => $deliveryAddress,
-                'billingAddress' => $billingAddress
-            ]);
-            
-            $request = new EmailRequest();
-            $request->recipient = $deliveryAddress->getEmail();
-            $request->subject = "New Order Alert";
-            $request->htmlbody = $template->render();
-            $request->textbody = null;
-            
-            return $request;
-        }
-
-        public function createDispatchedEmail(array $orders, $orderGroupKey) {
-            
-            if (count($orders) == 0) {
-                throw new \Exception("Could not find the order required to prepare an Order Dispatch Email");
-            }
-            
-            $orderTotal = 0;
-            foreach($orders as $order) {
-                $orderTotal += $order->getItemprice();
-                if ($order->getGroupkey() != $orderGroupKey) { throw new \Exception("Orders Items must be from same group"); }
-            }
-
-            $customer = $this->getCustomerByGroup($orderGroupKey);
-            $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
-            $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
-            
-            $template = new TemplateEngine("data/templates/order-dispatch.phtml", [
-                'domainPath' => $domainPath,
-                'orderGroupKey' => $orderGroupKey,
-                'orders' => $orders,
-                'orderTotal' => $orderTotal,
-                'deliveryAddress' => $deliveryAddress
-            ]);
-            
-            $request = new EmailRequest();
-            $request->recipient = $deliveryAddress->getEmail();
-            $request->subject = "Your TopBeans.co.uk Order has been Dispatched";
-            $request->htmlbody = $template->render();
-            $request->textbody = null;
-            
-            return $request;
-        }
-
-        public function createCancelledEmail(array $orders, $orderGroupKey) {
-            
-            if (count($orders) == 0) {
-                throw new \Exception("Could not find the order required to prepare an Order Cancel Email");
-            }
-            
-            $orderTotal = 0;
-            foreach($orders as $order) {
-                $orderTotal += $order->getItemprice();
-                if ($order->getGroupkey() != $orderGroupKey) { throw new \Exception("Orders Items must be from same group"); }
-            }
-
-            $customer = $this->getCustomerByGroup($orderGroupKey);
-            $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
-            $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
-            
-            $template = new TemplateEngine("data/templates/order-cancelled.phtml", [
-                'domainPath' => $domainPath,
-                'orderGroupKey' => $orderGroupKey,
-                'orders' => $orders,
-                'orderTotal' => $orderTotal,
-                'deliveryAddress' => $deliveryAddress
-            ]);
-            
-            $request = new EmailRequest();
-            $request->recipient = $deliveryAddress->getEmail();
-            $request->subject = "Your TopBeans.co.uk Order has been Cancelled";
-            $request->htmlbody = $template->render();
-            $request->textbody = null;
-            
-            return $request;
-        }
-        
-        public function createReturnedEmail(array $orders, $orderGroupKey) {
-            
-            if (count($orders) == 0) {
-                throw new \Exception("Could not find the order required to prepare an Order Return Email");
-            }
-            
-            $orderTotal = 0;
-            foreach($orders as $order) {
-                $orderTotal += $order->getItemprice();
-                if ($order->getGroupkey() != $orderGroupKey) { throw new \Exception("Orders Items must be from same group"); }
-            }
-
-            $customer = $this->getCustomerByGroup($orderGroupKey);
-            $deliveryAddress = $this->addressViewRepo->fetch($customer->getDeliveryaddresskey());
-            $domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
-            
-            $template = new TemplateEngine("data/templates/order-returned.phtml", [
-                'domainPath' => $domainPath,
-                'orderGroupKey' => $orderGroupKey,
-                'orders' => $orders,
-                'orderTotal' => $orderTotal,
-                'deliveryAddress' => $deliveryAddress
-            ]);
-            
-            $request = new EmailRequest();
-            $request->recipient = $deliveryAddress->getEmail();
-            $request->subject = "Your TopBeans.co.uk Order has been Returned";
-            $request->htmlbody = $template->render();
-            $request->textbody = null;
-            
-            return $request;
         }
     }
 }

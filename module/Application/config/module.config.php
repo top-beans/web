@@ -92,6 +92,7 @@ namespace Application {
                 'CoffeeRepo'        => 'Application\API\Repositories\Factories\CoffeeRepositoryFactory',
                 'CountryRepo'       => 'Application\API\Repositories\Factories\CountryRepositoryFactory',
                 'OrdersRepo'        => 'Application\API\Repositories\Factories\OrdersRepositoryFactory',
+                'OrderEmailsSvc'    => 'Application\API\Repositories\Factories\OrderEmailsServiceFactory',
                 'CartRepo'          => 'Application\API\Repositories\Factories\CartRepositoryFactory',
                 'EnquiryRepo'       => 'Application\API\Repositories\Factories\EnquiryRepositoryFactory',
                 'WorldpaySvc'       => 'Application\API\Repositories\Factories\WorldpayServiceFactory',
