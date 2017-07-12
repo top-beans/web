@@ -104,6 +104,32 @@ namespace('modals').orderCtrl = function ($uibModalInstance, orderService, bbox,
             });
         });
     };
+    
+    self.dispatchItems = function () {
+        var coffeeKeys = _(self.orderItems).filter(function (x) { return x.dispatch; }).map(function (x) { return x.coffeekey; }).value();
+        
+        if (coffeeKeys.length > 0) {
+            
+            showOverlay('Dispatching Items ...');
+            
+            orderService.dispatchItems(self.groupKey, coffeeKeys, function (data) {
+                hideOverlay();
+                if (!data.success) {
+                    toastrErrorFromList(data.errors);
+                } else {
+                    self.changesWereMade = true;
+                    if (data.warnings.length) toastrWarningFromList(data.warnings);
+                    
+                    _.forEach(data.items, function (item) {
+                        var index = _.findIndex(self.orderItems, function (o) { return o.coffeekey === item.coffeekey; });
+                        self.orderItems.splice(index, 1, item);
+                    });
+                    
+                    self.recalculateTotal();
+                }
+            });
+        }
+    };
 
     self.updateAddresses = function () {
         if (!self.allReceived) {

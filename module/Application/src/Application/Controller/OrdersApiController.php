@@ -187,6 +187,27 @@ namespace Application\Controller {
             }
         }
         
+        public function dispatchitemsAction() {
+            try {
+                if (!$this->authService->hasIdentity()) {
+                    throw new \Exception("Unauthorized Access");
+                }
+                
+                $jsonData = $this->getRequest()->getContent();
+                $data = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Dto\OrderItems", "json");
+                
+                $groupkey = $data->groupkey;
+                $coffeeKeys = $data->coffeekeys;
+                
+                $orderViewItems = $this->ordersRepo->dispatchItems($groupkey, $coffeeKeys);
+                $response = ResponseUtils::responseList($orderViewItems);
+                return $this->jsonResponse($response);
+            } catch (\Exception $ex) {
+                $response = ResponseUtils::createExceptionResponse($ex);
+                return $this->jsonResponse($response);
+            }
+        }
+        
         public function cancelorderAction() {
             try {
                 if (!$this->authService->hasIdentity()) {

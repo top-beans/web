@@ -462,6 +462,42 @@ namespace Application\API\Repositories\Implementations {
             }
         }
         
+        public function dispatchItems($groupKey, array $coffeeKeys) {
+            try {
+                $this->em->getConnection()->beginTransaction();
+
+                $orderViewItems = [];
+                
+                foreach($coffeeKeys as $coffeeKey) {
+                    $orderViewItem = $this->orderViewRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey, 'received' => 1]);
+                    $orderViewItems[] = $orderViewItem;
+
+                    if ($orderViewItem == null) {
+                        throw new \Exception("Could not find the requested order item to dispatch in Received status");
+                    }
+
+                    $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+                    $orderItem->setStatuskey(OrderStatuses::Dispatched);
+                    $this->ordersRepo->update($orderItem);
+                }
+                
+                $shoppersCopy = $this->orderEmailsSvc->createDispatchedEmail($orderViewItems, $groupKey, $this->getCustomerAddressesByGroup($groupKey));
+                $this->emailSvc->sendMail($shoppersCopy);
+                
+                $this->em->flush();
+                $this->em->getConnection()->commit();
+                
+                foreach($orderViewItems as $orderItem) {
+                    $this->em->refresh($orderItem);
+                }
+                
+                return $orderViewItems;
+                
+            } catch (\Exception $ex) {
+                $this->em->getConnection()->rollBack();
+                throw $ex;
+            }
+        }
         
         public function dispatchOrder($groupKey) {
             try {

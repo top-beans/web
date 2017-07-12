@@ -107,6 +107,22 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
         });
     };
     
+    self.dispatchItems = function (groupKey, coffeeKeys, callback) {
+        var orderItems = {
+            groupkey: groupKey,
+            coffeekeys: coffeeKeys
+        };
+
+        $http.post("/api/OrdersApi/dispatchitems", orderItems).then(function (response) {
+            if (callback) callback(response.data);
+        }, function (error) {
+            if (callback) callback({
+                success: false,
+                errors: ['Error ' + error.status + ': ' + error.statusText]
+            });
+        });
+    };
+    
     self.cancelOrder = function (groupKey, callback) {
         $http.post("/api/OrdersApi/cancelorder", groupKey).then(function (response) {
             if (callback) callback(response.data);

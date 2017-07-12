@@ -150,7 +150,7 @@ angular.module('orders')
         self.addOrEditOrder = function (orderHeader) {
             $uibModal.open({
                 backdrop: 'static',
-                templateUrl: '/angular/modals/order/order.template.html?3',
+                templateUrl: '/angular/modals/order/order.template.html',
                 controller: ['$uibModalInstance', 'orderService', 'bbox', 'countries', 'orderHeader', modals.orderCtrl],
                 controllerAs: "$mctrl",
                 openedClass: 'page modal-open',
