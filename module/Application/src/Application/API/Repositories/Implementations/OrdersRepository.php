@@ -691,21 +691,19 @@ namespace Application\API\Repositories\Implementations {
 
                 $orderItems = $this->ordersRepo->findBy(['statuskey' => OrderStatuses::SentForRefund, 'worldpayordercode' => $webhook->orderCode]);
                 
-                if ($orderItems == null || count($orderItems) == 0) {
-                    throw new \Exception("Could not find the order items to update");
-                }
-                
-                if ($webhook->paymentStatus == "SENT_FOR_REFUND") {
-                    $updatedStatus = OrderStatuses::SentForRefund;
-                } else if ($webhook->paymentStatus == "PARTIALLY_REFUNDED" || $webhook->paymentStatus == "REFUNDED") {
-                    $updatedStatus = OrderStatuses::Refunded;
-                } else {
-                    $updatedStatus = OrderStatuses::RefundFailed;
-                }
-                
-                foreach ($orderItems as $orderItem) {
-                    $orderItem->setStatuskey($updatedStatus);
-                    $this->ordersRepo->update($orderItem);
+                if ($orderItems != null && count($orderItems) > 0) {
+                    if ($webhook->paymentStatus == "SENT_FOR_REFUND") {
+                        $updatedStatus = OrderStatuses::SentForRefund;
+                    } else if ($webhook->paymentStatus == "PARTIALLY_REFUNDED" || $webhook->paymentStatus == "REFUNDED") {
+                        $updatedStatus = OrderStatuses::Refunded;
+                    } else {
+                        $updatedStatus = OrderStatuses::RefundFailed;
+                    }
+
+                    foreach ($orderItems as $orderItem) {
+                        $orderItem->setStatuskey($updatedStatus);
+                        $this->ordersRepo->update($orderItem);
+                    }
                 }
                 
                 $this->em->flush();
