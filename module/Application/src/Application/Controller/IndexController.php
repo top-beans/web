@@ -94,5 +94,9 @@ namespace Application\Controller {
                 'worldpayClientKey' => $this->worldpayClientKey
             ];
         }
+        
+        public function cancellationsAction() {
+            return [];
+        }
     }
 }

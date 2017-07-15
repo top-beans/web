@@ -1,0 +1,29 @@
+<div class="shell">
+    <div class="range range-md-justify">
+        <div class="cell-md-6 cell-lg-6 offset-top-22 offset-md-top-0">
+            <form class="rd-mailform form-modern" name="cancellationsForm" autocomplete="off" novalidate>
+                <div class="range">
+                    <div class="cell-xs-12">
+                        <div class="form-group">
+                            Cancellation Code
+                            <input ng-model="$ctrl.cancellationCode" type="text" placeholder="Cancellation Code" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="cell-xs-12">
+                        <div class="form-group">
+                            Email
+                            <input ng-model="$ctrl.email" type="email" placeholder="Email" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="cell-xs-12 offset-top-10">
+                        <div class="form-group">
+                            <button ng-click="$ctrl.getOrder()" class="btn btn-sm btn-primary-contrast">
+                                Proceed
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

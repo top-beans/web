@@ -14,5 +14,6 @@ angular.module('topbeans', [
     'checkout',
     'payment',
     'coffees',
-    'orders'
+    'orders',
+    'cancellations'
 ]);
