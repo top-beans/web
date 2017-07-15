@@ -271,9 +271,10 @@
                         <table class="order-table">
                             <thead>
                                 <tr style="border-bottom: 1px solid #aaa;">
-                                    <th style="width: 16.7%">Type</th>
-                                    <th style="width: 50%">Name &amp; Qty</th>
-                                    <th style="width: 16.7%">Cost</th>
+                                    <th style="width: 25%">Type</th>
+                                    <th style="width: 25%">Name</th>
+                                    <th style="width: 30%">Qty</th>
+                                    <th style="width: 20%">Cost</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -290,8 +291,8 @@
                                         <?php endif; ?>
                                         </strong>
                                     </td>
+                                    <td><?=$o->getName()?></td>
                                     <td>
-                                        <?=$o->getName()?><br/>
                                         <?php if ($o->getIspurchase()) : ?>
                                             <?=$o->getQuantity()?> &times; <?=$o->getPackagingunit()?>
                                         <?php elseif ($o->getIssample()) : ?>
@@ -313,10 +314,12 @@
                                 <tr>
                                     <td><strong>Shipping (Free)</strong></td>
                                     <td></td>
+                                    <td></td>
                                     <td><strong>&pound;0.00</strong></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Total</strong></td>
+                                    <td></td>
                                     <td></td>
                                     <td><strong>&pound;<?=$orderTotal?></strong></td>
                                 </tr>
@@ -368,9 +371,12 @@
                         
                         <h4 class="section-header">Cancelling your order</h4>
                         <p>
-                            If you wish to cancel part or all of your order, then please click on this link and follow the instructions: 
-                            <strong><a href="<?=$domainPath?>/Index/clientcancellations" title="Top Beans">Order Cancellations</a></strong>.
-                            Please use this code to activate the cancellations: <strong><?=strtoupper($cancellationCode)?></strong>.
+                            Your cancellation code is <strong><?=strtoupper($cancellationCode)?></strong>.
+                            If you wish to cancel part or all of your order, then click on the following link and use this code to do so: 
+                        </p>
+                        
+                        <p>
+                            <a href="<?=$domainPath?>/Index/ordercancellations" title="Top Beans"><?=$domainPath?>/Index/ordercancellations</a>
                         </p>
                         
                         <p>
