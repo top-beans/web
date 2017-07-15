@@ -27,9 +27,7 @@ class Orderheaderview
      * @Type("string")
      * @var string
      *
-     * @ORM\Column(name="cancellationCode", type="string", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="cancellationCode", type="string", length=45, nullable=false)
      */
     private $cancellationcode;
     

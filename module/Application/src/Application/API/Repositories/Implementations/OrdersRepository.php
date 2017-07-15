@@ -193,7 +193,7 @@ namespace Application\API\Repositories\Implementations {
 
         public function getNewCancellationCode() {
             do {
-                $char = str_shuffle("ABCDEFGHJKLMNPQRSTUVWXYZ3456789");
+                $char = str_shuffle("0123456789");
                 $cancellationCode = "";
                 $length = 5;
                 
