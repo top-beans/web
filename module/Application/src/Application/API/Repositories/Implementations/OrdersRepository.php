@@ -190,6 +190,21 @@ namespace Application\API\Repositories\Implementations {
             
             return $groupKey;
         }
+
+        public function getNewCancellationCode() {
+            do {
+                $char = str_shuffle("ABCDEFGHJKLMNPQRSTUVWXYZ3456789");
+                $cancellationCode = "";
+                $length = 5;
+                
+                for($i = 0, $l = strlen($char) - 1; $i < $length; $i ++) {
+                    $cancellationCode .= strtoupper($char{mt_rand(0, $l)});
+                }
+
+            } while ($this->ordersRepo->count(['cancellationcode' => $cancellationCode]) > 0);
+            
+            return $cancellationCode;
+        }
         
         public function getGroupByCookie($cookieKey) {
             $cartItems = $this->cartRepo->findBy(['cookiekey' => $cookieKey]);
@@ -329,6 +344,7 @@ namespace Application\API\Repositories\Implementations {
                 foreach($cartItems as $cartItem) {
                     $order = new Order();
                     $order->setGroupkey($orderResult->groupkey);
+                    $order->setCancellationcode($this->getNewCancellationCode());
                     $order->setStatuskey(OrderStatuses::Creating);
 
                     if (!$cartItem->getIsfreesample()) { 
@@ -634,7 +650,7 @@ namespace Application\API\Repositories\Implementations {
                 
                 $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
                 $addresses = $this->getCustomerAddressesByGroup($groupKey);
-                $shoppersCopy = $this->orderEmailsSvc->createReceivedEmail($orderViewItems, $groupKey, $addresses);
+                $shoppersCopy = $this->orderEmailsSvc->createReceivedEmail($orderViewItems, $orderHeader->getCancellationcode(), $groupKey, $addresses);
                 $topbeansCopy = $this->orderEmailsSvc->createNewOrderAlertEmail($orderViewItems, $groupKey, $addresses);
                 $this->emailSvc->sendMail($shoppersCopy);
                 $this->emailSvc->sendMail($topbeansCopy);

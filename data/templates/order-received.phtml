@@ -263,7 +263,7 @@
                         <h4>Hello</h4>
                         <p>
                             Thank you for placing your order with Top Beans. This email is to confirm your order has been placed successfully. 
-                            We will let you know once your item(s) have dispatched.
+                            We will send you a dispatch email once your item(s) have dispatched.
                         </p>
                             
                         <h4 class="section-header">Order Details</h4>
@@ -272,8 +272,7 @@
                             <thead>
                                 <tr style="border-bottom: 1px solid #aaa;">
                                     <th style="width: 16.7%">Type</th>
-                                    <th style="width: 33.3%">Name</th>
-                                    <th style="width: 16.7%">Qty</th>
+                                    <th style="width: 50%">Name &amp; Qty</th>
                                     <th style="width: 16.7%">Cost</th>
                                 </tr>
                             </thead>
@@ -291,8 +290,8 @@
                                         <?php endif; ?>
                                         </strong>
                                     </td>
-                                    <td><?=$o->getName()?></td>
                                     <td>
+                                        <?=$o->getName()?><br/>
                                         <?php if ($o->getIspurchase()) : ?>
                                             <?=$o->getQuantity()?> &times; <?=$o->getPackagingunit()?>
                                         <?php elseif ($o->getIssample()) : ?>
@@ -314,12 +313,10 @@
                                 <tr>
                                     <td><strong>Shipping (Free)</strong></td>
                                     <td></td>
-                                    <td></td>
                                     <td><strong>&pound;0.00</strong></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Total</strong></td>
-                                    <td></td>
                                     <td></td>
                                     <td><strong>&pound;<?=$orderTotal?></strong></td>
                                 </tr>
@@ -369,6 +366,18 @@
                         </table>
                         <!-- /address details -->
                         
+                        <h4 class="section-header">Cancelling your order</h4>
+                        <p>
+                            If you wish to cancel part or all of your order, then please click on this link and follow the instructions: 
+                            <strong><a href="<?=$domainPath?>/Index/clientcancellations" title="Top Beans">Cancellations</a></strong>
+                        </p>
+                        
+                        <p>You will need the following code to activate the cancellations: <strong><?=strtoupper($cancellationCode)?></strong></p>
+
+                        <p>
+                            Please, however, note that once the order has been dispatched, then it would have to be returned before it can be cancelled.
+                            Please review our terms and conditions for more information.
+                        </p>
                         <br/>
                         
                         

@@ -107,6 +107,14 @@ class Order
      * @Type("string")
      * @var string
      *
+     * @ORM\Column(name="cancellationCode", type="string", length=45, nullable=false)
+     */
+    private $cancellationcode;
+
+    /**
+     * @Type("string")
+     * @var string
+     *
      * @ORM\Column(name="worldpayOrderCode", type="string", length=100, nullable=true)
      */
     private $worldpayordercode;
@@ -170,6 +178,7 @@ class Order
     function getRequestypekey() { return $this->requestypekey; }
     function getStatuskey() { return $this->statuskey; }
     function getGroupkey() { return $this->groupkey; } 
+    function getCancellationcode() { return $this->cancellationcode; } 
     function getWorldpayordercode() { return $this->worldpayordercode; }
     function getShoppingcartkey() { return $this->shoppingcartkey; }
     function getTrackingnumber() { return $this->trackingnumber; }
@@ -189,6 +198,7 @@ class Order
     function setRequestypekey($val) { $this->requestypekey = $val; } 
     function setStatuskey($val) { $this->statuskey = $val; } 
     function setGroupkey($val) { $this->groupkey = $val; } 
+    function setCancellationcode($val) { $this->cancellationcode = $val; } 
     function setWorldpayordercode($val) { $this->worldpayordercode = $val; }
     function setShoppingcartkey($val) { $this->shoppingcartkey = $val; } 
     function setTrackingnumber($val) { $this->trackingnumber = $val; }

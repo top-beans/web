@@ -29,7 +29,7 @@ namespace Application\API\Repositories\Implementations {
             $this->domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
         }
 
-        public function createReceivedEmail(array $orders, $orderGroupKey, CustomerAddresses $addresses) {
+        public function createReceivedEmail(array $orders, $cancellationCode, $orderGroupKey, CustomerAddresses $addresses) {
 
             if($orders == null || count($orders) == 0) { throw new \Exception("At least one Order Item is required"); }
             $orderTotal = 0;
@@ -39,9 +39,10 @@ namespace Application\API\Repositories\Implementations {
                 if ($order->getGroupkey() != $orderGroupKey) { throw new \Exception("Orders Items must be from same group"); }
             }
 
-            $template = new TemplateEngine("data/templates/order-confirmation.phtml", [
+            $template = new TemplateEngine("data/templates/order-received.phtml", [
                 'domainPath' => $this->domainPath,
                 'orderGroupKey' => $orderGroupKey,
+                'cancellationCode' => $cancellationCode,
                 'orders' => $orders,
                 'orderTotal' => $orderTotal,
                 'deliveryAddress' => $addresses->deliveryaddress,
@@ -65,7 +66,7 @@ namespace Application\API\Repositories\Implementations {
                 if ($order->getGroupkey() != $orderGroupKey) { throw new \Exception("Orders Items must be from same group"); }
             }
 
-            $template = new TemplateEngine("data/templates/order-alert.phtml", [
+            $template = new TemplateEngine("data/templates/order-received-alert.phtml", [
                 'domainPath' => $this->domainPath,
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
@@ -91,7 +92,7 @@ namespace Application\API\Repositories\Implementations {
                 if ($order->getGroupkey() != $orderGroupKey) { throw new \Exception("Orders Items must be from same group"); }
             }
             
-            $template = new TemplateEngine("data/templates/order-dispatch.phtml", [
+            $template = new TemplateEngine("data/templates/order-dispatched.phtml", [
                 'domainPath' => $this->domainPath,
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
@@ -146,6 +147,33 @@ namespace Application\API\Repositories\Implementations {
             }
 
             $template = new TemplateEngine("data/templates/order-returned.phtml", [
+                'domainPath' => $this->domainPath,
+                'orderGroupKey' => $orderGroupKey,
+                'orders' => $orders,
+                'orderTotal' => $orderTotal,
+                'deliveryAddress' => $addresses->deliveryaddress,
+                'billingAddress' => $addresses->billingaddress
+            ]);
+            
+            $request = new EmailRequest();
+            $request->recipient = $addresses->deliveryaddress->getEmail();
+            $request->subject = "Your TopBeans.co.uk Order has been Returned";
+            $request->htmlbody = $template->render();
+            
+            return $request;
+        }
+        
+        public function createRefundedEmail(array $orders, $orderGroupKey, CustomerAddresses $addresses) {
+            
+            if($orders == null || count($orders) == 0) { throw new \Exception("At least one Order Item is required"); }
+            $orderTotal = 0;
+            
+            foreach($orders as $order) {
+                $orderTotal += $order->getItemprice();
+                if ($order->getGroupkey() != $orderGroupKey) { throw new \Exception("Orders Items must be from same group"); }
+            }
+
+            $template = new TemplateEngine("data/templates/order-refunded.phtml", [
                 'domainPath' => $this->domainPath,
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,

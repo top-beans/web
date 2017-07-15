@@ -24,6 +24,16 @@ class Orderheaderview
     private $groupkey;
 
     /**
+     * @Type("string")
+     * @var string
+     *
+     * @ORM\Column(name="cancellationCode", type="string", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $cancellationcode;
+    
+    /**
      * @Type("integer")
      * @var integer
      *
@@ -409,6 +419,7 @@ class Orderheaderview
     private $billingcountrycode;
 
     function getGroupkey() { return $this->groupkey; }
+    function getCancellationcode() { return $this->cancellationcode; } 
     function getCustomerkey() { return $this->customerkey; }
     function getTotalitems() { return $this->totalitems; }
     function getAllpurchase() { return $this->allpurchase; }
@@ -459,6 +470,7 @@ class Orderheaderview
     function getBillingcountrycode() { return $this->billingcountrycode; }
 
     function setGroupkey($val) { $this->groupkey = $val; }
+    function setCancellationcode($val) { $this->cancellationcode = $val; } 
     function setCustomerkey($val) { $this->customerkey = $val; }
     function setTotalitems($val) { $this->totalitems = $val; }
     function setAllpurchase($val) { $this->allpurchase = $val; }
