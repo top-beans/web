@@ -5,16 +5,36 @@ angular.module('cancellations')
 .component('cancellations', {
     templateUrl: '/angular/modules/cancellations/cancellations.template.html',
     bindings: {
-        orderComplete: '@'
+        cancellationCode: '@'
     },
     controller: ['cancellationsService', function (cancellationsService) {
         var self = this;
 
         self.$onInit = function () {
-            self.cancellationCode = null;
+            self.cancellationCodeOk = false;
             self.email = null;
             self.orderItems = [];
             self.cancellationsService = cancellationsService;
+        };
+        
+        self.confirmCancellationCode = function () {
+            var form = $('form[name=cancellationsForm]');
+            form.addClass('my-submitted');
+            
+            if (form.hasClass('ng-invalid-required')) {
+                toastrError('Please review form', 'Invalid Details');
+                return false;
+            }
+            
+            showOverlay('Confirming Code ...');
+            self.cancellationsService.confirmCancellationCode(self.cancellationCode, function (data) {
+                hideOverlay();
+                if (!data.success) {
+                    toastrErrorFromList(data.errors);
+                } else {
+                    self.orderItems = data.items;
+                }
+            });
         };
         
         self.getOrder = function () {

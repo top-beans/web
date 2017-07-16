@@ -344,7 +344,6 @@ namespace Application\API\Repositories\Implementations {
                 foreach($cartItems as $cartItem) {
                     $order = new Order();
                     $order->setGroupkey($orderResult->groupkey);
-                    $order->setCancellationcode($this->getNewCancellationCode());
                     $order->setStatuskey(OrderStatuses::Creating);
 
                     if (!$cartItem->getIsfreesample()) { 
