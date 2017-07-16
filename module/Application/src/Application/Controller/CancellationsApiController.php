@@ -103,6 +103,18 @@ namespace Application\Controller {
                 $groupKey = $this->ordersRepo->getGroupByCode($code);
                 $orderViewItems = $this->ordersRepo->cancelItems($groupKey, $coffeeKeys);
                 
+                $refundables = [];
+                
+                foreach($orderViewItems as $orderViewItem) {
+                    if ($orderViewItem->getIsrefundable()) {
+                        $refundables[] = $orderViewItem->getCoffeekey();
+                    }
+                }
+                
+                if (count($refundables) > 0) {
+                    $orderViewItems = $this->ordersRepo->requestItemsRefund($groupKey, $refundables);   
+                }
+                
                 $response = ResponseUtils::responseList($orderViewItems);
                 return $this->jsonResponse($response);
                 

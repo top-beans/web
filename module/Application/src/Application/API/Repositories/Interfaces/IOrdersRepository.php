@@ -25,6 +25,7 @@ namespace Application\API\Repositories\Interfaces {
         public function cancelItem($groupkey, $coffeeKey);
         public function returnItem($groupkey, $coffeeKey);
         public function requestItemRefund($groupkey, $coffeeKey);
+        public function requestItemsRefund($groupkey, array $coffeeKeys);
         public function dispatchItems($groupkey, array $coffeeKeys);
         public function cancelItems($groupKey, array $coffeeKeys);
         

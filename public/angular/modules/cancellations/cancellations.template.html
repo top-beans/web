@@ -27,7 +27,7 @@
                 <div class="range">
                     <div class="cell-xs-12">
                         <div class="form-group">
-                            We sent an Authentication Code to {{$ctrl.maskedEmail}}. Enter it here:
+                            We sent a confirmation code to <strong>{{$ctrl.maskedEmail}}</strong>:
                             <input ng-model="$ctrl.code" type="text" placeholder="Confirmation Code" class="form-control" ng-disabled="$ctrl.codeOk" ng-class="{'text-muted': $ctrl.groupKeyOk}" required>
                         </div>
                     </div>
@@ -48,10 +48,9 @@
                 <tbody>
                     <tr ng-repeat="item in $ctrl.orderItems">
                         <td class="col-md-4">
-                            <label><input type='checkbox' ng-disabled="!item.received" ng-model="item.cancel"> {{item.name}}</label>
+                            <label><input type='checkbox' ng-disabled="!item.received" ng-model="item.cancel"> &nbsp;&nbsp;{{item.name}}</label>
                         </td>
-                        <td class="col-md-2">
-                            <strong>Status:</strong>
+                        <td class="col-md-4">
                             <span ng-if="item.creating">Creating</span>
                             <span ng-if="item.received">Received</span>
                             <span ng-if="item.dispatched">Dispatched</span>

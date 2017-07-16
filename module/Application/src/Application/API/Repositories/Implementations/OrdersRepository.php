@@ -472,6 +472,44 @@ namespace Application\API\Repositories\Implementations {
             }
         }
         
+        public function requestItemsRefund($groupKey, array $coffeeKeys) {
+            try {
+                $this->em->getConnection()->beginTransaction();
+
+                $orderViewItems = [];
+                
+                foreach($coffeeKeys as $coffeeKey) {
+                    $orderViewItem = $this->orderViewRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+                    $orderViewItems[] = $orderViewItem;
+                    
+                    if ($orderViewItem == null || !$orderViewItem->getIsrefundable()) {
+                        throw new \Exception("Could not find the order item to cancel or item is not refundable");
+                    } 
+                    
+                    $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+                    $refundAmount = round($orderItem->getItemprice(), 2) * 100;
+                    $orderItem->setStatuskey(OrderStatuses::SentForRefund);
+                    $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
+                    $this->ordersRepo->update($orderItem);
+                    
+                    $this->worldpayService->refundOrder($orderItem->getWorldpayordercode(), $refundAmount);
+                }
+                
+                $this->em->flush();
+                $this->em->getConnection()->commit();
+                
+                foreach($orderViewItems as $orderItem) {
+                    $this->em->refresh($orderItem);
+                }
+                
+                return $orderViewItems;
+                
+            } catch (\Exception $ex) {
+                $this->em->getConnection()->rollBack();
+                throw $ex;
+            }
+        }
+        
         public function dispatchItems($groupKey, array $coffeeKeys) {
             try {
                 $this->em->getConnection()->beginTransaction();
