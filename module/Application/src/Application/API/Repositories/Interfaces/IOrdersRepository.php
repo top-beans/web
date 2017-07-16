@@ -10,8 +10,8 @@ namespace Application\API\Repositories\Interfaces {
         public function getOrder($groupKey);
         public function getOrderHeader($groupKey);
         public function getNewGroupKey();
-        public function getNewCancellationCode();
         public function getGroupByCookie($cookie);
+        public function getGroupByCode($code);
         public function getCustomerByGroup($groupKey);
         public function getAddress($key);
         public function getOrderTotalByCookie($cookie, $status);
@@ -26,6 +26,7 @@ namespace Application\API\Repositories\Interfaces {
         public function returnItem($groupkey, $coffeeKey);
         public function requestItemRefund($groupkey, $coffeeKey);
         public function dispatchItems($groupkey, array $coffeeKeys);
+        public function cancelItems($groupKey, array $coffeeKeys);
         
         public function dispatchOrder($groupkey);
         public function cancelOrder($groupKey);

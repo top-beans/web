@@ -25,7 +25,6 @@ namespace Application\API\Repositories\Implementations {
     use Application\API\Repositories\Interfaces\IWorldpayService;
     use Application\API\Repositories\Interfaces\IOrderEmailsService;
     use Application\API\Repositories\Interfaces\IOrdersRepository;
-    use Application\API\Canonicals\Dto\EmailRequest;
     use Application\API\Canonicals\Dto\Webhook;
 
     class OrdersRepository implements IOrdersRepository {
@@ -190,21 +189,6 @@ namespace Application\API\Repositories\Implementations {
             
             return $groupKey;
         }
-
-        public function getNewCancellationCode() {
-            do {
-                $char = str_shuffle("0123456789");
-                $cancellationCode = "";
-                $length = 5;
-                
-                for($i = 0, $l = strlen($char) - 1; $i < $length; $i ++) {
-                    $cancellationCode .= strtoupper($char{mt_rand(0, $l)});
-                }
-
-            } while ($this->ordersRepo->count(['cancellationcode' => $cancellationCode]) > 0);
-            
-            return $cancellationCode;
-        }
         
         public function getGroupByCookie($cookieKey) {
             $cartItems = $this->cartRepo->findBy(['cookiekey' => $cookieKey]);
@@ -222,6 +206,16 @@ namespace Application\API\Repositories\Implementations {
             }
             
             return null;
+        }
+        
+        public function getGroupByCode($code) {
+            $orderItems = $this->ordersRepo->findBy(['cancellationcode' => $code]);
+            
+            if (count($orderItems) == 0) {
+                return null;
+            } else {
+                return $orderItems[0]->getGroupkey();
+            }
         }
 
         public function getCustomerByGroup($groupKey) {
@@ -515,6 +509,43 @@ namespace Application\API\Repositories\Implementations {
             }
         }
         
+        public function cancelItems($groupKey, array $coffeeKeys) {
+            try {
+                $this->em->getConnection()->beginTransaction();
+
+                $orderViewItems = [];
+                
+                foreach($coffeeKeys as $coffeeKey) {
+                    $orderViewItem = $this->orderViewRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey, 'received' => 1]);
+                    $orderViewItems[] = $orderViewItem;
+
+                    if ($orderViewItem == null) {
+                        throw new \Exception("Could not find the requested order item to cancel in Received status");
+                    }
+
+                    $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
+                    $orderItem->setStatuskey(OrderStatuses::Cancelled);
+                    $this->ordersRepo->update($orderItem);
+                }
+                
+                $shoppersCopy = $this->orderEmailsSvc->createCancelledEmail($orderViewItems, $groupKey, $this->getCustomerAddressesByGroup($groupKey));
+                $this->emailSvc->sendMail($shoppersCopy);
+                
+                $this->em->flush();
+                $this->em->getConnection()->commit();
+                
+                foreach($orderViewItems as $orderItem) {
+                    $this->em->refresh($orderItem);
+                }
+                
+                return $orderViewItems;
+                
+            } catch (\Exception $ex) {
+                $this->em->getConnection()->rollBack();
+                throw $ex;
+            }
+        }
+        
         public function dispatchOrder($groupKey) {
             try {
                 $this->em->getConnection()->beginTransaction();
@@ -649,7 +680,7 @@ namespace Application\API\Repositories\Implementations {
                 
                 $orderViewItems = $this->orderViewRepo->findBy(['groupkey' => $groupKey]);
                 $addresses = $this->getCustomerAddressesByGroup($groupKey);
-                $shoppersCopy = $this->orderEmailsSvc->createReceivedEmail($orderViewItems, $orderHeader->getCancellationcode(), $groupKey, $addresses);
+                $shoppersCopy = $this->orderEmailsSvc->createReceivedEmail($orderViewItems, $groupKey, $addresses);
                 $topbeansCopy = $this->orderEmailsSvc->createNewOrderAlertEmail($orderViewItems, $groupKey, $addresses);
                 $this->emailSvc->sendMail($shoppersCopy);
                 $this->emailSvc->sendMail($topbeansCopy);

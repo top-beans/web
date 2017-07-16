@@ -1,5 +1,6 @@
 'use strict';
 
 angular.module('cancellations', [
-    'cancellationsService'
+    'cancellationsService',
+    'bbox'
 ]);

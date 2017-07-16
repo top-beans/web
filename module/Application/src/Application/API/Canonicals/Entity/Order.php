@@ -112,6 +112,22 @@ class Order
     private $cancellationcode;
 
     /**
+     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="codeRequestTime", type="datetime", nullable=true)
+     */
+    private $coderequesttime;
+    
+    /**
+     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="codeConfirmTime", type="datetime", nullable=true)
+     */
+    private $codeconfirmtime;
+
+    /**
      * @Type("string")
      * @var string
      *
@@ -179,6 +195,8 @@ class Order
     function getStatuskey() { return $this->statuskey; }
     function getGroupkey() { return $this->groupkey; } 
     function getCancellationcode() { return $this->cancellationcode; } 
+    function getCoderequesttime() { return $this->coderequesttime; }
+    function getCodeconfirmtime() { return $this->codeconfirmtime; }
     function getWorldpayordercode() { return $this->worldpayordercode; }
     function getShoppingcartkey() { return $this->shoppingcartkey; }
     function getTrackingnumber() { return $this->trackingnumber; }
@@ -199,6 +217,8 @@ class Order
     function setStatuskey($val) { $this->statuskey = $val; } 
     function setGroupkey($val) { $this->groupkey = $val; } 
     function setCancellationcode($val) { $this->cancellationcode = $val; } 
+    function setCoderequesttime($val) { $this->coderequesttime = $val; }
+    function setCodeconfirmtime($val) { $this->codeconfirmtime = $val; }
     function setWorldpayordercode($val) { $this->worldpayordercode = $val; }
     function setShoppingcartkey($val) { $this->shoppingcartkey = $val; } 
     function setTrackingnumber($val) { $this->trackingnumber = $val; }

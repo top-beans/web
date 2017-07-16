@@ -27,9 +27,25 @@ class Orderheaderview
      * @Type("string")
      * @var string
      *
-     * @ORM\Column(name="cancellationCode", type="string", length=45, nullable=false)
+     * @ORM\Column(name="cancellationCode", type="string", length=45, nullable=true)
      */
     private $cancellationcode;
+
+    /**
+     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="codeRequestTime", type="datetime", nullable=true)
+     */
+    private $coderequesttime;
+    
+    /**
+     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="codeConfirmTime", type="datetime", nullable=true)
+     */
+    private $codeconfirmtime;
     
     /**
      * @Type("integer")
@@ -418,6 +434,8 @@ class Orderheaderview
 
     function getGroupkey() { return $this->groupkey; }
     function getCancellationcode() { return $this->cancellationcode; } 
+    function getCoderequesttime() { return $this->coderequesttime; }
+    function getCodeconfirmtime() { return $this->codeconfirmtime; }
     function getCustomerkey() { return $this->customerkey; }
     function getTotalitems() { return $this->totalitems; }
     function getAllpurchase() { return $this->allpurchase; }
@@ -469,6 +487,8 @@ class Orderheaderview
 
     function setGroupkey($val) { $this->groupkey = $val; }
     function setCancellationcode($val) { $this->cancellationcode = $val; } 
+    function setCoderequesttime($val) { $this->coderequesttime = $val; }
+    function setCodeconfirmtime($val) { $this->codeconfirmtime = $val; }
     function setCustomerkey($val) { $this->customerkey = $val; }
     function setTotalitems($val) { $this->totalitems = $val; }
     function setAllpurchase($val) { $this->allpurchase = $val; }

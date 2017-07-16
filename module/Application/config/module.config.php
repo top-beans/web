@@ -10,8 +10,10 @@ namespace Application {
             'factories' => [
                 'Admin'         => 'Application\ControllerFactory\AdminControllerFactory',
                 'Index'         => 'Application\ControllerFactory\IndexControllerFactory',
+                'Cancellations' => 'Application\ControllerFactory\CancellationsControllerFactory',
                 'Customer'      => 'Application\ControllerFactory\CustomerControllerFactory',
                 'SecurityApi'   => 'Application\ControllerFactory\SecurityApiControllerFactory',
+                'CancelApi'     => 'Application\ControllerFactory\CancellationsApiControllerFactory',
                 'UsersApi'      => 'Application\ControllerFactory\UsersApiControllerFactory',
                 'EnquiryApi'    => 'Application\ControllerFactory\EnquiryApiControllerFactory',
                 'ClientsApi'    => 'Application\ControllerFactory\ClientsApiControllerFactory',
@@ -93,6 +95,7 @@ namespace Application {
                 'CoffeeRepo'        => 'Application\API\Repositories\Factories\CoffeeRepositoryFactory',
                 'CountryRepo'       => 'Application\API\Repositories\Factories\CountryRepositoryFactory',
                 'OrdersRepo'        => 'Application\API\Repositories\Factories\OrdersRepositoryFactory',
+                'CancelRepo'        => 'Application\API\Repositories\Factories\CancellationsRepositoryFactory',
                 'OrderEmailsSvc'    => 'Application\API\Repositories\Factories\OrderEmailsServiceFactory',
                 'CartRepo'          => 'Application\API\Repositories\Factories\CartRepositoryFactory',
                 'EnquiryRepo'       => 'Application\API\Repositories\Factories\EnquiryRepositoryFactory',

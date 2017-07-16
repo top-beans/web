@@ -5,13 +5,31 @@ angular.module('cancellationsService').
 service('cancellationsService', ['$http', function ($http) {
     var self = this;
 
-    self.getOrder = function (cancellationCode, email, callback) {
-        var cancellationDetails = {
-            code: cancellationCode,
-            email: email
-        };
+    self.confirmGroupKey = function (groupKey, callback) {
+        $http.post("/api/CancelApi/confirmgroupkey", groupKey).then(function (response) {
+            if (callback) callback(response.data);
+        }, function (error) {
+            if (callback) callback({
+                success: false,
+                errors: ['Error ' + error.status + ': ' + error.statusText]
+            });
+        });
+    };
+
+    self.confirmCode = function (code, callback) {
+        $http.post("/api/CancelApi/confirmcode", code).then(function (response) {
+            if (callback) callback(response.data);
+        }, function (error) {
+            if (callback) callback({
+                success: false,
+                errors: ['Error ' + error.status + ': ' + error.statusText]
+            });
+        });
+    };
+
+    self.getOrderTotal = function (code, callback) {
         
-        $http.post("/api/CancellationsApi/getorder", cancellationDetails).then(function (response) {
+        $http.post("/api/CancelApi/getordertotal", code).then(function (response) {
             if (callback) callback(response.data);
         }, function (error) {
             if (callback) callback({
@@ -21,30 +39,13 @@ service('cancellationsService', ['$http', function ($http) {
         });
     };
     
-    self.cancelOrderItem = function (cancellationCode, email, coffeeKey, callback) {
-        var cancellationDetails = {
-            code: cancellationCode,
-            email: email,
-            coffeekey: coffeeKey
+    self.cancelOrderItems = function (code, coffeeKeys, callback) {
+        var orderItems = {
+            groupkey: code,
+            coffeekeys: coffeeKeys
         };
-        
-        $http.post("/api/CancellationsApi/cancelorderitem", cancellationDetails).then(function (response) {
-            if (callback) callback(response.data);
-        }, function (error) {
-            if (callback) callback({
-                success: false,
-                errors: ['Error ' + error.status + ': ' + error.statusText]
-            });
-        });
-    };
-    
-    self.cancelOrder = function (cancellationCode, email, callback) {
-        var cancellationDetails = {
-            code: cancellationCode,
-            email: email
-        };
-        
-        $http.post("/api/CancellationsApi/cancelorder", cancellationDetails).then(function (response) {
+
+        $http.post("/api/CancelApi/cancelorderitems", orderItems).then(function (response) {
             if (callback) callback(response.data);
         }, function (error) {
             if (callback) callback({

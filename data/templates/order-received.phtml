@@ -238,7 +238,7 @@
                             </td>
                             <td align="right">
                                 <h3 class="collapse">Order Confirmation</h3>
-                                Order #<?=strtoupper($orderGroupKey)?>
+                                Order #<strong><?=strtoupper($orderGroupKey)?></strong>
                             </td>
                         </tr>
                     </table>
@@ -262,7 +262,7 @@
                     <td>
                         <h4>Hello</h4>
                         <p>
-                            Thank you for placing your order with Top Beans. This email is to confirm your order has been placed successfully. 
+                            Thank you for placing your order with Top Beans. This email is to confirm your that order has been placed successfully. 
                             We will send you a dispatch email once your item(s) have dispatched.
                         </p>
                             
@@ -371,16 +371,16 @@
                         
                         <h4 class="section-header">Cancellations and Returns</h4>
                         <p>
-                            If you wish to cancel PART or ALL of your order, then please click on the following link.
-                            You will require the Order number (i.e. <strong><?=strtoupper($orderGroupKey)?></strong>) to complete the process:
+                            In order to cancel PART or ALL of your order, please click on the following link.
+                            You will require the Order number (<strong><?=strtoupper($orderGroupKey)?></strong>) to complete the process:
                         </p>
                         
                         <p>
-                            <a href="<?=$domainPath?>/Index/cancellations" title="Top Beans"><?=$domainPath?>/Index/cancellations</a>
+                            <a href="<?=$domainPath?>/Cancellations/index" title="Top Beans"><?=$domainPath?>/Cancellations/index</a>
                         </p>
                         
                         <p>
-                            However, please note that once the order has been dispatched, then it would have to return it before it can be cancelled.
+                            However, once we have dispatched the order, then you will have to return it before it can be cancelled.
                             All returns are at your expense and must be sent to the following address:
                         </p>
                         <p>

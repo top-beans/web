@@ -179,9 +179,25 @@ class Orderview
      * @Type("string")
      * @var string
      *
-     * @ORM\Column(name="cancellationCode", type="string", length=45, nullable=false)
+     * @ORM\Column(name="cancellationCode", type="string", length=45, nullable=true)
      */
     private $cancellationcode;
+
+    /**
+     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="codeRequestTime", type="datetime", nullable=true)
+     */
+    private $coderequesttime;
+    
+    /**
+     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="codeConfirmTime", type="datetime", nullable=true)
+     */
+    private $codeconfirmtime;
 
     /**
      * @Type("string")
@@ -693,6 +709,8 @@ class Orderview
     function getRefundfailed() { return $this->refundfailed; }
     function getGroupkey() { return $this->groupkey; }
     function getCancellationcode() { return $this->cancellationcode; } 
+    function getCoderequesttime() { return $this->coderequesttime; }
+    function getCodeconfirmtime() { return $this->codeconfirmtime; }
     function getWorldpayordercode() { return $this->worldpayordercode; }
     function getShoppingcartkey() { return $this->shoppingcartkey; }
     function getTrackingnumber() { return $this->trackingnumber; }
@@ -776,6 +794,8 @@ class Orderview
     function setRefundfailed($val) { $this->refundfailed = $val; }
     function setGroupkey($val) { $this->groupkey = $val; }
     function setCancellationcode($val) { $this->cancellationcode = $val; } 
+    function setCoderequesttime($val) { $this->coderequesttime = $val; }
+    function setCodeconfirmtime($val) { $this->codeconfirmtime = $val; }
     function setWorldpayordercode($val) { $this->worldpayordercode = $val; }
     function setShoppingcartkey($val) { $this->shoppingcartkey = $val; } 
     function setTrackingnumber($val) { $this->trackingnumber = $val; }

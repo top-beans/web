@@ -2,12 +2,15 @@
 
 namespace Application\API\Repositories\Interfaces {
     
-    use Application\API\Canonicals\Dto\CancellationDetails;
-    
     interface ICancellationsRepository {
-        public function confirmCancellation($code);
-        public function getOrder(CancellationDetails $details);
-        public function cancelItem(CancellationDetails $details);
-        public function cancelOrder(CancellationDetails $details);
+        public function getNewCancellationCode();
+        
+        public function confirmGroupKey($groupKey);
+        public function confirmCode($code);
+        
+        public function isAuthenticated($code);
+        
+        public function createAndSendCode($groupKey);
+        public function getMaskedEmail($groupKey);
     }
 }

@@ -1,40 +1,86 @@
 <div class="shell">
     <div class="range range-md-justify">
         <div class="cell-md-6 cell-lg-6 offset-top-22 offset-md-top-0">
-            <form class="rd-mailform form-modern" name="orderForm" autocomplete="off" novalidate>
+            <form class="rd-mailform form-modern" name="groupKeyForm" autocomplete="off" novalidate>
                 <div class="range">
                     <div class="cell-xs-12">
                         <div class="form-group">
-                            Please enter your Order Number
-                            <input ng-model="$ctrl.groupKey" type="text" placeholder="Order Number" class="form-control" required>
+                            Order Number
+                            <input ng-model="$ctrl.groupKey" type="text" placeholder="Order Number" class="form-control" ng-disabled="$ctrl.groupKeyOk" ng-class="{'text-muted': $ctrl.groupKeyOk}" required>
                         </div>
                     </div>
                     <div class="cell-xs-12 offset-top-10">
                         <div class="form-group">
-                            <button ng-click="$ctrl.confirmGroupKey()" class="btn btn-sm btn-primary-contrast">
+                            <button ng-click="$ctrl.confirmGroupKey()" ng-disabled="$ctrl.groupKeyOk" class="btn btn-sm btn-primary-contrast">
+                                Confirm
+                            </button>
+                            <button ng-click="$ctrl.reset()" ng-show="$ctrl.groupKeyOk" class="btn btn-sm btn-primary-contrast">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="cell-md-6 cell-lg-6 offset-top-22 offset-md-top-0">
+            <form ng-if="$ctrl.groupKeyOk" class="rd-mailform form-modern" name="codeForm" autocomplete="off" novalidate>
+                <div class="range">
+                    <div class="cell-xs-12">
+                        <div class="form-group">
+                            We sent an Authentication Code to {{$ctrl.maskedEmail}}. Enter it here:
+                            <input ng-model="$ctrl.code" type="text" placeholder="Confirmation Code" class="form-control" ng-disabled="$ctrl.codeOk" ng-class="{'text-muted': $ctrl.groupKeyOk}" required>
+                        </div>
+                    </div>
+                    <div class="cell-xs-12 offset-top-10">
+                        <div class="form-group">
+                            <button ng-click="$ctrl.confirmCode()" ng-disabled="$ctrl.codeOk" class="btn btn-sm btn-primary-contrast">
                                 Confirm
                             </button>
                         </div>
                     </div>
                 </div>
             </form>
-            <form ng-if="$ctrl.groupKeyOk" class="rd-mailform form-modern" name="confirmationForm" autocomplete="off" novalidate>
-                <div class="range">
-                    <div class="cell-xs-12">
-                        <div class="form-group">
-                            We have sent a code to {{$ctrl.maskedEmail}}, please enter it here (it expires in 5 minutes):
-                            <input ng-model="$ctrl.confrimationCode" type="text" placeholder="Confirmation Code" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="cell-xs-12 offset-top-10">
-                        <div class="form-group">
-                            <button ng-click="$ctrl.getOrder()" class="btn btn-sm btn-primary-contrast">
-                                Retrieve Order
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
+        </div>
+        <div class="cell-md-12 cell-lg-12 offset-top-22 offset-top-22" ng-if="$ctrl.codeOk">
+            <h5 class="my-underline">Order Items</h5>
+
+            <table class="table table-condensed">
+                <tbody>
+                    <tr ng-repeat="item in $ctrl.orderItems">
+                        <td class="col-md-4">
+                            <label><input type='checkbox' ng-disabled="!item.received" ng-model="item.cancel"> {{item.name}}</label>
+                        </td>
+                        <td class="col-md-2">
+                            <strong>Status:</strong>
+                            <span ng-if="item.creating">Creating</span>
+                            <span ng-if="item.received">Received</span>
+                            <span ng-if="item.dispatched">Dispatched</span>
+                            <span ng-if="item.cancelled">Cancelled</span>
+                            <span ng-if="item.sentforrefund">Sent For Refund</span>
+                            <span ng-if="item.refunded">Refunded</span>
+                            <span ng-if="item.returned">Returned</span>
+                            <span ng-if="item.refundfailed">Refund Failed</span>
+                        </td>
+                        <td class="col-md-2">
+                            <span ng-if="item.ispurchase">{{item.quantity}} &times; {{item.packagingunit}}</span>
+                            <span ng-if="item.issample">{{item.quantity}} {{item.pricebaseunit}}</span>
+                        </td>
+                        <td class="col-md-2">&pound;{{item.itemprice}}</td>
+                    </tr>
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>Total</td>
+                        <td>&pound;{{$ctrl.orderTotal}}</td>
+                    </tr>
+                </tfoot>
+            </table>
+            <div class="offset-top-15">
+                <button type="button" class="btn btn-sm btn-primary" ng-click="$ctrl.cancelItems()">Cancel Selected Items</button>
+            </div>
         </div>
     </div>
 </div>

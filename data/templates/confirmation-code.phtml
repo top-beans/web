@@ -4,7 +4,7 @@
 <head>
 <meta name="viewport" content="width=device-width" /><!-- IMPORTANT -->
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Order Cancelled</title>
+<title>Confirmation Code</title>
     
 <style>
     /* ------------------------------------- 
@@ -237,8 +237,7 @@
                                 </a>
                             </td>
                             <td align="right">
-                                <h3 class="collapse">Order Cancelled</h3>
-                                Order #<?=strtoupper($orderGroupKey)?>
+                                <h3 class="collapse">Confirmation Code</h3>
                             </td>
                         </tr>
                     </table>
@@ -262,66 +261,9 @@
                     <td>
                         <h4>Hello</h4>
                         <p>
-                            We thought you would like to know that we have cancelled the following items from your order. 
-                            Any items you paid for will be refunded.
+                            Your confirmation code is <strong><?=$code?></strong>. Please note that it expires within <strong><?=$expiry?> minutes</strong>
                         </p>
-                            
-
-                        <h4 class="section-header">Cancelled Order Details</h4>
-                        
-                        <table class="order-table">
-                            <thead>
-                                <tr style="border-bottom: 1px solid #aaa;">
-                                    <th style="width: 16.7%">Type</th>
-                                    <th style="width: 33.3%">Name</th>
-                                    <th style="width: 16.7%">Qty</th>
-                                    <th style="width: 16.7%">Cost</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach($orders as $o): ?>
-                                <tr>
-                                    <td>
-                                        <strong>
-                                        <?php if ($o->getIspurchase()) : ?>
-                                            Purchase
-                                        <?php elseif ($o->getIspaidsample()) : ?>
-                                            Sample
-                                        <?php elseif ($o->getIsfreesample()) : ?>
-                                            Sample (Free)
-                                        <?php endif; ?>
-                                        </strong>
-                                    </td>
-                                    <td><?=$o->getName()?></td>
-                                    <td>
-                                        <?php if ($o->getIspurchase()) : ?>
-                                            <?=$o->getQuantity()?> &times; <?=$o->getPackagingunit()?>
-                                        <?php elseif ($o->getIssample()) : ?>
-                                            <?=$o->getQuantity()?> <?=$o->getPricebaseunit()?>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <?php if ($o->getIspurchase() || $o->getIspaidsample()) : ?>
-                                            &pound;<?=$o->getItemprice()?>
-                                        <?php elseif ($o->getIsfreesample()) : ?>
-                                            &pound;0.00
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
-                                <?php endforeach;?>
-                            </tbody>
-                            
-                            <tfoot>
-                                <tr>
-                                    <td><strong>Total</strong></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><strong>&pound;<?=$orderTotal?></strong></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                        
-                        
+                        <br/>
                     </td>
                 </tr>
             </table>
