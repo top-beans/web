@@ -477,6 +477,8 @@ namespace Application\API\Repositories\Implementations {
                 $this->em->getConnection()->beginTransaction();
 
                 $orderViewItems = [];
+                $refundAmount = 0;
+                $worldpayOrderCode = null;
                 
                 foreach($coffeeKeys as $coffeeKey) {
                     $orderViewItem = $this->orderViewRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
@@ -487,14 +489,16 @@ namespace Application\API\Repositories\Implementations {
                     } 
                     
                     $orderItem = $this->ordersRepo->findOneBy(['groupkey' => $groupKey, 'coffeekey' => $coffeeKey]);
-                    $refundAmount = round($orderItem->getItemprice(), 2) * 100;
+                    
+                    $refundAmount += round($orderItem->getItemprice(), 2) * 100;
+                    $worldpayOrderCode = $orderItem->getWorldpayordercode();
+                    
                     $orderItem->setStatuskey(OrderStatuses::SentForRefund);
                     $orderItem->setUpdateddate(new \DateTime("now", new \DateTimeZone("UTC")));
                     $this->ordersRepo->update($orderItem);
-                    
-                    $this->worldpayService->refundOrder($orderItem->getWorldpayordercode(), $refundAmount);
                 }
                 
+                $this->worldpayService->refundOrder($worldpayOrderCode, $refundAmount);
                 $this->em->flush();
                 $this->em->getConnection()->commit();
                 
