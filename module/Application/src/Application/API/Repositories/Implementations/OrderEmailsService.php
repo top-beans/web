@@ -40,6 +40,7 @@ namespace Application\API\Repositories\Implementations {
             }
 
             $template = new TemplateEngine("data/templates/order-received.phtml", [
+                'title' => "Order Received",
                 'domainPath' => $this->domainPath,
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
@@ -50,7 +51,7 @@ namespace Application\API\Repositories\Implementations {
             
             $request = new EmailRequest();
             $request->recipient = $addresses->deliveryaddress->getEmail();
-            $request->subject = "Your TopBeans.co.uk Order has been Received";
+            $request->subject = "Order Received - TopBeans.co.uk";
             $request->htmlbody = $template->render();
             return $request;
         }
@@ -66,6 +67,7 @@ namespace Application\API\Repositories\Implementations {
             }
 
             $template = new TemplateEngine("data/templates/order-received-alert.phtml", [
+                'title' => "Order Received Alert",
                 'domainPath' => $this->domainPath,
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
@@ -76,7 +78,7 @@ namespace Application\API\Repositories\Implementations {
             
             $request = new EmailRequest();
             $request->recipient = $addresses->deliveryaddress->getEmail();
-            $request->subject = "New Order Alert";
+            $request->subject = "Order Alert";
             $request->htmlbody = $template->render();
             return $request;
         }
@@ -92,6 +94,7 @@ namespace Application\API\Repositories\Implementations {
             }
             
             $template = new TemplateEngine("data/templates/order-dispatched.phtml", [
+                'title' => "Order Dispatched",
                 'domainPath' => $this->domainPath,
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
@@ -102,7 +105,7 @@ namespace Application\API\Repositories\Implementations {
             
             $request = new EmailRequest();
             $request->recipient = $addresses->deliveryaddress->getEmail();
-            $request->subject = "Your TopBeans.co.uk Order has been Dispatched";
+            $request->subject = "Order Dispatched - TopBeans.co.uk";
             $request->htmlbody = $template->render();
             
             return $request;
@@ -119,6 +122,7 @@ namespace Application\API\Repositories\Implementations {
             }
 
             $template = new TemplateEngine("data/templates/order-cancelled.phtml", [
+                'title' => "Order Cancelled",
                 'domainPath' => $this->domainPath,
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
@@ -129,7 +133,7 @@ namespace Application\API\Repositories\Implementations {
             
             $request = new EmailRequest();
             $request->recipient = $addresses->deliveryaddress->getEmail();
-            $request->subject = "Your TopBeans.co.uk Order has been Cancelled";
+            $request->subject = "Order Cancelled - TopBeans.co.uk";
             $request->htmlbody = $template->render();
             
             return $request;
@@ -146,6 +150,7 @@ namespace Application\API\Repositories\Implementations {
             }
 
             $template = new TemplateEngine("data/templates/order-returned.phtml", [
+                'title' => "Order Returned",
                 'domainPath' => $this->domainPath,
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
@@ -156,7 +161,7 @@ namespace Application\API\Repositories\Implementations {
             
             $request = new EmailRequest();
             $request->recipient = $addresses->deliveryaddress->getEmail();
-            $request->subject = "Your TopBeans.co.uk Order has been Returned";
+            $request->subject = "Order Returned - TopBeans.co.uk";
             $request->htmlbody = $template->render();
             
             return $request;
@@ -173,6 +178,7 @@ namespace Application\API\Repositories\Implementations {
             }
 
             $template = new TemplateEngine("data/templates/order-refunded.phtml", [
+                'title' => "Order Refunded",
                 'domainPath' => $this->domainPath,
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
@@ -183,7 +189,7 @@ namespace Application\API\Repositories\Implementations {
             
             $request = new EmailRequest();
             $request->recipient = $addresses->deliveryaddress->getEmail();
-            $request->subject = "Your TopBeans.co.uk Order has been Returned";
+            $request->subject = "Order Refunded - TopBeans.co.uk";
             $request->htmlbody = $template->render();
             
             return $request;
@@ -192,6 +198,7 @@ namespace Application\API\Repositories\Implementations {
         public function createConfirmationCodeEmail($code, $expiry, $deliveryEmail) {
 
             $template = new TemplateEngine("data/templates/confirmation-code.phtml", [
+                'title' => "Confirmation Code",
                 'domainPath' => $this->domainPath,
                 'code' => $code,
                 'expiry' => $expiry
@@ -199,7 +206,7 @@ namespace Application\API\Repositories\Implementations {
             
             $request = new EmailRequest();
             $request->recipient = $deliveryEmail;
-            $request->subject = "Confirmation Code from TopBeans.co.uk";
+            $request->subject = "Confirmation Code - TopBeans.co.uk";
             $request->htmlbody = $template->render();
             
             return $request;

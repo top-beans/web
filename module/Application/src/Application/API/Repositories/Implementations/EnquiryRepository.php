@@ -92,6 +92,7 @@ namespace Application\API\Repositories\Implementations {
             $description = nl2br($enquiry->getDescription());
             
             $template = new TemplateEngine("data/templates/enquiry-alert.phtml", [
+                'title' => "Enquiry Alert",
                 'domainPath' => $domainPath,
                 'name' => $name,
                 'number' => $number,
