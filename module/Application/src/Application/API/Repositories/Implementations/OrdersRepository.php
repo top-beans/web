@@ -779,24 +779,21 @@ namespace Application\API\Repositories\Implementations {
 
                 $orderViewItems = $this->orderViewRepo->findBy(['sentforrefund' => 1, 'worldpayordercode' => $webhook->orderCode]);
                 
-                if ($orderViewItems == null || count($orderViewItems) == 0) {
+                if ($orderViewItems == null || count($orderViewItems) == 0 || $webhook->paymentStatus == "SENT_FOR_REFUND") {
                     $this->em->flush();
                     $this->em->getConnection()->commit();
                     return;                    
                 }
                 
-                if ($webhook->paymentStatus == "SENT_FOR_REFUND") {
-                    $updatedStatus = OrderStatuses::SentForRefund;
-                } else if ($webhook->paymentStatus == "PARTIALLY_REFUNDED" || $webhook->paymentStatus == "REFUNDED") {
+                $updatedStatus = OrderStatuses::RefundFailed;
+                
+                if ($webhook->paymentStatus == "PARTIALLY_REFUNDED" || $webhook->paymentStatus == "REFUNDED") {
                     $updatedStatus = OrderStatuses::Refunded;
-                } else {
-                    $updatedStatus = OrderStatuses::RefundFailed;
                 }
 
                 foreach ($orderViewItems as $orderViewItem) {
                     $orderItem = $this->ordersRepo->fetch($orderViewItem->getOrderkey());
                     $orderItem->setStatuskey($updatedStatus);
-                    $this->ordersRepo->update($orderItem);
                 }
                 
                 $groupKey = $orderViewItems[0]->getGroupkey();
