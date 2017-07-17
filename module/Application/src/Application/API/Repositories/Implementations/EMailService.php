@@ -13,20 +13,20 @@ namespace Application\API\Repositories\Implementations {
         private $smtpSender;
         private $supportEmail;
         private $queueEmails;
-        private $isProduction;
+        private $sendToRecipient;
         
-        public function __construct(EntityManager $em, $smtpDetails, $smtpSender, $supportEmail, $queueEmails, $isProduction) {
+        public function __construct(EntityManager $em, $smtpDetails, $smtpSender, $supportEmail, $queueEmails, $sendToRecipient) {
             parent::__construct($em);
             $this->smtpDetails = $smtpDetails;
             $this->smtpSender = $smtpSender;
             $this->supportEmail = $supportEmail;
             $this->queueEmails = $queueEmails;
-            $this->isProduction = $isProduction;
+            $this->sendToRecipient = $sendToRecipient;
         }
         
         public function sendMail(EmailRequest $emailRequest) {
             
-            if (!$this->isProduction) {
+            if (!$this->sendToRecipient) {
                 $emailRequest->recipient = $this->supportEmail;
             }
             
@@ -49,7 +49,7 @@ namespace Application\API\Repositories\Implementations {
 
         public function sendBccMail(EmailRequest $emailRequest) {
             
-            if (!$this->isProduction) {
+            if (!$this->sendToRecipient) {
                 $emailRequest->recipient = $this->supportEmail;
             }
             
@@ -81,7 +81,7 @@ namespace Application\API\Repositories\Implementations {
 
                 foreach ($emails as $email) {
                     $emailRequest = new EmailRequest();
-                    $emailRequest->recipient = $this->isProduction ? $email->getRecipients() : $this->supportEmail;
+                    $emailRequest->recipient = $this->sendToRecipient ? $email->getRecipients() : $this->supportEmail;
                     $emailRequest->subject = $email->getSubject();
                     $emailRequest->textbody = $email->getText();
                     $emailRequest->htmlbody = $email->getHtml();
