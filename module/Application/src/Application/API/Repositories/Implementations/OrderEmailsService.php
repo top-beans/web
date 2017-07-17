@@ -195,6 +195,34 @@ namespace Application\API\Repositories\Implementations {
             return $request;
         }
         
+        public function createRefundFailedAlertEmail(array $orders, $orderGroupKey, CustomerAddresses $addresses) {
+            
+            if($orders == null || count($orders) == 0) { throw new \Exception("At least one Order Item is required"); }
+            $orderTotal = 0;
+            
+            foreach($orders as $order) {
+                $orderTotal += $order->getItemprice();
+                if ($order->getGroupkey() != $orderGroupKey) { throw new \Exception("Orders Items must be from same group"); }
+            }
+
+            $template = new TemplateEngine("data/templates/order-refund-failed.phtml", [
+                'title' => "Refund Failed",
+                'domainPath' => $this->domainPath,
+                'orderGroupKey' => $orderGroupKey,
+                'orders' => $orders,
+                'orderTotal' => $orderTotal,
+                'deliveryAddress' => $addresses->deliveryaddress,
+                'billingAddress' => $addresses->billingaddress
+            ]);
+            
+            $request = new EmailRequest();
+            $request->recipient = $addresses->deliveryaddress->getEmail();
+            $request->subject = "Refund Failed Alert";
+            $request->htmlbody = $template->render();
+            
+            return $request;
+        }
+        
         public function createConfirmationCodeEmail($code, $expiry, $deliveryEmail) {
 
             $template = new TemplateEngine("data/templates/confirmation-code.phtml", [

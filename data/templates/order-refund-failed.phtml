@@ -1,0 +1,91 @@
+<?php include("data/templates/header.phtml"); ?>
+
+<!-- BODY -->
+<table class="body-wrap">
+    <tr>
+        <td></td>
+        <td class="container" bgcolor="#FFFFFF">
+
+            <div class="content">
+            <table>
+                <tr>
+                    <td>
+                        <h4>Hello</h4>
+                        <p>
+                            The following items could not be refunded.
+                        </p>
+                            
+
+                        <h4 class="section-header">Refund Failed Items</h4>
+                        
+                        <table class="order-table">
+                            <thead>
+                                <tr style="border-bottom: 1px solid #aaa;">
+                                    <th style="width: 16.7%">Type</th>
+                                    <th style="width: 33.3%">Name</th>
+                                    <th style="width: 16.7%">Qty</th>
+                                    <th style="width: 16.7%">Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach($orders as $o): ?>
+                                <tr>
+                                    <td>
+                                        <strong>
+                                        <?php if ($o->getIspurchase()) : ?>
+                                            Purchase
+                                        <?php elseif ($o->getIspaidsample()) : ?>
+                                            Sample
+                                        <?php elseif ($o->getIsfreesample()) : ?>
+                                            Sample (Free)
+                                        <?php endif; ?>
+                                        </strong>
+                                    </td>
+                                    <td><?=$o->getName()?></td>
+                                    <td>
+                                        <?php if ($o->getIspurchase()) : ?>
+                                            <?=$o->getQuantity()?> &times; <?=$o->getPackagingunit()?>
+                                        <?php elseif ($o->getIssample()) : ?>
+                                            <?=$o->getQuantity()?> <?=$o->getPricebaseunit()?>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if ($o->getIspurchase() || $o->getIspaidsample()) : ?>
+                                            &pound;<?=$o->getItemprice()?>
+                                        <?php elseif ($o->getIsfreesample()) : ?>
+                                            &pound;0.00
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <?php endforeach;?>
+                            </tbody>
+                            
+                            <tfoot>
+                                <tr>
+                                    <td><strong>Shipping (Free)</strong></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><strong>&pound;0.00</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Total</strong></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><strong>&pound;<?=$orderTotal?></strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        
+                        
+                    </td>
+                </tr>
+            </table>
+            </div>
+                                    
+        </td>
+        <td></td>
+    </tr>
+</table>
+<!-- /BODY -->
+
+<?php include("data/templates/footer.phtml"); ?>
