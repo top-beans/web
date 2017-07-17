@@ -104,15 +104,18 @@ namespace Application\Controller {
                 $orderViewItems = $this->ordersRepo->cancelItems($groupKey, $coffeeKeys);
                 
                 $refundables = [];
+                $nonRefundables = [];
                 
                 foreach($orderViewItems as $orderViewItem) {
                     if ($orderViewItem->getIsrefundable()) {
                         $refundables[] = $orderViewItem->getCoffeekey();
+                    } else {
+                        $nonRefundables[] = $orderViewItem;
                     }
                 }
                 
                 if (count($refundables) > 0) {
-                    $orderViewItems = $this->ordersRepo->requestItemsRefund($groupKey, $refundables);   
+                    $orderViewItems = array_merge($this->ordersRepo->requestItemsRefund($groupKey, $refundables), $nonRefundables);
                 }
                 
                 $response = ResponseUtils::responseList($orderViewItems);
