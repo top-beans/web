@@ -5,7 +5,7 @@ namespace Application\Controller {
     use Zend\Navigation\AbstractContainer;
     use Zend\Authentication\AuthenticationServiceInterface;
     use JMS\Serializer\SerializerInterface;
-    use Application\API\Canonicals\Entity\Orderview;
+    use Worldpay\WorldpayException;
     use Application\API\Canonicals\Entity\OrderStatuses;
     use Application\API\Canonicals\Response\ResponseUtils;
     use Application\API\Repositories\Interfaces\IOrdersRepository;
@@ -422,7 +422,9 @@ namespace Application\Controller {
                     'customerOrderCode' => $groupKey
                 ]);
 
-                if ($wpResponse["paymentStatus"] == "SUCCESS") {
+                if ($wpResponse["paymentStatus"] != "SUCCESS") {
+                    throw new WorldpayException(print_r($response, true));
+                } else {
                     $this->ordersRepo->receiveOrder($groupKey, $wpResponse["orderCode"]);
                     $this->addFlashSuccessMsgs([FlashMessages::OrderComplete]);
                 }
