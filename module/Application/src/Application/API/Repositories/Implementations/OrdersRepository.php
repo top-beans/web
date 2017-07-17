@@ -800,9 +800,11 @@ namespace Application\API\Repositories\Implementations {
                 $addresses = $this->getCustomerAddressesByGroup($groupKey);
                 
                 if ($updatedStatus == OrderStatuses::Refunded) {
-                    $this->orderEmailsSvc->createRefundedEmail($orderViewItems, $groupKey, $addresses);
+                    $emailRequest = $this->orderEmailsSvc->createRefundedEmail($orderViewItems, $groupKey, $addresses);
+                    $this->emailSvc->sendMail($emailRequest);
                 } else if ($updatedStatus == OrderStatuses::RefundFailed) {
-                    $this->orderEmailsSvc->createRefundFailedAlertEmail($orderViewItems, $groupKey, $addresses);
+                    $emailRequest = $this->orderEmailsSvc->createRefundFailedAlertEmail($orderViewItems, $groupKey, $addresses);
+                    $this->emailSvc->sendMail($emailRequest);
                 }
                 
                 $this->em->flush();

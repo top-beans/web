@@ -240,7 +240,7 @@ namespace Application\API\Repositories\Implementations {
             
             $request = new EmailRequest();
             $request->recipient = $deliveryEmail;
-            $request->subject = "Confirmation Code - TopBeans.co.uk";
+            $request->subject = "Confirmation Code - $code";
             $request->htmlbody = $template->render();
             
             return $request;
