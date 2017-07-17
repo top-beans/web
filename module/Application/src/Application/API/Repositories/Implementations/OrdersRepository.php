@@ -777,21 +777,35 @@ namespace Application\API\Repositories\Implementations {
             try {
                 $this->em->getConnection()->beginTransaction();
 
-                $orderItems = $this->ordersRepo->findBy(['statuskey' => OrderStatuses::SentForRefund, 'worldpayordercode' => $webhook->orderCode]);
+                $orderViewItems = $this->orderViewRepo->findBy(['sentforrefund' => 1, 'worldpayordercode' => $webhook->orderCode]);
                 
-                if ($orderItems != null && count($orderItems) > 0) {
-                    if ($webhook->paymentStatus == "SENT_FOR_REFUND") {
-                        $updatedStatus = OrderStatuses::SentForRefund;
-                    } else if ($webhook->paymentStatus == "PARTIALLY_REFUNDED" || $webhook->paymentStatus == "REFUNDED") {
-                        $updatedStatus = OrderStatuses::Refunded;
-                    } else {
-                        $updatedStatus = OrderStatuses::RefundFailed;
-                    }
+                if ($orderViewItems == null || count($orderViewItems) == 0) {
+                    $this->em->flush();
+                    $this->em->getConnection()->commit();
+                    return;                    
+                }
+                
+                if ($webhook->paymentStatus == "SENT_FOR_REFUND") {
+                    $updatedStatus = OrderStatuses::SentForRefund;
+                } else if ($webhook->paymentStatus == "PARTIALLY_REFUNDED" || $webhook->paymentStatus == "REFUNDED") {
+                    $updatedStatus = OrderStatuses::Refunded;
+                } else {
+                    $updatedStatus = OrderStatuses::RefundFailed;
+                }
 
-                    foreach ($orderItems as $orderItem) {
-                        $orderItem->setStatuskey($updatedStatus);
-                        $this->ordersRepo->update($orderItem);
-                    }
+                foreach ($orderViewItems as $orderViewItem) {
+                    $orderItem = $this->ordersRepo->fetch($orderViewItem->getOrderkey());
+                    $orderItem->setStatuskey($updatedStatus);
+                    $this->ordersRepo->update($orderItem);
+                }
+                
+                $groupKey = $orderViewItems[0]->getGroupkey();
+                $addresses = $this->getCustomerAddressesByGroup($groupKey);
+                
+                if ($updatedStatus == OrderStatuses::Refunded) {
+                    $this->orderEmailsSvc->createRefundedEmail($orderViewItems, $groupKey, $addresses);
+                } else if ($updatedStatus == OrderStatuses::RefundFailed) {
+                    $this->orderEmailsSvc->createRefundFailedAlertEmail($orderViewItems, $groupKey, $addresses);
                 }
                 
                 $this->em->flush();
