@@ -21,11 +21,17 @@ namespace Application\API\Repositories\Implementations {
         /**
          * @var string
          */
+        private $supportEmail;
+        
+        /**
+         * @var string
+         */
         private $domainPath;
         
-        public function __construct($domainName, $isDevelopment) {
+        public function __construct($domainName, $isDevelopment, $supportEmail) {
             $this->domainName = $domainName;
             $this->isDevelopment = $isDevelopment;
+            $this->supportEmail = $supportEmail;
             $this->domainPath = ($this->isDevelopment ? "http" : "https") . "://$this->domainName";
         }
 
@@ -77,7 +83,7 @@ namespace Application\API\Repositories\Implementations {
             ]);
             
             $request = new EmailRequest();
-            $request->recipient = $addresses->deliveryaddress->getEmail();
+            $request->recipient = $this->supportEmail;
             $request->subject = "Order Alert";
             $request->htmlbody = $template->render();
             return $request;
@@ -216,7 +222,7 @@ namespace Application\API\Repositories\Implementations {
             ]);
             
             $request = new EmailRequest();
-            $request->recipient = $addresses->deliveryaddress->getEmail();
+            $request->recipient = $this->supportEmail;
             $request->subject = "Refund Failed Alert";
             $request->htmlbody = $template->render();
             

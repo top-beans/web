@@ -12,7 +12,8 @@ namespace Application\API\Repositories\Factories {
             $config = $serviceLocator->get('Config');
             $domainName = $config['DomainName'];
             $isDevelopment = $config['ENV'] === 'development';
-            return new OrderEmailsService($domainName, $isDevelopment);
+            $supportEmail = $config['SupportEmail'];
+            return new OrderEmailsService($domainName, $isDevelopment, $supportEmail);
         }
     }
 }
