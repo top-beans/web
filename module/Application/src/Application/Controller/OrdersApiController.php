@@ -407,7 +407,7 @@ namespace Application\Controller {
                 ];
                 
                 $worldpay = new Worldpay($this->worldpayServiceKey);
-                $wpResponse = $worldpay->createOrder([
+                $wpResponse = (object)$worldpay->createOrder([
                     'token' => $data->token,
                     'amount' => round($amount, 2) * 100, // Amount is only transacted in cents/pennies
                     'currencyCode' => $currencyCode,
@@ -422,10 +422,10 @@ namespace Application\Controller {
                     'customerOrderCode' => $groupKey
                 ]);
 
-                if ($wpResponse["paymentStatus"] != "SUCCESS") {
-                    throw new \Exception($wpResponse["paymentStatusReason"]);
+                if ($wpResponse->paymentStatus != "SUCCESS") {
+                    throw new \Exception("$wpResponse->paymentStatus: $wpResponse->paymentStatusReason");
                 } else {
-                    $this->ordersRepo->receiveOrder($groupKey, $wpResponse["orderCode"]);
+                    $this->ordersRepo->receiveOrder($groupKey, $wpResponse->orderCode);
                     $this->addFlashSuccessMsgs([FlashMessages::OrderComplete]);
                 }
                 
