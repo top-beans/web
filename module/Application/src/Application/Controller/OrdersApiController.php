@@ -423,7 +423,7 @@ namespace Application\Controller {
                 ]);
 
                 if ($wpResponse["paymentStatus"] != "SUCCESS") {
-                    throw new WorldpayException(print_r($response, true));
+                    throw new \Exception($wpResponse["paymentStatusReason"]);
                 } else {
                     $this->ordersRepo->receiveOrder($groupKey, $wpResponse["orderCode"]);
                     $this->addFlashSuccessMsgs([FlashMessages::OrderComplete]);
