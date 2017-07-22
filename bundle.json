@@ -31,6 +31,7 @@
         "src": [
             "public/corecss/**/*.css",
             "public/css/**/*.css",
+            "public/vendor/font-awesome-animation/dist/font-awesome-animation.css",
             "public/vendor/toastr/toastr.min.css",
             "public/vendor/bootstrap-multiselect/dist/css/bootstrap-multiselect.css"
         ],
