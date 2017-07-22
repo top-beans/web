@@ -32261,7 +32261,7 @@ blockquote cite {
 }
 
 .product-item-fullwidth * + .product-rating {
-  margin-top: 7px;
+  margin-top: 0px;
 }
 
 .product-item-fullwidth * + .product-description {
