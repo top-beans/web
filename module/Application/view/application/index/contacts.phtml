@@ -14,17 +14,19 @@
                     <div class="range">
                         <div class="cell-sm-10 cell-md-12">
                             <h3 class="my-underline">How to contact us</h3>
-                            <p class="offset-sm-top-40 text-secondary">If you have any questions, just fill in the contact form, and we will answer you shortly.</p>
+                            <p class="text-secondary">If you have any questions, just fill in the contact form, and we will answer you shortly.</p>
                         </div>
                         <div class="cell-sm-6 cell-md-12 offset-top-30 offset-sm-top-45">
                             <h5>Contacts</h5>
                             <address class="contact-info">
+                                <?php if ($this->phoneNumber->getContent() != null): ?>
                                 <dl class="list-terms-inline">
                                     <dt>Telephone</dt>
                                     <dd>
                                         <a href="callto:<?=$this->phoneNumber->getContent()?>" class="link-secondary"><?=$this->phoneNumber->getContent()?></a>
                                     </dd>
                                 </dl>
+                                <?php endif; ?>
                                 <dl class="list-terms-inline">
                                     <dt>E-mail</dt>
                                     <dd>
