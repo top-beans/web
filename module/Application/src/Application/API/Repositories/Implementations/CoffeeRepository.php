@@ -43,7 +43,7 @@ namespace Application\API\Repositories\Implementations {
         }
 
         public function addOrUpdateCoffee(Coffee $coffee) {
-            $this->coffeeRepo->update($coffee);
+            $this->coffeeRepo->addOrUpdate($coffee);
         }
 
         public function incrementCoffee($coffeeKey) {
