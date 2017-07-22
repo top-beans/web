@@ -1001,8 +1001,7 @@ th {
   font-weight: 700;
   padding: 26px 25px;
   vertical-align: bottom;
-  background: #f6f7fa;
-  border-bottom: 0;
+  border-bottom: 1px solid #999;
 }
 
 @media (min-width: 768px) {

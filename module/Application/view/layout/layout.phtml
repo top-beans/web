@@ -72,16 +72,18 @@
                                                 </div>
                                             </div>
                                         </li>
-                                        <li>
-                                            <div class="unit unit-horizontal unit-spacing-xs">
-                                                <div class="unit-left">
-                                                    <span class="icon icon-xxs icon-primary material-icons-phone icon-shift-2"></span>
+                                        <?php if ($this->phone_number != null) : ?>
+                                            <li>
+                                                <div class="unit unit-horizontal unit-spacing-xs">
+                                                    <div class="unit-left">
+                                                        <span class="icon icon-xxs icon-primary material-icons-phone icon-shift-2"></span>
+                                                    </div>
+                                                    <div class="unit-body">
+                                                        <a href="callto:<?=$this->phone_number?>" class="link-white-v2"><?=$this->phone_number?></a>
+                                                    </div>
                                                 </div>
-                                                <div class="unit-body">
-                                                    <a href="callto:<?=$this->phone_number?>" class="link-white-v2"><?=$this->phone_number?></a>
-                                                </div>
-                                            </div>
-                                        </li>
+                                            </li>
+                                        <?php endif; ?>
                                     </ul>
                                     <div class="rd-navbar-aside-group">
                                         <ul class="list-inline list-inline-reset">
@@ -139,9 +141,10 @@
                                 </address>
                                 <address class="contact-info text-left">
                                     <div class="unit unit-horizontal unit-spacing-xs unit-middle unit-align-center unit-sm-left">
-                                        <div class="unit-left"><span class="icon icon-md-custom icon-gunsmoke material-icons-phone"></span></div>
                                         <div class="unit-body">
-                                            <div class="link-wrap"><a href="callto:<?=$this->phone_number?>" class="link-white-03 text-light"><?=$this->phone_number?></a></div>
+                                            <?php if ($this->phone_number != null) : ?>
+                                                <div class="link-wrap"><a href="callto:<?=$this->phone_number?>" class="link-white-03 text-light"><?=$this->phone_number?></a></div>
+                                            <?php endif; ?>
                                             <div class="link-wrap"><a href="mailto:<?=$this->email_address?>" class="link-white-03 text-light"><?=$this->email_address?></a></div>
                                         </div>
                                     </div>
