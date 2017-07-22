@@ -87,18 +87,15 @@
                                     </ul>
                                     <div class="rd-navbar-aside-group">
                                         <ul class="list-inline list-inline-reset">
-                                            <li>
-                                                <a href="<?=$this->facebook_url?>" class="icon icon-round icon-gray-dark-filled icon-xxs-smallest fa fa-facebook"></a>
-                                            </li>
-                                            <li>
-                                                <a href="<?=$this->twitter_url?>" class="icon icon-round icon-gray-dark-filled icon-xxs-smallest fa fa-twitter"></a>
-                                            </li>
-                                            <li>
-                                                <a href="<?=$this->instagram_url?>" class="icon icon-round icon-gray-dark-filled icon-xxs-smallest fa fa-instagram"></a>
-                                            </li>
-                                            <li>
-                                                <a href="<?=$this->youtube_url?>" class="icon icon-round icon-gray-dark-filled icon-xxs-smallest fa fa-youtube"></a>
-                                            </li>
+                                            <?php if ($this->facebook_url != null) : ?>
+                                                <li><a href="<?=$this->facebook_url?>" class="icon icon-round icon-gray-dark-filled icon-xxs-smallest fa fa-facebook"></a></li>
+                                            <?php endif; if ($this->twitter_url != null) : ?>
+                                                <li><a href="<?=$this->twitter_url?>" class="icon icon-round icon-gray-dark-filled icon-xxs-smallest fa fa-twitter"></a></li>
+                                            <?php endif; if ($this->instagram_url != null) : ?>
+                                                <li><a href="<?=$this->instagram_url?>" class="icon icon-round icon-gray-dark-filled icon-xxs-smallest fa fa-instagram"></a></li>
+                                            <?php endif; if ($this->youtube_url != null) : ?>
+                                                <li><a href="<?=$this->youtube_url?>" class="icon icon-round icon-gray-dark-filled icon-xxs-smallest fa fa-youtube"></a></li>
+                                            <?php endif; ?>
                                         </ul>
                                     </div>
                                 </div>
@@ -151,12 +148,17 @@
                                 </address>
                             </div>
                         </div>
-                        <div class="cell-sm-5 cell-lg-4 offset-top-30 offset-lg-top-0 text-md-center">
+                        <div class="cell-sm-5 cell-lg-4 offset-top-30 offset-lg-top-0 text-right">
                             <ul class="list-inline list-inline-xs">
-                                <li><a href="<?=$this->facebook_url?>" class="icon icon-sm-custom link-tundora-inverse fa-facebook"></a></li>
-                                <li><a href="<?=$this->twitter_url?>" class="icon icon-sm-custom link-tundora-inverse fa-twitter"></a></li>
-                                <li><a href="<?=$this->instagram_url?>" class="icon icon-sm-custom link-tundora-inverse fa-instagram"></a></li>
-                                <li><a href="<?=$this->youtube_url?>" class="icon icon-sm-custom link-tundora-inverse fa-youtube"></a></li>
+                                <?php if ($this->facebook_url != null) : ?>
+                                    <li><a href="<?=$this->facebook_url?>" class="icon icon-sm-custom link-tundora-inverse fa-facebook"></a></li>
+                                <?php endif; if ($this->twitter_url != null) : ?>
+                                    <li><a href="<?=$this->twitter_url?>" class="icon icon-sm-custom link-tundora-inverse fa-twitter"></a></li>
+                                <?php endif; if ($this->instagram_url != null) : ?>
+                                    <li><a href="<?=$this->instagram_url?>" class="icon icon-sm-custom link-tundora-inverse fa-instagram"></a></li>
+                                <?php endif; if ($this->youtube_url != null) : ?>
+                                    <li><a href="<?=$this->youtube_url?>" class="icon icon-sm-custom link-tundora-inverse fa-youtube"></a></li>
+                                <?php endif; ?>
                             </ul>
                         </div>
                     </div>
@@ -181,8 +183,10 @@
                         </div>
                         <div class="cell-xs-12">
                             <p class="rights small">
-                                <a target="_blank" href="/wordpress/wp-login.php" class="link-primary-inverse">Word Press</a>
-                                <span>|</span>
+                                <?php if ($this->env == "development") : ?>
+                                    <a target="_blank" href="/wordpress/wp-login.php" class="link-primary-inverse">Word Press</a>
+                                    <span>|</span>
+                                <?php endif; ?>
                                 <a href="/Admin/index" class="link-primary-inverse">Admin</a>
                                 <!-- {%FOOTER_LINK}-->
                             </p>
