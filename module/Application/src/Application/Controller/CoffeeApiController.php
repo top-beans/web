@@ -52,7 +52,8 @@ namespace Application\Controller {
                 $coffee = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Entity\Coffee", "json");
                 
                 $this->coffeeRepo->addOrUpdateCoffee($coffee);
-                $response = ResponseUtils::responseItem($coffee);
+                $coffeeView = $this->coffeeRepo->find($coffee->getCoffeekey());
+                $response = ResponseUtils::responseItem($coffeeView);
                 return $this->jsonResponse($response);
                 
             } catch (\Exception $ex) {
