@@ -10,6 +10,11 @@
                         <th class="col-md-2 hidden-xs">Date</th>
                     </tr>
                 </thead>
+                <tbody ng-show="(!$ctrl.loading && !$ctrl.enquiries.length)">
+                    <tr>
+                        <td colspan="5">No records found</td>
+                    </tr>
+                </tbody>
                 <tbody>
                     <tr ng-repeat="enquiry in $ctrl.enquiries">
                         <td class="word-break">{{enquiry.name}}</td>
