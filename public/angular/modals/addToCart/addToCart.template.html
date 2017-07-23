@@ -9,7 +9,7 @@
             <div class="radio">
               <label>
                   <input type="radio" name="optradio" ng-model="$mctrl.shoppingCart.requesttypekey" value="1">
-                  Sample (free up to {{$mctrl.coffee.maxfreesamplequantity}} {{$mctrl.coffee.pricebaseunit}})
+                  Sample <span ng-if="$mctrl.coffee.maxfreesamplequantity > 0">(free up to {{$mctrl.coffee.maxfreesamplequantity}} {{$mctrl.coffee.pricebaseunit}})</span>
               </label>
             </div>
             <div class="radio">
