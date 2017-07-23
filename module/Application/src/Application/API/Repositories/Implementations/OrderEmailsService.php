@@ -50,7 +50,7 @@ namespace Application\API\Repositories\Implementations {
                 'domainPath' => $this->domainPath,
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
-                'orderTotal' => $orderTotal,
+                'orderTotal' => number_format($orderTotal, 2, '.', ''),
                 'deliveryAddress' => $addresses->deliveryaddress,
                 'billingAddress' => $addresses->billingaddress
             ]);
@@ -77,7 +77,7 @@ namespace Application\API\Repositories\Implementations {
                 'domainPath' => $this->domainPath,
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
-                'orderTotal' => $orderTotal,
+                'orderTotal' => number_format($orderTotal, 2, '.', ''),
                 'deliveryAddress' => $addresses->deliveryaddress,
                 'billingAddress' => $addresses->billingaddress
             ]);
@@ -104,7 +104,7 @@ namespace Application\API\Repositories\Implementations {
                 'domainPath' => $this->domainPath,
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
-                'orderTotal' => $orderTotal,
+                'orderTotal' => number_format($orderTotal, 2, '.', ''),
                 'deliveryAddress' => $addresses->deliveryaddress,
                 'billingAddress' => $addresses->billingaddress
             ]);
@@ -132,7 +132,7 @@ namespace Application\API\Repositories\Implementations {
                 'domainPath' => $this->domainPath,
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
-                'orderTotal' => $orderTotal,
+                'orderTotal' => number_format($orderTotal, 2, '.', ''),
                 'deliveryAddress' => $addresses->deliveryaddress,
                 'billingAddress' => $addresses->billingaddress
             ]);
@@ -160,7 +160,7 @@ namespace Application\API\Repositories\Implementations {
                 'domainPath' => $this->domainPath,
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
-                'orderTotal' => $orderTotal,
+                'orderTotal' => number_format($orderTotal, 2, '.', ''),
                 'deliveryAddress' => $addresses->deliveryaddress,
                 'billingAddress' => $addresses->billingaddress
             ]);
@@ -188,7 +188,7 @@ namespace Application\API\Repositories\Implementations {
                 'domainPath' => $this->domainPath,
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
-                'orderTotal' => $orderTotal,
+                'orderTotal' => number_format($orderTotal, 2, '.', ''),
                 'deliveryAddress' => $addresses->deliveryaddress,
                 'billingAddress' => $addresses->billingaddress
             ]);
@@ -216,7 +216,7 @@ namespace Application\API\Repositories\Implementations {
                 'domainPath' => $this->domainPath,
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
-                'orderTotal' => $orderTotal,
+                'orderTotal' => number_format($orderTotal, 2, '.', ''),
                 'deliveryAddress' => $addresses->deliveryaddress,
                 'billingAddress' => $addresses->billingaddress
             ]);
