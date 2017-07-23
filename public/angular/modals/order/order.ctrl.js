@@ -131,45 +131,6 @@ namespace('modals').orderCtrl = function ($uibModalInstance, orderService, bbox,
         }
     };
 
-    self.updateAddresses = function () {
-        if (!self.allReceived) {
-            toastrError("This operation is only valid of Received Orders");
-            return false;
-        }
-
-        var dlForm = $('form[name=deliveryForm]');
-        var blForm = $('form[name=billingForm]');
-
-        dlForm.addClass('my-submitted');
-        blForm.addClass('my-submitted');
-
-        var dlInv = dlForm.hasClass('ng-invalid-required') || dlForm.hasClass('ng-invalid-email');
-        var blInv = blForm.hasClass('ng-invalid-required') || blForm.hasClass('ng-invalid-email');
-
-        if (dlInv || (self.billingDifferent && blInv)) {
-            toastrError('Please review form', 'Invalid Details');
-            return false;
-        }
-
-        if (!self.billingDifferent) {
-            var key = self.addresses.billingaddress.addresskey;
-            self.addresses.billingaddress = new models.address(self.addresses.deliveryaddress);
-            self.addresses.billingaddress.addresskey = key;
-        }
-
-        showOverlay('Saving Addresses ...');
-        
-        orderService.updateCustomerAddresses(self.addresses, function (data) {
-            hideOverlay();
-            if (!data.success) {
-                toastrErrorFromList(data.errors);
-            } else {
-                self.changesWereMade = true;
-                toastrSuccess("Saved Successfully");
-            }
-        });
-    };
-    
     self.closeModal = function () {
         $uibModalInstance.dismiss(self.changesWereMade);
     };

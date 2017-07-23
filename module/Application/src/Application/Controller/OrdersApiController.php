@@ -281,25 +281,6 @@ namespace Application\Controller {
             }
         }
         
-        public function updatecustomeraddressesAction() {
-            try {
-                if (!$this->authService->hasIdentity()) {
-                    throw new \Exception("Unauthorized Access");
-                }
-                
-                $jsonData = $this->getRequest()->getContent();
-                $data = $this->serializer->deserialize($jsonData, "Application\API\Canonicals\Dto\CustomerAddresses", "json");
-                
-                $this->ordersRepo->updateAddresses($data->deliveryaddress, $data->billingaddress);
-                $response = ResponseUtils::response();
-
-                return $this->jsonResponse($response);
-            } catch (\Exception $ex) {
-                $response = ResponseUtils::createExceptionResponse($ex);
-                return $this->jsonResponse($response);
-            }
-        }
-        
         public function getcustomeraddressesAction() {
             try {
                 $cookieKey = $this->getRequest()->getContent();

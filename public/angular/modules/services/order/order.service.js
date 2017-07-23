@@ -134,17 +134,6 @@ service('orderService', ['$http', 'cookieService', function ($http, cookieServic
         });
     };
     
-    self.updateCustomerAddresses = function (addresses, callback) {
-        $http.post("/api/OrdersApi/updatecustomeraddresses", addresses).then(function (response) {
-            if (callback) callback(response.data);
-        }, function (error) {
-            if (callback) callback({
-                success: false,
-                errors: ['Error ' + error.status + ': ' + error.statusText]
-            });
-        });
-    };
-    
     self.dispatchOrder = function (groupKey, callback) {
         $http.post("/api/OrdersApi/dispatchorder", groupKey).then(function (response) {
             if (callback) callback(response.data);
