@@ -8,6 +8,7 @@ namespace Application\API\Repositories\Interfaces {
         public function find($coffeeKey);
         public function findAll();
         public function findAllActive();
+        public function getNewCoffeeCode();
         
         public function addCoffee(Coffee $coffee);
         public function updateCoffee(Coffee $coffee);

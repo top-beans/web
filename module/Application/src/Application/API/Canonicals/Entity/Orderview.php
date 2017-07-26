@@ -270,6 +270,14 @@ class Orderview
      * @ORM\Column(name="orderStatus", type="string", length=45, nullable=false)
      */
     private $orderstatus;
+
+    /**
+     * @Type("string")
+     * @var string
+     *
+     * @ORM\Column(name="coffeeCode", type="string", length=45, nullable=false)
+     */
+    private $coffeecode;
     
     /**
      * @Type("string")
@@ -720,6 +728,7 @@ class Orderview
     function getCreateddate() { return $this->createddate; }
     function getRequesttype() { return $this->requesttype; }
     function getOrderstatus() { return $this->orderstatus; }
+    function getCoffeecode() { return $this->coffeecode; }
     function getPackaging() { return $this->packaging; }
     function getAvailability() { return $this->availability; }
     function getWarehouse() { return $this->warehouse; }
@@ -805,6 +814,7 @@ class Orderview
     function setCreateddate($val) { $this->createddate = $val; }
     function setRequesttype($val) { $this->requesttype = $val; }
     function setOrderstatus($val) { $this->orderstatus = $val; }
+    function setCoffeecode($val) { $this->coffeecode = $val; } 
     function setPackaging($val) { $this->packaging = $val; }
     function setAvailability($val) { $this->availability = $val; }
     function setWarehouse($val) { $this->warehouse = $val; }

@@ -34,7 +34,23 @@ namespace Application\API\Repositories\Implementations {
             $this->coffeeViewRepo = new Repository($em, new EntityRepository($em, new ClassMetadata(get_class(new CoffeeView()))));
         }
 
+        public function getNewCoffeeCode() {
+            do {
+                $char = str_shuffle("ABCDEFGHJKLMNPQRSTUVWXYZ3456789");
+                $coffeeCode = "";
+                $length = 5;
+                
+                for($i = 0, $l = strlen($char) - 1; $i < $length; $i ++) {
+                    $coffeeCode .= strtoupper($char{mt_rand(0, $l)});
+                }
+
+            } while ($this->coffeeRepo->count(['coffeecode' => $coffeeCode]) > 0);
+            
+            return $coffeeCode;
+        }
+        
         public function addCoffee(Coffee $coffee) {
+            $coffee->setCoffeecode($this->getNewCoffeeCode());
             $this->coffeeRepo->add($coffee);
         }
 
@@ -43,7 +59,11 @@ namespace Application\API\Repositories\Implementations {
         }
 
         public function addOrUpdateCoffee(Coffee $coffee) {
-            $this->coffeeRepo->addOrUpdate($coffee);
+            if ($coffee->getCoffeekey() != null) {
+                $this->addCoffee($coffee);
+            } else {
+                $this->updateCoffee($coffee);
+            }
         }
 
         public function incrementCoffee($coffeeKey) {

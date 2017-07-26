@@ -83,6 +83,14 @@ class Shoppingcartview
      * @Type("string")
      * @var string
      *
+     * @ORM\Column(name="coffeeCode", type="string", length=45, nullable=false)
+     */
+    private $coffeecode;
+
+    /**
+     * @Type("string")
+     * @var string
+     *
      * @ORM\Column(name="packaging", type="string", length=45, nullable=true)
      */
     private $packaging;
@@ -311,6 +319,7 @@ class Shoppingcartview
     function getUpdateddate() { return $this->updateddate; }
     function getCreateddate() { return $this->createddate; }
     function getRequesttype() { return $this->requesttype; }
+    function getCoffeecode() { return $this->coffeecode; }
     function getPackaging() { return $this->packaging; }
     function getAvailability() { return $this->availability; }
     function getWarehouse() { return $this->warehouse; }
@@ -348,6 +357,7 @@ class Shoppingcartview
     function setUpdateddate($val) { $this->updateddate = $val; } 
     function setCreateddate($val) { $this->createddate = $val; } 
     function setRequesttype($val) { $this->requesttype = $val; } 
+    function setCoffeecode($val) { $this->coffeecode = $val; } 
     function setPackaging($val) { $this->packaging = $val; } 
     function setAvailability($val) { $this->availability = $val; } 
     function setWarehouse($val) { $this->warehouse = $val; } 

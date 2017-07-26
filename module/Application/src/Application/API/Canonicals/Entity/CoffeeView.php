@@ -27,6 +27,14 @@ class CoffeeView
      * @Type("string")
      * @var string
      *
+     * @ORM\Column(name="coffeeCode", type="string", length=45, nullable=false)
+     */
+    private $coffeecode;
+
+    /**
+     * @Type("string")
+     * @var string
+     *
      * @ORM\Column(name="packaging", type="string", length=45, nullable=true)
      */
     private $packaging;
@@ -208,6 +216,7 @@ class CoffeeView
     private $active;
 
     function getCoffeekey() { return $this->coffeekey; }
+    function getCoffeecode() { return $this->coffeecode; }
     function getPackaging() { return $this->packaging; }
     function getAvailability() { return $this->availability; }
     function getWarehouse() { return $this->warehouse; }
@@ -233,6 +242,7 @@ class CoffeeView
     function getActive() { return $this->active; }
 
     function setCoffeekey($val) { $this->coffeekey = $val; } 
+    function setCoffeecode($val) { $this->coffeecode = $val; } 
     function setPackaging($val) { $this->packaging = $val; } 
     function setAvailability($val) { $this->availability = $val; } 
     function setWarehouse($val) { $this->warehouse = $val; } 

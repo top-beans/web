@@ -3,6 +3,7 @@
 namespace('models').coffee = function (data) {
     var self = this;
     self.coffeekey = !data ? null : data.coffeekey;
+    self.coffeecode = !data ? null : data.coffeecode;
     self.packaging = !data ? null : data.packaging;
     self.availability = !data ? null : data.availability;
     self.warehouse = !data ? null : data.warehouse;
