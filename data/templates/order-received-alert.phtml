@@ -17,111 +17,12 @@
                         </p>
                             
                         <h4 class="section-header">Order Details</h4>
-                        
-                        <table class="order-table">
-                            <thead>
-                                <tr style="border-bottom: 1px solid #aaa;">
-                                    <th style="width: 16.7%">Type</th>
-                                    <th style="width: 33.3%">Name</th>
-                                    <th style="width: 16.7%">Qty</th>
-                                    <th style="width: 16.7%">Cost</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach($orders as $o): ?>
-                                <tr>
-                                    <td>
-                                        <strong>
-                                        <?php if ($o->getIspurchase()) : ?>
-                                            Purchase
-                                        <?php elseif ($o->getIspaidsample()) : ?>
-                                            Sample
-                                        <?php elseif ($o->getIsfreesample()) : ?>
-                                            Sample (Free)
-                                        <?php endif; ?>
-                                        </strong>
-                                    </td>
-                                    <td><?=$o->getName()?></td>
-                                    <td>
-                                        <?php if ($o->getIspurchase()) : ?>
-                                            <?=$o->getQuantity()?> &times; <?=$o->getPackagingunit()?>
-                                        <?php elseif ($o->getIssample()) : ?>
-                                            <?=$o->getQuantity()?> <?=$o->getPricebaseunit()?>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <?php if ($o->getIspurchase() || $o->getIspaidsample()) : ?>
-                                            &pound;<?=$o->getItemprice()?>
-                                        <?php elseif ($o->getIsfreesample()) : ?>
-                                            &pound;0.00
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
-                                <?php endforeach;?>
-                            </tbody>
-                            
-                            <tfoot>
-                                <tr>
-                                    <td><strong>Shipping (Free)</strong></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><strong>&pound;0.00</strong></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Total</strong></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><strong>&pound;<?=$orderTotal?></strong></td>
-                                </tr>
-                            </tfoot>
-                        </table>
+                        <?php $showShipping = true; include("data/templates/items.phtml"); ?>
 
                         <h4 class="section-header">Delivery and Billing Addresses</h4>
-                        
-                        <!-- address detals -->
-                        <table class="columns" width="100%">
-                            <tr>
-                                <td>
-                                    <table align="left" class="column">
-                                        <tr>
-                                            <td>                
-                                                <h5 class="">Delivery address</h5>
-                                                <p class="">
-                                                    <?=$deliveryAddress->getFirstname()?> <?=$deliveryAddress->getLastname()?><br/>
-                                                    <?=$deliveryAddress->getAddress1()?> <?=$deliveryAddress->getAddress2()?><br/>
-                                                    <?=$deliveryAddress->getCity()?> <?=$deliveryAddress->getState()?>
-                                                    <?=$deliveryAddress->getPostcode()?><br/>
-                                                    <?=$deliveryAddress->getCountryname()?>
-                                                </p>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    
-                                    <table align="left" class="column">
-                                        <tr>
-                                            <td>                                            
-                                                <h5 class="">Billing address</h5>                                
-                                                <p class="">
-                                                    <?=$billingAddress->getFirstname()?> <?=$billingAddress->getLastname()?><br/>
-                                                    <?=$billingAddress->getAddress1()?> <?=$billingAddress->getAddress2()?><br/>
-                                                    <?=$billingAddress->getCity()?> <?=$billingAddress->getState()?>
-                                                    <?=$billingAddress->getPostcode()?><br/>
-                                                    <?=$billingAddress->getCountryname()?>
-                                                </p>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    
-                                    <span class="clear"></span>    
-                                    
-                                </td>
-                            </tr>
-                        </table>
-                        <!-- /address details -->
+                        <?php $showDelivery = true; $showBilling = true; include("data/templates/addresses.phtml"); ?>       
                         
                         <br/>
-                        
-                        
                     </td>
                 </tr>
             </table>

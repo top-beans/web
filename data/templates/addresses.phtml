@@ -1,0 +1,48 @@
+<?php if ($showDelivery || $showBilling): ?>
+
+<!-- address detals -->
+<table class="columns" width="100%">
+    <tr>
+        <td>
+            <?php if ($showDelivery): ?>
+            <table align="left" class="column">
+                <tr>
+                    <td>                
+                        <h5 class="">Delivery address</h5>
+                        <p class="">
+                            <?=$deliveryAddress->getFirstname()?> <?=$deliveryAddress->getLastname()?><br/>
+                            <?=$deliveryAddress->getAddress1()?> <?=$deliveryAddress->getAddress2()?><br/>
+                            <?=$deliveryAddress->getCity()?> <?=$deliveryAddress->getState()?>
+                            <?=$deliveryAddress->getPostcode()?><br/>
+                            <?=$deliveryAddress->getCountryname()?>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+            <?php endif; ?>
+
+            <?php if ($showBilling): ?>
+            <table align="left" class="column">
+                <tr>
+                    <td>                                            
+                        <h5 class="">Billing address</h5>                                
+                        <p class="">
+                            <?=$billingAddress->getFirstname()?> <?=$billingAddress->getLastname()?><br/>
+                            <?=$billingAddress->getAddress1()?> <?=$billingAddress->getAddress2()?><br/>
+                            <?=$billingAddress->getCity()?> <?=$billingAddress->getState()?>
+                            <?=$billingAddress->getPostcode()?><br/>
+                            <?=$billingAddress->getCountryname()?>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+            <?php endif; ?>
+
+            <span class="clear"></span>    
+
+        </td>
+    </tr>
+</table>
+<!-- /address details -->
+
+<?php endif; ?>

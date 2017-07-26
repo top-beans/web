@@ -1,0 +1,64 @@
+<table class="order-table">
+    <thead>
+        <tr style="border-bottom: 1px solid #aaa;">
+            <th style="width: 25%">Type</th>
+            <th style="width: 25%">Name</th>
+            <th style="width: 10%">Lot</th>
+            <th style="width: 20%">Qty</th>
+            <th style="width: 20%">Cost</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($orders as $o): ?>
+        <tr>
+            <td>
+                <strong>
+                <?php if ($o->getIspurchase()) : ?>
+                    Purchase
+                <?php elseif ($o->getIspaidsample()) : ?>
+                    Sample
+                <?php elseif ($o->getIsfreesample()) : ?>
+                    Sample (Free)
+                <?php endif; ?>
+                </strong>
+            </td>
+            <td><?=$o->getName()?></td>
+            <td><?=$o->getCoffeecode()?></td>
+            <td>
+                <?php if ($o->getIspurchase()) : ?>
+                    <?=$o->getQuantity()?> &times; <?=$o->getPackagingunit()?>
+                <?php elseif ($o->getIssample()) : ?>
+                    <?=$o->getQuantity()?> <?=$o->getPricebaseunit()?>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php if ($o->getIspurchase() || $o->getIspaidsample()) : ?>
+                    &pound;<?=$o->getItemprice()?>
+                <?php elseif ($o->getIsfreesample()) : ?>
+                    &pound;0.00
+                <?php endif; ?>
+            </td>
+        </tr>
+        <?php endforeach;?>
+    </tbody>
+
+    <tfoot>
+        <?php if ($showShipping): ?>
+        <tr>
+            <td><strong>Shipping (Free)</strong></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><strong>&pound;0.00</strong></td>
+        </tr>
+        <?php endif; ?>
+        
+        <tr>
+            <td><strong>Total</strong></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><strong>&pound;<?=$orderTotal?></strong></td>
+        </tr>
+    </tfoot>
+</table>

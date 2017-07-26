@@ -47,10 +47,13 @@
             <table class="table table-condensed">
                 <tbody>
                     <tr ng-repeat="item in $ctrl.orderItems">
-                        <td class="col-md-4">
+                        <td class="col-md-3">
                             <label><input type='checkbox' ng-disabled="!item.received" ng-model="item.cancel"> &nbsp;&nbsp;{{item.name}}</label>
                         </td>
-                        <td class="col-md-4">
+                        <td class="col-md-2">
+                            <strong>Lot:</strong> {{item.coffeecode}}
+                        </td>
+                        <td class="col-md-3">
                             <span ng-if="item.creating">Creating</span>
                             <span ng-if="item.received">Received</span>
                             <span ng-if="item.dispatched">Dispatched</span>
@@ -70,6 +73,7 @@
 
                 <tfoot>
                     <tr>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td>Total</td>
