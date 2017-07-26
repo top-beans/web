@@ -36,12 +36,12 @@ namespace Application\API\Repositories\Implementations {
 
         public function getNewCoffeeCode() {
             do {
-                $char = str_shuffle("ABCDEFGHJKLMNPQRSTUVWXYZ3456789");
-                $coffeeCode = "";
-                $length = 5;
+                $number = str_shuffle("3456789");
+                $coffeeCode = "L";
+                $numberLen = 2;
                 
-                for($i = 0, $l = strlen($char) - 1; $i < $length; $i ++) {
-                    $coffeeCode .= strtoupper($char{mt_rand(0, $l)});
+                for($i = 0, $l = strlen($number) - 1; $i < $numberLen; $i ++) {
+                    $coffeeCode .= strtoupper($number{mt_rand(0, $l)});
                 }
 
             } while ($this->coffeeRepo->count(['coffeecode' => $coffeeCode]) > 0);
