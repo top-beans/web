@@ -31,7 +31,8 @@
                 <thead>
                     <tr>
                         <th class="col-md-2 hidden-xs">Type</th>
-                        <th class="col-md-4">Name</th>
+                        <th class="col-md-3">Name</th>
+                        <th class="col-md-1 hidden-xs">Lot</th>
                         <th class="col-md-2">Qty</th>
                         <th class="col-md-2 hidden-xs hidden-sm">Cost</th>
                         <th class="col-md-2">Actions</th>
@@ -45,6 +46,7 @@
                             <span ng-if="item.isfreesample">Sample (Free)</span>
                         </th>
                         <td>{{item.name}}</td>
+                        <td class="hidden-xs">{{item.coffeecode}}</td>
                         <td>
                             <span ng-if="item.ispurchase">{{item.quantity}} &times; {{item.packagingunit}}</span>
                             <span ng-if="item.issample">{{item.quantity}} {{item.pricebaseunit}}</span>
@@ -70,6 +72,7 @@
                     <tr>
                         <td class="hidden-xs"></td>
                         <td>Shipping (Free)</td>
+                        <td class="hidden-xs"></td>
                         <td></td>
                         <td>&pound;0.00</td>
                         <td></td>
@@ -77,6 +80,7 @@
                     <tr>
                         <td class="hidden-xs"></td>
                         <td>Total</td>
+                        <td class="hidden-xs"></td>
                         <td></td>
                         <td>
                             <dl class="dl-inline">
