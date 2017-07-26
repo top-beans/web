@@ -36,12 +36,12 @@ namespace Application\API\Repositories\Implementations {
 
         public function getNewCoffeeCode() {
             do {
-                $number = str_shuffle("3456789");
-                $coffeeCode = "L";
-                $numberLen = 2;
+                $chars = str_shuffle("ABCDEFGHJKLMNPQRSTUVWXYZ3456789");
+                $coffeeCode = "";
+                $len = 3;
                 
-                for($i = 0, $l = strlen($number) - 1; $i < $numberLen; $i ++) {
-                    $coffeeCode .= strtoupper($number{mt_rand(0, $l)});
+                for($i = 0, $l = strlen($chars) - 1; $i < $len; $i ++) {
+                    $coffeeCode .= strtoupper($chars{mt_rand(0, $l)});
                 }
 
             } while ($this->coffeeRepo->count(['coffeecode' => $coffeeCode]) > 0);
@@ -59,11 +59,12 @@ namespace Application\API\Repositories\Implementations {
         }
 
         public function addOrUpdateCoffee(Coffee $coffee) {
-            if ($coffee->getCoffeekey() != null) {
-                $this->addCoffee($coffee);
-            } else {
-                $this->updateCoffee($coffee);
+            
+            if ($coffee->getCoffeecode() == null) {
+                $coffee->setCoffeecode($this->getNewCoffeeCode());
             }
+            
+            $this->coffeeRepo->addOrUpdate($coffee);
         }
 
         public function incrementCoffee($coffeeKey) {
