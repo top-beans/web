@@ -133,11 +133,18 @@
                             <div class="wrap-justify">
                                 <address class="contact-info text-left">
                                     <div class="unit unit-horizontal unit-spacing-xs unit-middle unit-align-center unit-sm-left">
-                                        <div class="unit-body"><span class="link-white-03 reveal-inline text-light">Top Beans Ltd<br>UK Company No: SC520820</span></div>
+                                        <div class="unit-body">
+                                            <span class="link-white-03 reveal-inline text-light">
+                                                Top Beans Ltd<br>
+                                                36 Erliegh Court Gardens<br>
+                                                Reading, RG6 1EH
+                                            </span>
+                                        </div>
                                     </div>
                                 </address>
                                 <address class="contact-info text-left">
                                     <div class="unit unit-horizontal unit-spacing-xs unit-middle unit-align-center unit-sm-left">
+                                        <div class="unit-left"><span class="icon icon-md-custom icon-gunsmoke material-icons-phone"></span></div>
                                         <div class="unit-body">
                                             <?php if ($this->phone_number != null) : ?>
                                                 <div class="link-wrap"><a href="callto:<?=$this->phone_number?>" class="link-white-03 text-light"><?=$this->phone_number?></a></div>
@@ -171,12 +178,13 @@
                         <div class="cell-xs-12">
                             <p class="rights small">
                                 <span>Top Beans Ltd</span>
-                                <span>&nbsp;&#169;&nbsp;</span>
+                                <span>&copy;</span>
                                 <span id="copyright-year"></span>
-                                <span>All Rights Reserved</span>
-                                <br class="veil-sm">
+                                <span>|</span>
+                                Company No: SC520820
+                                <span>|</span>
                                 <a href="/Index/terms" class="link-primary-inverse">Terms of Use</a>
-                                <span>and</span>
+                                <span>|</span>
                                 <a href="/Index/privacy" class="link-primary-inverse">Privacy Policy</a>
                                 <!-- {%FOOTER_LINK}-->
                             </p>
