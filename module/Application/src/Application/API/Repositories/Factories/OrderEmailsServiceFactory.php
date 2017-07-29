@@ -10,10 +10,11 @@ namespace Application\API\Repositories\Factories {
         
         public function createService(ServiceLocatorInterface $serviceLocator) {
             $config = $serviceLocator->get('Config');
+            $wpRepo = $serviceLocator->get('WordPrRepo');
             $domainName = $config['DomainName'];
             $isDevelopment = $config['ENV'] === 'development';
             $supportEmail = $config['SupportEmail'];
-            return new OrderEmailsService($domainName, $isDevelopment, $supportEmail);
+            return new OrderEmailsService($wpRepo, $domainName, $isDevelopment, $supportEmail);
         }
     }
 }

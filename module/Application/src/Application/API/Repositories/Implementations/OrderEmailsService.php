@@ -61,7 +61,7 @@ namespace Application\API\Repositories\Implementations {
                 'orderTotal' => number_format($orderTotal, 2, '.', ''),
                 'deliveryAddress' => $addresses->deliveryaddress,
                 'billingAddress' => $addresses->billingaddress,
-                'companyAddress' => $this->wpRepo->fetchPostBySlug(PostSlugs::CompanyAddress)
+                'companyAddress' => $this->wpRepo->fetchPostBySlug(PostSlugs::CompanyAddress)->getContent()
             ]);
             
             $request = new EmailRequest();
