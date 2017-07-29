@@ -59,8 +59,7 @@ namespace Application\API\Repositories\Implementations {
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
                 'orderTotal' => number_format($orderTotal, 2, '.', ''),
-                'deliveryAddress' => $addresses->deliveryaddress,
-                'billingAddress' => $addresses->billingaddress,
+                'addresses' => $addresses,
                 'companyAddress' => $this->wpRepo->fetchPostBySlug(PostSlugs::CompanyAddress)->getContent()
             ]);
             
@@ -87,8 +86,7 @@ namespace Application\API\Repositories\Implementations {
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
                 'orderTotal' => number_format($orderTotal, 2, '.', ''),
-                'deliveryAddress' => $addresses->deliveryaddress,
-                'billingAddress' => $addresses->billingaddress
+                'addresses' => $addresses
             ]);
             
             $request = new EmailRequest();
@@ -114,8 +112,7 @@ namespace Application\API\Repositories\Implementations {
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
                 'orderTotal' => number_format($orderTotal, 2, '.', ''),
-                'deliveryAddress' => $addresses->deliveryaddress,
-                'billingAddress' => $addresses->billingaddress
+                'addresses' => $addresses
             ]);
             
             $request = new EmailRequest();
@@ -142,8 +139,7 @@ namespace Application\API\Repositories\Implementations {
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
                 'orderTotal' => number_format($orderTotal, 2, '.', ''),
-                'deliveryAddress' => $addresses->deliveryaddress,
-                'billingAddress' => $addresses->billingaddress
+                'addresses' => $addresses
             ]);
             
             $request = new EmailRequest();
@@ -170,8 +166,7 @@ namespace Application\API\Repositories\Implementations {
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
                 'orderTotal' => number_format($orderTotal, 2, '.', ''),
-                'deliveryAddress' => $addresses->deliveryaddress,
-                'billingAddress' => $addresses->billingaddress
+                'addresses' => $addresses
             ]);
             
             $request = new EmailRequest();
@@ -198,8 +193,7 @@ namespace Application\API\Repositories\Implementations {
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
                 'orderTotal' => number_format($orderTotal, 2, '.', ''),
-                'deliveryAddress' => $addresses->deliveryaddress,
-                'billingAddress' => $addresses->billingaddress
+                'addresses' => $addresses
             ]);
             
             $request = new EmailRequest();
@@ -226,8 +220,7 @@ namespace Application\API\Repositories\Implementations {
                 'orderGroupKey' => $orderGroupKey,
                 'orders' => $orders,
                 'orderTotal' => number_format($orderTotal, 2, '.', ''),
-                'deliveryAddress' => $addresses->deliveryaddress,
-                'billingAddress' => $addresses->billingaddress
+                'addresses' => $addresses
             ]);
             
             $request = new EmailRequest();

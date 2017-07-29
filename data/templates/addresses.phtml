@@ -10,11 +10,11 @@
                     <td>                
                         <h5 class="">Delivery address</h5>
                         <p class="">
-                            <?=$deliveryAddress->getFirstname()?> <?=$deliveryAddress->getLastname()?><br/>
-                            <?=$deliveryAddress->getAddress1()?> <?=$deliveryAddress->getAddress2()?><br/>
-                            <?=$deliveryAddress->getCity()?> <?=$deliveryAddress->getState()?>
-                            <?=$deliveryAddress->getPostcode()?><br/>
-                            <?=$deliveryAddress->getCountryname()?>
+                            <?=$addresses->deliveryaddress->getFirstname()?> <?=$addresses->deliveryaddress->getLastname()?><br/>
+                            <?=$addresses->deliveryaddress->getAddress1()?> <?=$addresses->deliveryaddress->getAddress2()?><br/>
+                            <?=$addresses->deliveryaddress->getCity()?> <?=$addresses->deliveryaddress->getState()?>
+                            <?=$addresses->deliveryaddress->getPostcode()?><br/>
+                            <?=$addresses->deliveryaddress->getCountryname()?>
                         </p>
                     </td>
                 </tr>
@@ -27,11 +27,11 @@
                     <td>                                            
                         <h5 class="">Billing address</h5>                                
                         <p class="">
-                            <?=$billingAddress->getFirstname()?> <?=$billingAddress->getLastname()?><br/>
-                            <?=$billingAddress->getAddress1()?> <?=$billingAddress->getAddress2()?><br/>
-                            <?=$billingAddress->getCity()?> <?=$billingAddress->getState()?>
-                            <?=$billingAddress->getPostcode()?><br/>
-                            <?=$billingAddress->getCountryname()?>
+                            <?=$addresses->billingaddress->getFirstname()?> <?=$addresses->billingaddress->getLastname()?><br/>
+                            <?=$addresses->billingaddress->getAddress1()?> <?=$addresses->billingaddress->getAddress2()?><br/>
+                            <?=$addresses->billingaddress->getCity()?> <?=$addresses->billingaddress->getState()?>
+                            <?=$addresses->billingaddress->getPostcode()?><br/>
+                            <?=$addresses->billingaddress->getCountryname()?>
                         </p>
                     </td>
                 </tr>
