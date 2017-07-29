@@ -3,8 +3,10 @@
 namespace Application\API\Repositories\Implementations {
 
     use Application\API\Repositories\Interfaces\IOrderEmailsService;
+    use Application\API\Repositories\Interfaces\IWordPressRepository;
     use Application\API\Canonicals\Dto\EmailRequest;
     use Application\API\Canonicals\Dto\CustomerAddresses;
+    use Application\API\Canonicals\WordPress\PostSlugs;
 
     class OrderEmailsService implements IOrderEmailsService {
         
@@ -28,7 +30,13 @@ namespace Application\API\Repositories\Implementations {
          */
         private $domainPath;
         
-        public function __construct($domainName, $isDevelopment, $supportEmail) {
+        /**
+         * @var IWordPressRepository
+         */
+        private $wpRepo;
+        
+        public function __construct(IWordPressRepository $wpRepo, $domainName, $isDevelopment, $supportEmail) {
+            $this->wpRepo = $wpRepo;
             $this->domainName = $domainName;
             $this->isDevelopment = $isDevelopment;
             $this->supportEmail = $supportEmail;
@@ -52,7 +60,8 @@ namespace Application\API\Repositories\Implementations {
                 'orders' => $orders,
                 'orderTotal' => number_format($orderTotal, 2, '.', ''),
                 'deliveryAddress' => $addresses->deliveryaddress,
-                'billingAddress' => $addresses->billingaddress
+                'billingAddress' => $addresses->billingaddress,
+                'companyAddress' => $this->wpRepo->fetchPostBySlug(PostSlugs::CompanyAddress)
             ]);
             
             $request = new EmailRequest();

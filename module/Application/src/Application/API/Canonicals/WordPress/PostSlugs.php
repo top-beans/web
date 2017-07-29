@@ -4,6 +4,7 @@ namespace Application\API\Canonicals\WordPress {
 
     class PostSlugs {
         const PhoneNumber         = 'phone_number';
+        const CompanyAddress      = 'company_address';
         const EmailAddress        = 'email_address';
         const FacebookUrl         = 'facebook_url';
         const TwitterUrl          = 'twitter_url';

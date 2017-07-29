@@ -41,6 +41,7 @@ namespace Application {
             $config = $e->getTarget()->getServiceManager()->get('Config');
             $wpRepo = $e->getTarget()->getServiceManager()->get('WordPrRepo');
 
+            $companyAddress = $wpRepo->fetchPostBySlug(PostSlugs::CompanyAddress);
             $phoneNumber = $wpRepo->fetchPostBySlug(PostSlugs::PhoneNumber);
             $emailAddress = $wpRepo->fetchPostBySlug(PostSlugs::EmailAddress);
             $facebookUrl = $wpRepo->fetchPostBySlug(PostSlugs::FacebookUrl);
@@ -50,6 +51,7 @@ namespace Application {
 
             $e->getViewModel()->setVariable(Layout::Env, $config['ENV']);
             $e->getViewModel()->setVariable(Layout::Analytics, $config['AnalyticsTrackingID']);
+            $e->getViewModel()->setVariable(PostSlugs::CompanyAddress, $companyAddress->getContent());
             $e->getViewModel()->setVariable(PostSlugs::PhoneNumber, $phoneNumber->getContent());
             $e->getViewModel()->setVariable(PostSlugs::EmailAddress, $emailAddress->getContent());
             $e->getViewModel()->setVariable(PostSlugs::FacebookUrl, $facebookUrl->getContent());
