@@ -6,11 +6,11 @@
     </div>
 </div>
 
-<div class="shell">
+<div ng-hide="$ctrl.loading" class="shell">
     <div class="range">
         <div class="cell-xs-12 offset-top-0">
             <h4>Our Green Coffees</h4>
-            <div ng-hide="$ctrl.loading" class="product product-item-fullwidth" ng-repeat="coffee in $ctrl.coffees">
+            <div class="product product-item-fullwidth" ng-repeat="coffee in $ctrl.coffees">
                 <div class="product-main">
                     <div class="product-main-inner">
                         <div class="product-body">
