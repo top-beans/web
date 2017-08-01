@@ -13,7 +13,9 @@ namespace Application\ControllerFactory {
             $serviceLocator = $sli->getServiceLocator();
             $serializer = SerializerBuilder::create()->build();
             $ordersRepo = $serviceLocator->get('OrdersRepo');
-            return new WorldpayApiController($serializer, $ordersRepo);
+            $config = $serviceLocator->get('Config');
+            $env = $config["ENV"];
+            return new WorldpayApiController($serializer, $ordersRepo, $env);
         }
     }
 }
